@@ -37,13 +37,14 @@ namespace ADWinFormsApp1
             Socket clientSocket = (Socket)oSocket;
             string clientName = clientSocket.RemoteEndPoint.ToString();
             Console.WriteLine("新来一个客户:" + clientName);
+
             try
             {
-
                 byte[] buffer = new byte[BufferSize];
                 int count = clientSocket.Receive(buffer);
                 Console.WriteLine("收到" + clientName + ":" + Encoding.Default.GetString(buffer, 0, count));
                 string[] command = Encoding.Default.GetString(buffer, 0, count).Split(',');
+
                 string fileName;
                 long length;
                 if (command[0] == "namelength")
@@ -51,6 +52,7 @@ namespace ADWinFormsApp1
                     fileName = command[1];
                     length = Convert.ToInt64(command[2]);
                     clientSocket.Send(Encoding.Default.GetBytes("OK"));
+
                     long receive = 0L;
                     Console.WriteLine("Receiveing file:" + fileName + ".Plz wait...");
                     using (FileStream writer = new FileStream(Path.Combine(path, fileName), FileMode.Create, FileAccess.Write, FileShare.None))
@@ -61,7 +63,7 @@ namespace ADWinFormsApp1
                             received = clientSocket.Receive(buffer);
                             writer.Write(buffer, 0, received);
                             writer.Flush();
-                            receive += (long)received;
+                            receive += received;
                         }
                     }
                     Console.WriteLine("Receive finish.\n");

@@ -26,7 +26,6 @@ namespace ADWinFormsApp1
                     string fileName = Path.GetFileName(path);
                     sock.Send(Encoding.Default.GetBytes(sendStr));
 
-                    int BufferSize = 1024;
                     byte[] buffer = new byte[32];
                     sock.Receive(buffer);
                     string mes = Encoding.Default.GetString(buffer);
@@ -34,6 +33,7 @@ namespace ADWinFormsApp1
                     if (mes.Contains("OK"))
                     {
                         Console.WriteLine("Sending file:" + fileName + ".Plz wait...");
+                        int BufferSize = 1024;
                         byte[] fileBuffer = new byte[BufferSize];
                         int read, sent;
                         while ((read = reader.Read(fileBuffer, 0, BufferSize)) != 0)
@@ -52,8 +52,6 @@ namespace ADWinFormsApp1
             {
                 Console.WriteLine(ex.Message);
             }
-
         }
     }
-
 }
