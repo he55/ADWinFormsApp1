@@ -39,8 +39,7 @@ namespace ADWinFormsApp1
             Console.WriteLine("新来一个客户:" + clientName);
             try
             {
-                while (true)
-                {
+                
                     byte[] buffer = new byte[BufferSize];
                     int count = clientSocket.Receive(buffer);
                     Console.WriteLine("收到" + clientName + ":" + Encoding.Default.GetString(buffer, 0, count));
@@ -67,7 +66,7 @@ namespace ADWinFormsApp1
                         }
                         Console.WriteLine("Receive finish.\n");
                     }
-                }
+                
             }
             catch
             {

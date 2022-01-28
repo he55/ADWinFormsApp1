@@ -14,10 +14,8 @@ namespace ADWinFormsApp1
         {
             sock.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
             Console.WriteLine("Connect successfully");
-            while (true)
-            {
-                Console.WriteLine("please input the path of the file which you want to send：");
-                string path = Console.ReadLine();
+            
+                string path ="";
                 try
                 {
                     using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
@@ -54,7 +52,7 @@ namespace ADWinFormsApp1
                 {
                     Console.WriteLine(ex.Message);
                 }
-            }
+            
         }
     }
 
