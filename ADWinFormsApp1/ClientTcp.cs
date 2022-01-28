@@ -9,7 +9,8 @@ namespace ADWinFormsApp1
     class ClientTcp
     {
         static Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        static void Main2(string[] args)
+       
+        static void StartClientTcp()
         {
             sock.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
             Console.WriteLine("Connect successfully");
@@ -42,7 +43,7 @@ namespace ADWinFormsApp1
                                 sent = 0;
                                 while ((sent += sock.Send(fileBuffer, sent, read, SocketFlags.None)) < read)
                                 {
-                                    send += (long)sent;
+                                    send += sent;
                                 }
                             }
                             Console.WriteLine("Send finish.\n");

@@ -10,8 +10,9 @@ namespace ADWinFormsApp1
     class ServerTcp
     {
         const int BufferSize = 1024;
-        static string path = @"E:\";
-        static void Main2(string[] args)
+        static string path = @"D:\";
+
+        static void StartServerTcp()
         {
             IPEndPoint ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
