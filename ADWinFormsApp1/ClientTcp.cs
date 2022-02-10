@@ -8,14 +8,14 @@ namespace ADWinFormsApp1
 {
     class ClientTcp
     {
+        const int BufferSize = 1024;
         static Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-        static void StartClientTcp()
+        static void StartClientTcp(string path)
         {
             sock.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
             Console.WriteLine("Connect successfully");
 
-            string path = "";
             try
             {
                 using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
@@ -33,7 +33,7 @@ namespace ADWinFormsApp1
                     {
                         string fileName = Path.GetFileName(path);
                         Console.WriteLine("Sending file:" + fileName + ".Plz wait...");
-                        int BufferSize = 1024;
+
                         byte[] fileBuffer = new byte[BufferSize];
                         int read, sent;
                         while ((read = reader.Read(fileBuffer, 0, BufferSize)) != 0)

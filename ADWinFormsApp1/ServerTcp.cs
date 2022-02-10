@@ -42,6 +42,7 @@ namespace ADWinFormsApp1
             {
                 byte[] buffer = new byte[BufferSize];
                 int count = clientSocket.Receive(buffer);
+
                 Console.WriteLine("收到" + clientName + ":" + Encoding.Default.GetString(buffer, 0, count));
                 string[] command = Encoding.Default.GetString(buffer, 0, count).Split(',');
 
@@ -51,10 +52,12 @@ namespace ADWinFormsApp1
                     long length = Convert.ToInt64(command[2]);
                     clientSocket.Send(Encoding.Default.GetBytes("OK"));
 
-                    long receive = 0L;
                     Console.WriteLine("Receiveing file:" + fileName + ".Plz wait...");
-                    using (FileStream writer = new FileStream(Path.Combine(path, fileName), FileMode.Create, FileAccess.Write, FileShare.None))
+
+                    string path1 = Path.Combine(path, fileName);
+                    using (FileStream writer = new FileStream(path1, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
+                        long receive = 0L;
                         int received;
                         while (receive < length)
                         {
