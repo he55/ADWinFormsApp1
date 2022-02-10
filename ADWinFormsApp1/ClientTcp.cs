@@ -21,17 +21,17 @@ namespace ADWinFormsApp1
                 using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
                 {
                     long send = 0L, length = reader.Length;
-                    string sendStr = "namelength," + Path.GetFileName(path) + "," + length.ToString();
 
-                    string fileName = Path.GetFileName(path);
+                    string sendStr = "namelength," + Path.GetFileName(path) + "," + length.ToString();
                     sock.Send(Encoding.Default.GetBytes(sendStr));
 
                     byte[] buffer = new byte[32];
                     sock.Receive(buffer);
-                    string mes = Encoding.Default.GetString(buffer);
 
+                    string mes = Encoding.Default.GetString(buffer);
                     if (mes.Contains("OK"))
                     {
+                        string fileName = Path.GetFileName(path);
                         Console.WriteLine("Sending file:" + fileName + ".Plz wait...");
                         int BufferSize = 1024;
                         byte[] fileBuffer = new byte[BufferSize];
