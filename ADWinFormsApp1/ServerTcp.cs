@@ -45,12 +45,10 @@ namespace ADWinFormsApp1
                 Console.WriteLine("收到" + clientName + ":" + Encoding.Default.GetString(buffer, 0, count));
                 string[] command = Encoding.Default.GetString(buffer, 0, count).Split(',');
 
-                string fileName;
-                long length;
                 if (command[0] == "namelength")
                 {
-                    fileName = command[1];
-                    length = Convert.ToInt64(command[2]);
+                    string fileName = command[1];
+                    long length = Convert.ToInt64(command[2]);
                     clientSocket.Send(Encoding.Default.GetBytes("OK"));
 
                     long receive = 0L;
@@ -68,14 +66,11 @@ namespace ADWinFormsApp1
                     }
                     Console.WriteLine("Receive finish.\n");
                 }
-
             }
             catch
             {
                 Console.WriteLine("客户:" + clientName + "退出");
             }
-
         }
     }
-
 }
