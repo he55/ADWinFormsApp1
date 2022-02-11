@@ -7,12 +7,12 @@ using System.Threading;
 
 namespace ADWinFormsApp1
 {
-    class ServerTcp
+    public class ServerTcp
     {
         const int BufferSize = 1024;
         static string path = @"D:\";
 
-        static void StartServerTcp()
+        public static void StartServerTcp()
         {
             IPEndPoint ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

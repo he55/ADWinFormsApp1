@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -16,17 +18,21 @@ namespace ADWinFormsApp1
 
         const int port = 12500;
         Socket socket1;
-        Socket socket2;
-        IPEndPoint iPEndPoint1 = new IPEndPoint(IPAddress.Any, port);
-        IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
 
         private void Form1_Load(object sender, EventArgs e)
         {
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket1.Bind(iPEndPoint1);
-            socket2 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket2.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+            socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+
+            if (Debugger.IsAttached)
+            {
+                button1.Enabled = true;
+                IPEndPoint iPEndPoint1 = new IPEndPoint(IPAddress.Any, port);
+                socket1.Bind(iPEndPoint1);
+            }
         }
+
+        List<string> ips = new List<string>();
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -46,16 +52,28 @@ namespace ADWinFormsApp1
                         byte[] buf2 = Encoding.UTF8.GetBytes("ok");
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
                     }
-
-                    string text = $"{ep} => {str}";
-                    this.Invoke(new Action(() =>
+                    else if (str == "ok")
                     {
-                        listBox1.Items.Add(text);
-                        if (str == "ok")
+                        ips.Add($"{ep}");
+                        this.Invoke(new Action(() =>
                         {
-                            listBox2.Items.Add(text);
-                        }
-                    }));
+                            listBox2.Items.Add($"{ep}");
+                        }));
+                    }
+                    else if (str == "send")
+                    {
+                        ServerTcp.StartServerTcp();
+                    }
+                    else if (str == "sendOK")
+                    {
+                        ClientTcp.StartClientTcp("");
+                    }
+
+                    // log
+                    this.Invoke(new Action(() =>
+                {
+                    listBox1.Items.Add($"{ep} => {str}");
+                }));
                 }
             });
         }
@@ -63,7 +81,9 @@ namespace ADWinFormsApp1
         private void button2_Click(object sender, EventArgs e)
         {
             byte[] buf = Encoding.UTF8.GetBytes(textBox2.Text);
-            socket2.SendTo(buf, iPEndPoint2);
+
+            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
+            socket1.SendTo(buf, iPEndPoint2);
         }
     }
 }

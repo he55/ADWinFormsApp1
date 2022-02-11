@@ -6,12 +6,12 @@ using System.Text;
 
 namespace ADWinFormsApp1
 {
-    class ClientTcp
+    public class ClientTcp
     {
         const int BufferSize = 1024;
         static Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-        static void StartClientTcp(string path)
+        public static void StartClientTcp(string path)
         {
             sock.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
             Console.WriteLine("Connect successfully");
