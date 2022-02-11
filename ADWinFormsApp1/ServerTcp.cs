@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ADWinFormsApp1
 {
@@ -20,16 +21,19 @@ namespace ADWinFormsApp1
             sock.Listen(1);
             Console.WriteLine("Begin listen...");
 
-            while (true)
+            Task.Run(() =>
             {
-                Socket client = sock.Accept();
-                if (client.Connected)
+                while (true)
                 {
-                    Thread cThread = new Thread(new ParameterizedThreadStart(myClient));
-                    cThread.IsBackground = true;
-                    cThread.Start(client);
+                    Socket client = sock.Accept();
+                    if (client.Connected)
+                    {
+                        Thread cThread = new Thread(new ParameterizedThreadStart(myClient));
+                        cThread.IsBackground = true;
+                        cThread.Start(client);
+                    }
                 }
-            }
+            });
         }
 
         static void myClient(object oSocket)

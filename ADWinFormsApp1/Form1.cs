@@ -63,10 +63,17 @@ namespace ADWinFormsApp1
                     else if (str == "send")
                     {
                         ServerTcp.StartServerTcp();
+
+                        byte[] buf2 = Encoding.UTF8.GetBytes("sendOK");
+                        socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
                     }
                     else if (str == "sendOK")
                     {
-                        ClientTcp.StartClientTcp("");
+                        Task.Run(() =>
+                        {
+                            string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
+                            ClientTcp.StartClientTcp(filePath);
+                        });
                     }
 
                     // log
@@ -84,6 +91,11 @@ namespace ADWinFormsApp1
 
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
             socket1.SendTo(buf, iPEndPoint2);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
