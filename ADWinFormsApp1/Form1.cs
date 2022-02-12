@@ -85,6 +85,10 @@ namespace ADWinFormsApp1
                             ClientTcp.StartClientTcp(filePath);
                         });
                     }
+                    else if (msg == MSG.str)
+                    {
+                        string v = msg.ToStringData();
+                    }
 
                     // log
                     this.Invoke(new Action(() =>
@@ -127,7 +131,7 @@ namespace ADWinFormsApp1
             this.header = HEADER;
             this.type = type;
             this.len = 0;
-            this.data = new byte[0];
+            this.data = null;
         }
 
         public void AddStringData(string str)
@@ -135,6 +139,11 @@ namespace ADWinFormsApp1
             byte[] vs = Encoding.UTF8.GetBytes(str);
             this.len = vs.Length;
             this.data = vs;
+        }
+
+        public string ToStringData()
+        {
+            return Encoding.UTF8.GetString(this.data);
         }
 
         public byte[] ToArr()
@@ -160,8 +169,25 @@ namespace ADWinFormsApp1
 
         public static MSG ToMSG(byte[] buf)
         {
-            uint v = BitConverter.ToUInt32(buf, 4);
-            return new MSG(v);
+            uint v = BitConverter.ToUInt32(buf, 0);
+            if (v != HEADER)
+            {
+                throw new Exception();
+            }
+
+            MSG msg;
+            msg.header = HEADER;
+            msg.type = BitConverter.ToUInt32(buf, 4);
+            msg.len = BitConverter.ToInt32(buf, 8);
+            msg.data = null;
+
+            if (msg.len != 0)
+            {
+                msg.data = new byte[msg.len];
+                Array.Copy(buf, 12, msg.data, 0, msg.len);
+            }
+
+            return msg;
         }
 
         public static bool IsMSG(byte[] buf)
