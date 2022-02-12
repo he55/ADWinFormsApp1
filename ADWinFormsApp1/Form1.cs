@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -98,15 +99,18 @@ namespace ADWinFormsApp1
         private void button2_Click(object sender, EventArgs e)
         {
             byte[] buf = MSG.hello.ToArr();
-            //byte[] buf = Encoding.UTF8.GetBytes(textBox2.Text);
-
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
             socket1.SendTo(buf, iPEndPoint2);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            MSG msg = MSG.str;
+            msg.AddStringData(textBox2.Text);
+            byte[] buf = msg.ToArr();
 
+            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
+            socket1.SendTo(buf, iPEndPoint2);
         }
     }
 
@@ -115,28 +119,44 @@ namespace ADWinFormsApp1
         const uint HEADER = 0xadadadad;
         uint header;
         uint type;
+        int len;
+        byte[] data;
 
         public MSG(uint type)
         {
             this.header = HEADER;
             this.type = type;
+            this.len = 0;
+            this.data = new byte[0];
+        }
+
+        public void AddStringData(string str)
+        {
+            byte[] vs = Encoding.UTF8.GetBytes(str);
+            this.len = vs.Length;
+            this.data = vs;
         }
 
         public byte[] ToArr()
         {
-            byte[] buf = new byte[8];
-            byte[] vs = BitConverter.GetBytes(this.header);
-            byte[] vs2 = BitConverter.GetBytes(this.type);
-            Array.Copy(vs, 0, buf, 0, 4);
-            Array.Copy(vs2, 0, buf, 4, 4);
-
-            return buf;
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
+                {
+                    binaryWriter.Write(this.header);
+                    binaryWriter.Write(this.type);
+                    binaryWriter.Write(this.len);
+                    binaryWriter.Write(this.data);
+                }
+                return memoryStream.ToArray();
+            }
         }
 
         public static MSG hello = new MSG(0x1);
         public static MSG helloOK = new MSG(0x2);
         public static MSG send = new MSG(0x3);
         public static MSG sendOK = new MSG(0x4);
+        public static MSG str = new MSG(0x5);
 
         public static MSG ToMSG(byte[] buf)
         {
