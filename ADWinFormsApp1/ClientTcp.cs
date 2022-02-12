@@ -11,9 +11,9 @@ namespace ADWinFormsApp1
         const int BufferSize = 1024;
         static Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-        public static void StartClientTcp(string path)
+        public static void StartClientTcp(string path, IPEndPoint remoteEP)
         {
-            sock.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080));
+            sock.Connect(remoteEP);
             Console.WriteLine("Connect successfully");
 
             try

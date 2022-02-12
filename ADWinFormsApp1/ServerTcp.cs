@@ -13,11 +13,10 @@ namespace ADWinFormsApp1
         const int BufferSize = 1024;
         static string path = @"D:\";
 
-        public static void StartServerTcp()
+        public static void StartServerTcp(IPEndPoint remoteEP)
         {
-            IPEndPoint ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sock.Bind(ip);
+            sock.Bind(remoteEP);
             sock.Listen(1);
             Console.WriteLine("Begin listen...");
 

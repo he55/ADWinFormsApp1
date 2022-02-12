@@ -33,8 +33,6 @@ namespace ADWinFormsApp1
             }
         }
 
-        List<string> ips = new List<string>();
-
         private void button1_Click(object sender, EventArgs e)
         {
             button1.Enabled = false;
@@ -46,13 +44,14 @@ namespace ADWinFormsApp1
         }
 
 
+        List<EndPoint> eps = new List<EndPoint>();
         void met()
         {
             byte[] buf = new byte[100];
-            EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
 
             while (true)
             {
+                EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
                 int len = socket1.ReceiveFrom(buf, ref ep);
                 if (len >= 8 && MSG.IsMSG(buf))
                 {
@@ -64,7 +63,9 @@ namespace ADWinFormsApp1
                     }
                     else if (msg == MSG.helloOK)
                     {
-                        ips.Add($"{ep}");
+                        iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, port);
+                        eps.Add(ep);
+
                         this.Invoke(new Action(() =>
                         {
                             listBox2.Items.Add($"{ep}");
@@ -74,20 +75,25 @@ namespace ADWinFormsApp1
                     {
                         msg.ToFileData();
 
-                        if (false)
+                        if (true)
                         {
-                            ServerTcp.StartServerTcp();
+                            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
+                            ServerTcp.StartServerTcp(remoteEP);
 
-                            byte[] buf2 = MSG.sendFileOK.ToArr();
+                            MSG msg2 = MSG.sendFileOK;
+                            msg2.AddIPData(remoteEP);
+                            byte[] buf2 = msg2.ToArr();
                             socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
                         }
                     }
                     else if (msg == MSG.sendFileOK)
                     {
+                        string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
+                        IPEndPoint remoteEP = msg.ToIPData();
+
                         Task.Run(() =>
                         {
-                            string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
-                            ClientTcp.StartClientTcp(filePath);
+                            ClientTcp.StartClientTcp(filePath, remoteEP);
                         });
                     }
                     else if (msg == MSG.sendUrl)
@@ -116,13 +122,14 @@ namespace ADWinFormsApp1
             socket1.SendTo(buf, iPEndPoint2);
         }
 
+        IPEndPoint iPEndPoint2;
+
         private void button3_Click(object sender, EventArgs e)
         {
             MSG msg = MSG.sendString;
             msg.AddStringData(textBox2.Text);
             byte[] buf = msg.ToArr();
 
-            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
             socket1.SendTo(buf, iPEndPoint2);
         }
 
@@ -132,7 +139,6 @@ namespace ADWinFormsApp1
             msg.AddUrlData("https://devblogs.microsoft.com/");
             byte[] buf = msg.ToArr();
 
-            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
             socket1.SendTo(buf, iPEndPoint2);
         }
 
@@ -145,7 +151,6 @@ namespace ADWinFormsApp1
             msg.AddFileData(filePath);
             byte[] buf = msg.ToArr();
 
-            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
             socket1.SendTo(buf, iPEndPoint2);
         }
     }
@@ -164,6 +169,22 @@ namespace ADWinFormsApp1
             this.type = type;
             this.len = 0;
             this.data = new byte[0];
+        }
+
+        public void AddIPData(IPEndPoint ep)
+        {
+            byte[] addr = ep.Address.GetAddressBytes();
+            this.len = 8;
+            this.data = new byte[8] {
+                addr[0],
+                addr[1],
+                addr[2],
+                addr[3],
+                (byte)ep.Port,
+                (byte)(ep.Port>>8),
+                (byte)(ep.Port>>16),
+                (byte)(ep.Port>>24),
+            };
         }
 
         public void AddStringData(string str)
@@ -190,6 +211,13 @@ namespace ADWinFormsApp1
 
             vs1.CopyTo(this.data, 0);
             vs.CopyTo(this.data, 8);
+        }
+
+        public IPEndPoint ToIPData()
+        {
+            int addr = BitConverter.ToInt32(this.data, 0);
+            int port = BitConverter.ToInt32(this.data, 4);
+            return new IPEndPoint(addr, port);
         }
 
         public string ToStringData()
