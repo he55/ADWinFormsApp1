@@ -70,14 +70,19 @@ namespace ADWinFormsApp1
                             listBox2.Items.Add($"{ep}");
                         }));
                     }
-                    else if (msg == MSG.send)
+                    else if (msg == MSG.sendFile)
                     {
-                        ServerTcp.StartServerTcp();
+                        msg.ToFileData();
 
-                        byte[] buf2 = MSG.sendOK.ToArr();
-                        socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
+                        if (false)
+                        {
+                            ServerTcp.StartServerTcp();
+
+                            byte[] buf2 = MSG.sendFileOK.ToArr();
+                            socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
+                        }
                     }
-                    else if (msg == MSG.sendOK)
+                    else if (msg == MSG.sendFileOK)
                     {
                         Task.Run(() =>
                         {
@@ -85,7 +90,11 @@ namespace ADWinFormsApp1
                             ClientTcp.StartClientTcp(filePath);
                         });
                     }
-                    else if (msg == MSG.str)
+                    else if (msg == MSG.sendUrl)
+                    {
+                        string v = msg.ToUrlData();
+                    }
+                    else if (msg == MSG.sendString)
                     {
                         string v = msg.ToStringData();
                     }
@@ -109,8 +118,31 @@ namespace ADWinFormsApp1
 
         private void button3_Click(object sender, EventArgs e)
         {
-            MSG msg = MSG.str;
+            MSG msg = MSG.sendString;
             msg.AddStringData(textBox2.Text);
+            byte[] buf = msg.ToArr();
+
+            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
+            socket1.SendTo(buf, iPEndPoint2);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            MSG msg = MSG.sendUrl;
+            msg.AddUrlData("https://devblogs.microsoft.com/");
+            byte[] buf = msg.ToArr();
+
+            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
+            socket1.SendTo(buf, iPEndPoint2);
+        }
+
+
+        string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            MSG msg = MSG.sendFile;
+            msg.AddFileData(filePath);
             byte[] buf = msg.ToArr();
 
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
@@ -131,19 +163,49 @@ namespace ADWinFormsApp1
             this.header = HEADER;
             this.type = type;
             this.len = 0;
-            this.data = null;
+            this.data = new byte[0];
         }
 
         public void AddStringData(string str)
         {
-            byte[] vs = Encoding.UTF8.GetBytes(str);
-            this.len = vs.Length;
-            this.data = vs;
+            this.data = Encoding.UTF8.GetBytes(str);
+            this.len = this.data.Length;
+        }
+
+        public void AddUrlData(string url)
+        {
+            AddStringData(url);
+        }
+
+        public void AddFileData(string filePath)
+        {
+            FileInfo fileInfo = new FileInfo(filePath);
+            long length = fileInfo.Length;
+
+            byte[] vs1 = BitConverter.GetBytes(length);
+            byte[] vs = Encoding.UTF8.GetBytes(fileInfo.Name);
+
+            this.len = 8 + vs.Length;
+            this.data = new byte[this.len];
+
+            vs1.CopyTo(this.data, 0);
+            vs.CopyTo(this.data, 8);
         }
 
         public string ToStringData()
         {
             return Encoding.UTF8.GetString(this.data);
+        }
+
+        public string ToUrlData()
+        {
+            return Encoding.UTF8.GetString(this.data);
+        }
+
+        public void ToFileData()
+        {
+            long v = BitConverter.ToInt64(this.data, 0);
+            string v1 = Encoding.UTF8.GetString(this.data, 8, this.len - 8);
         }
 
         public byte[] ToArr()
@@ -163,9 +225,10 @@ namespace ADWinFormsApp1
 
         public static MSG hello = new MSG(0x1);
         public static MSG helloOK = new MSG(0x2);
-        public static MSG send = new MSG(0x3);
-        public static MSG sendOK = new MSG(0x4);
-        public static MSG str = new MSG(0x5);
+        public static MSG sendFile = new MSG(0x3);
+        public static MSG sendFileOK = new MSG(0x4);
+        public static MSG sendUrl = new MSG(0x5);
+        public static MSG sendString = new MSG(0x6);
 
         public static MSG ToMSG(byte[] buf)
         {
@@ -179,7 +242,7 @@ namespace ADWinFormsApp1
             msg.header = HEADER;
             msg.type = BitConverter.ToUInt32(buf, 4);
             msg.len = BitConverter.ToInt32(buf, 8);
-            msg.data = null;
+            msg.data = new byte[0];
 
             if (msg.len != 0)
             {
