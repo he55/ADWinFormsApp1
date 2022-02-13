@@ -15,30 +15,25 @@ namespace ADWinFormsApp1
         }
 
         const int port = 12500;
+
         Socket socket1;
+        bool isInitServer;
+        Dictionary<long, string> ipkv = new Dictionary<long, string>();
 
         private void Form1_Load(object sender, EventArgs e)
         {
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
+            socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
 
             IPEndPoint iPEndPoint1 = new IPEndPoint(IPAddress.Any, port);
             socket1.Bind(iPEndPoint1);
+
+            Task.Run(() => OnRec());
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        void OnRec()
         {
-            button1.Enabled = false;
-
-            Task.Run(() => met());
-        }
-
-
-        bool isInitServer;
-        Dictionary<long, string> kv = new Dictionary<long, string>();
-        void met()
-        {
-            byte[] buf = new byte[100];
+            byte[] buf = new byte[1024];
 
             while (true)
             {
@@ -59,7 +54,7 @@ namespace ADWinFormsApp1
                     else if (msg.type == ADMsgType.helloOK)
                     {
                         iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, port);
-                        kv[((IPEndPoint)ep).Address.Address] = msg.ToNameData();
+                        ipkv[((IPEndPoint)ep).Address.Address] = msg.ToNameData();
 
                         this.Invoke(new Action(() =>
                         {
@@ -116,7 +111,7 @@ namespace ADWinFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            kv.Clear();
+            ipkv.Clear();
 
             byte[] buf = new ADMsg(ADMsgType.hello).ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
