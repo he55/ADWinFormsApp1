@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -47,12 +44,12 @@ namespace ADWinFormsApp1
             {
                 EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
                 int len = socket1.ReceiveFrom(buf, ref ep);
-                if (len >= 8 && MSG.IsMSG(buf))
+                if (len >= 8 && ADMsg.IsMSG(buf))
                 {
-                    MSG msg = MSG.ToMSG(buf);
+                    ADMsg msg = ADMsg.ToMSG(buf);
                     if (msg.type == ADMsgType.hello)
                     {
-                        MSG msg2 = new MSG(ADMsgType.helloOK);
+                        ADMsg msg2 = new ADMsg(ADMsgType.helloOK);
                         string v = Dns.GetHostName();
                         msg2.AddNameData(v);
                         byte[] buf2 = msg2.ToArr();
@@ -78,11 +75,11 @@ namespace ADWinFormsApp1
                             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
                             if (!isInitServer)
                             {
-                                ServerTcp.StartServerTcp(remoteEP);
+                                TcpServer.StartServerTcp(remoteEP);
                                 isInitServer = true;
                             }
 
-                            MSG msg2 = new MSG(ADMsgType.sendFileOK);
+                            ADMsg msg2 = new ADMsg(ADMsgType.sendFileOK);
                             msg2.AddIPData(remoteEP);
                             byte[] buf2 = msg2.ToArr();
                             socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
@@ -95,7 +92,7 @@ namespace ADWinFormsApp1
 
                         Task.Run(() =>
                         {
-                            ClientTcp.StartClientTcp(filePath, remoteEP);
+                            TcpServer.StartClientTcp(filePath, remoteEP);
                         });
                     }
                     else if (msg.type == ADMsgType.sendUrl)
@@ -121,7 +118,7 @@ namespace ADWinFormsApp1
         {
             kv.Clear();
 
-            byte[] buf = new MSG(ADMsgType.hello).ToArr();
+            byte[] buf = new ADMsg(ADMsgType.hello).ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
             socket1.SendTo(buf, iPEndPoint2);
         }
@@ -130,7 +127,7 @@ namespace ADWinFormsApp1
         IPEndPoint iPEndPoint2;
         private void button3_Click(object sender, EventArgs e)
         {
-            MSG msg = new MSG(ADMsgType.sendString);
+            ADMsg msg = new ADMsg(ADMsgType.sendString);
             msg.AddStringData(textBox2.Text);
             byte[] buf = msg.ToArr();
 
@@ -139,7 +136,7 @@ namespace ADWinFormsApp1
 
         private void button4_Click(object sender, EventArgs e)
         {
-            MSG msg = new MSG(ADMsgType.sendUrl);
+            ADMsg msg = new ADMsg(ADMsgType.sendUrl);
             msg.AddUrlData("https://devblogs.microsoft.com/");
             byte[] buf = msg.ToArr();
 
@@ -149,157 +146,11 @@ namespace ADWinFormsApp1
         string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
         private void button5_Click(object sender, EventArgs e)
         {
-            MSG msg = new MSG(ADMsgType.sendFile);
+            ADMsg msg = new ADMsg(ADMsgType.sendFile);
             msg.AddFileData(filePath);
             byte[] buf = msg.ToArr();
 
             socket1.SendTo(buf, iPEndPoint2);
-        }
-    }
-
-    public enum ADMsgType : int
-    {
-        hello = 0x1,
-        helloOK,
-        sendFile,
-        sendFileOK,
-        sendUrl,
-        sendString
-    }
-
-    public struct MSG
-    {
-        const uint HEADER = 0xadadadad;
-        uint header;
-        public ADMsgType type;
-        int len;
-        byte[] data;
-
-        public MSG(ADMsgType type)
-        {
-            this.header = HEADER;
-            this.type = type;
-            this.len = 0;
-            this.data = new byte[0];
-        }
-
-        public void AddIPData(IPEndPoint ep)
-        {
-            byte[] addr = ep.Address.GetAddressBytes();
-            this.len = 8;
-            this.data = new byte[8] {
-                addr[0],
-                addr[1],
-                addr[2],
-                addr[3],
-                (byte)ep.Port,
-                (byte)(ep.Port>>8),
-                (byte)(ep.Port>>16),
-                (byte)(ep.Port>>24),
-            };
-        }
-
-        public void AddStringData(string str)
-        {
-            this.data = Encoding.UTF8.GetBytes(str);
-            this.len = this.data.Length;
-        }
-
-        public void AddUrlData(string url)
-        {
-            AddStringData(url);
-        }
-
-        public void AddNameData(string name)
-        {
-            AddStringData(name);
-        }
-
-        public void AddFileData(string filePath)
-        {
-            FileInfo fileInfo = new FileInfo(filePath);
-            long length = fileInfo.Length;
-
-            byte[] vs1 = BitConverter.GetBytes(length);
-            byte[] vs = Encoding.UTF8.GetBytes(fileInfo.Name);
-
-            this.len = 8 + vs.Length;
-            this.data = new byte[this.len];
-
-            vs1.CopyTo(this.data, 0);
-            vs.CopyTo(this.data, 8);
-        }
-
-        public IPEndPoint ToIPData()
-        {
-            int addr = BitConverter.ToInt32(this.data, 0);
-            int port = BitConverter.ToInt32(this.data, 4);
-            return new IPEndPoint(addr, port);
-        }
-
-        public string ToStringData()
-        {
-            return Encoding.UTF8.GetString(this.data);
-        }
-
-        public string ToUrlData()
-        {
-            return ToStringData();
-        }
-
-        public string ToNameData()
-        {
-            return ToStringData();
-        }
-
-        public void ToFileData()
-        {
-            long v = BitConverter.ToInt64(this.data, 0);
-            string v1 = Encoding.UTF8.GetString(this.data, 8, this.len - 8);
-        }
-
-        public byte[] ToArr()
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
-                {
-                    binaryWriter.Write(this.header);
-                    binaryWriter.Write((int)this.type);
-                    binaryWriter.Write(this.len);
-                    binaryWriter.Write(this.data);
-                }
-                return memoryStream.ToArray();
-            }
-        }
-
-        public static MSG ToMSG(byte[] buf)
-        {
-            uint v = BitConverter.ToUInt32(buf, 0);
-            if (v != HEADER)
-            {
-                throw new Exception();
-            }
-
-            MSG msg;
-            msg.header = HEADER;
-            msg.type = (ADMsgType)BitConverter.ToInt32(buf, 4);
-            msg.len = BitConverter.ToInt32(buf, 8);
-            msg.data = new byte[0];
-
-            if (msg.len != 0)
-            {
-                msg.data = new byte[msg.len];
-                Array.Copy(buf, 12, msg.data, 0, msg.len);
-            }
-
-            return msg;
-        }
-
-        public static bool IsMSG(byte[] buf)
-        {
-            uint v = BitConverter.ToUInt32(buf, 0);
-            return v == HEADER;
         }
     }
 }
