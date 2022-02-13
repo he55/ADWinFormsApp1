@@ -14,19 +14,31 @@ namespace ADWinFormsApp1
             InitializeComponent();
         }
 
-        const int port = 12500;
+        const int PORT = 12500;
 
         Socket socket1;
         bool isInitServer;
         Dictionary<long, string> ipkv = new Dictionary<long, string>();
+        IPAddress ipAddress;
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+
+            foreach (var item in ipHostInfo.AddressList)
+            {
+                if(item.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    ipAddress = item;
+                    break;
+                }
+            }
+
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
 
-            IPEndPoint iPEndPoint1 = new IPEndPoint(IPAddress.Any, port);
-            socket1.Bind(iPEndPoint1);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
+            socket1.Bind(localEndPoint);
 
             Task.Run(() => OnRec());
         }
@@ -49,11 +61,11 @@ namespace ADWinFormsApp1
                         msg2.AddNameData(v);
                         byte[] buf2 = msg2.ToArr();
 
-                        socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
+                        socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                     }
                     else if (msg.type == ADMsgType.helloOK)
                     {
-                        iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, port);
+                        iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, PORT);
                         ipkv[((IPEndPoint)ep).Address.Address] = msg.ToNameData();
 
                         this.Invoke(new Action(() =>
@@ -67,7 +79,7 @@ namespace ADWinFormsApp1
 
                         if (true)
                         {
-                            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
+                            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 8080);
                             if (!isInitServer)
                             {
                                 TcpServer.StartServerTcp(remoteEP);
@@ -77,7 +89,7 @@ namespace ADWinFormsApp1
                             ADMsg msg2 = new ADMsg(ADMsgType.sendFileOK);
                             msg2.AddIPData(remoteEP);
                             byte[] buf2 = msg2.ToArr();
-                            socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
+                            socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                         }
                     }
                     else if (msg.type == ADMsgType.sendFileOK)
@@ -114,7 +126,7 @@ namespace ADWinFormsApp1
             ipkv.Clear();
 
             byte[] buf = new ADMsg(ADMsgType.hello).ToArr();
-            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
+            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
             socket1.SendTo(buf, iPEndPoint2);
         }
 
