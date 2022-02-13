@@ -17,7 +17,8 @@ namespace ADWinFormsApp1
 
     public struct ADMsg
     {
-        const uint HEADER = 0xadadadad;
+        const uint HEADER = 0xad00ad00;
+
         uint header;
         public ADMsgType type;
         int len;
@@ -34,12 +35,16 @@ namespace ADWinFormsApp1
         public void AddIPData(IPEndPoint ep)
         {
             byte[] addr = ep.Address.GetAddressBytes();
-            this.len = 8;
-            this.data = new byte[8] {
+            this.len = 12;
+            this.data = new byte[12] {
                 addr[0],
                 addr[1],
                 addr[2],
                 addr[3],
+                0,
+                0,
+                0,
+                0,
                 (byte)ep.Port,
                 (byte)(ep.Port>>8),
                 (byte)(ep.Port>>16),
@@ -80,7 +85,7 @@ namespace ADWinFormsApp1
 
         public IPEndPoint ToIPData()
         {
-            int addr = BitConverter.ToInt32(this.data, 0);
+            long addr = BitConverter.ToInt64(this.data, 0);
             int port = BitConverter.ToInt32(this.data, 4);
             return new IPEndPoint(addr, port);
         }
