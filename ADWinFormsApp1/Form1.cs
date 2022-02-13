@@ -33,15 +33,12 @@ namespace ADWinFormsApp1
         {
             button1.Enabled = false;
 
-            Task.Run(() =>
-            {
-                met();
-            });
+            Task.Run(() => met());
         }
 
 
         bool isInitServer;
-        List<EndPoint> eps = new List<EndPoint>();
+        Dictionary<long, string> kv = new Dictionary<long, string>();
         void met()
         {
             byte[] buf = new byte[100];
@@ -55,13 +52,17 @@ namespace ADWinFormsApp1
                     MSG msg = MSG.ToMSG(buf);
                     if (msg.type == ADMsgType.hello)
                     {
-                        byte[] buf2 = new MSG(ADMsgType.helloOK).ToArr();
+                        MSG msg2 = new MSG(ADMsgType.helloOK);
+                        string v = Dns.GetHostName();
+                        msg2.AddNameData(v);
+                        byte[] buf2 = msg2.ToArr();
+
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
                     }
                     else if (msg.type == ADMsgType.helloOK)
                     {
                         iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, port);
-                        eps.Add(ep);
+                        kv[((IPEndPoint)ep).Address.Address] = msg.ToNameData();
 
                         this.Invoke(new Action(() =>
                         {
@@ -109,7 +110,7 @@ namespace ADWinFormsApp1
                     // log
                     this.Invoke(new Action(() =>
                     {
-                        listBox1.Items.Add($"{ep} =>");
+                        listBox1.Items.Add($"{ep} => {msg.type} : {msg.ToStringData()}");
                     }));
                 }
             }
@@ -118,6 +119,8 @@ namespace ADWinFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
+            kv.Clear();
+
             byte[] buf = new MSG(ADMsgType.hello).ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
             socket1.SendTo(buf, iPEndPoint2);
@@ -207,6 +210,11 @@ namespace ADWinFormsApp1
             AddStringData(url);
         }
 
+        public void AddNameData(string name)
+        {
+            AddStringData(name);
+        }
+
         public void AddFileData(string filePath)
         {
             FileInfo fileInfo = new FileInfo(filePath);
@@ -236,7 +244,12 @@ namespace ADWinFormsApp1
 
         public string ToUrlData()
         {
-            return Encoding.UTF8.GetString(this.data);
+            return ToStringData();
+        }
+
+        public string ToNameData()
+        {
+            return ToStringData();
         }
 
         public void ToFileData()
