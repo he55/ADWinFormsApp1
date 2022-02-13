@@ -9,11 +9,11 @@ namespace ADWinFormsApp1
     public class ClientTcp
     {
         const int BufferSize = 1024;
-        static Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         public static void StartClientTcp(string path, IPEndPoint remoteEP)
         {
-            sock.Connect(remoteEP);
+            Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sender.Connect(remoteEP);
             Console.WriteLine("Connect successfully");
 
             try
@@ -23,10 +23,10 @@ namespace ADWinFormsApp1
                     long send = 0L, length = reader.Length;
 
                     string sendStr = "namelength," + Path.GetFileName(path) + "," + length.ToString();
-                    sock.Send(Encoding.Default.GetBytes(sendStr));
+                    sender.Send(Encoding.Default.GetBytes(sendStr));
 
                     byte[] buffer = new byte[32];
-                    sock.Receive(buffer);
+                    sender.Receive(buffer);
 
                     string mes = Encoding.Default.GetString(buffer);
                     if (mes.Contains("OK"))
@@ -39,11 +39,16 @@ namespace ADWinFormsApp1
                         while ((read = reader.Read(fileBuffer, 0, BufferSize)) != 0)
                         {
                             sent = 0;
-                            while ((sent += sock.Send(fileBuffer, sent, read, SocketFlags.None)) < read)
+                            while ((sent += sender.Send(fileBuffer, sent, read, SocketFlags.None)) < read)
                             {
                                 send += sent;
                             }
                         }
+
+                        // Release the socket.  
+                        sender.Shutdown(SocketShutdown.Both);
+                        sender.Close();
+
                         Console.WriteLine("Send finish.\n");
                     }
                 }
