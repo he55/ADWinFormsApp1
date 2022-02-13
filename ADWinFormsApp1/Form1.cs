@@ -23,16 +23,7 @@ namespace ADWinFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-
-            foreach (var item in ipHostInfo.AddressList)
-            {
-                if(item.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    ipAddress = item;
-                    break;
-                }
-            }
+            ipAddress = GetIPAddr();
 
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -41,6 +32,25 @@ namespace ADWinFormsApp1
             socket1.Bind(localEndPoint);
 
             Task.Run(() => OnRec());
+        }
+
+        static IPAddress GetIPAddr()
+        {
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+
+            foreach (var item in ipHostInfo.AddressList)
+            {
+                if (item.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    byte v = (byte)(item.Address >> 16);
+                    if (v == 0)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            return null;
         }
 
         void OnRec()
