@@ -122,8 +122,8 @@ namespace ADWinFormsApp1
             socket1.SendTo(buf, iPEndPoint2);
         }
 
-        IPEndPoint iPEndPoint2;
 
+        IPEndPoint iPEndPoint2;
         private void button3_Click(object sender, EventArgs e)
         {
             MSG msg = MSG.sendString;
@@ -144,7 +144,6 @@ namespace ADWinFormsApp1
 
 
         string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
-
         private void button5_Click(object sender, EventArgs e)
         {
             MSG msg = MSG.sendFile;
@@ -159,11 +158,11 @@ namespace ADWinFormsApp1
     {
         const uint HEADER = 0xadadadad;
         uint header;
-        uint type;
+        int type;
         int len;
         byte[] data;
 
-        public MSG(uint type)
+        public MSG(int type)
         {
             this.header = HEADER;
             this.type = type;
@@ -268,7 +267,7 @@ namespace ADWinFormsApp1
 
             MSG msg;
             msg.header = HEADER;
-            msg.type = BitConverter.ToUInt32(buf, 4);
+            msg.type = BitConverter.ToInt32(buf, 4);
             msg.len = BitConverter.ToInt32(buf, 8);
             msg.data = new byte[0];
 
