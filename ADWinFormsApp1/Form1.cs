@@ -56,12 +56,12 @@ namespace ADWinFormsApp1
                 if (len >= 8 && MSG.IsMSG(buf))
                 {
                     MSG msg = MSG.ToMSG(buf);
-                    if (msg == MSG.hello)
+                    if (msg.type == ADMsgType.hello)
                     {
-                        byte[] buf2 = MSG.helloOK.ToArr();
+                        byte[] buf2 = new MSG(ADMsgType.helloOK).ToArr();
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
                     }
-                    else if (msg == MSG.helloOK)
+                    else if (msg.type == ADMsgType.helloOK)
                     {
                         iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, port);
                         eps.Add(ep);
@@ -71,7 +71,7 @@ namespace ADWinFormsApp1
                             listBox2.Items.Add($"{ep}");
                         }));
                     }
-                    else if (msg == MSG.sendFile)
+                    else if (msg.type == ADMsgType.sendFile)
                     {
                         msg.ToFileData();
 
@@ -80,13 +80,13 @@ namespace ADWinFormsApp1
                             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
                             ServerTcp.StartServerTcp(remoteEP);
 
-                            MSG msg2 = MSG.sendFileOK;
+                            MSG msg2 = new MSG(ADMsgType.sendFileOK);
                             msg2.AddIPData(remoteEP);
                             byte[] buf2 = msg2.ToArr();
                             socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, port));
                         }
                     }
-                    else if (msg == MSG.sendFileOK)
+                    else if (msg.type == ADMsgType.sendFileOK)
                     {
                         string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
                         IPEndPoint remoteEP = msg.ToIPData();
@@ -96,11 +96,11 @@ namespace ADWinFormsApp1
                             ClientTcp.StartClientTcp(filePath, remoteEP);
                         });
                     }
-                    else if (msg == MSG.sendUrl)
+                    else if (msg.type == ADMsgType.sendUrl)
                     {
                         string v = msg.ToUrlData();
                     }
-                    else if (msg == MSG.sendString)
+                    else if (msg.type == ADMsgType.sendString)
                     {
                         string v = msg.ToStringData();
                     }
@@ -117,7 +117,7 @@ namespace ADWinFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            byte[] buf = MSG.hello.ToArr();
+            byte[] buf = new MSG(ADMsgType.hello).ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, port);
             socket1.SendTo(buf, iPEndPoint2);
         }
@@ -126,7 +126,7 @@ namespace ADWinFormsApp1
         IPEndPoint iPEndPoint2;
         private void button3_Click(object sender, EventArgs e)
         {
-            MSG msg = MSG.sendString;
+            MSG msg = new MSG(ADMsgType.sendString);
             msg.AddStringData(textBox2.Text);
             byte[] buf = msg.ToArr();
 
@@ -135,18 +135,17 @@ namespace ADWinFormsApp1
 
         private void button4_Click(object sender, EventArgs e)
         {
-            MSG msg = MSG.sendUrl;
+            MSG msg = new MSG(ADMsgType.sendUrl);
             msg.AddUrlData("https://devblogs.microsoft.com/");
             byte[] buf = msg.ToArr();
 
             socket1.SendTo(buf, iPEndPoint2);
         }
 
-
         string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
         private void button5_Click(object sender, EventArgs e)
         {
-            MSG msg = MSG.sendFile;
+            MSG msg = new MSG(ADMsgType.sendFile);
             msg.AddFileData(filePath);
             byte[] buf = msg.ToArr();
 
@@ -154,15 +153,25 @@ namespace ADWinFormsApp1
         }
     }
 
+    public enum ADMsgType : int
+    {
+        hello = 0x1,
+        helloOK,
+        sendFile,
+        sendFileOK,
+        sendUrl,
+        sendString
+    }
+
     public struct MSG
     {
         const uint HEADER = 0xadadadad;
         uint header;
-        int type;
+        public ADMsgType type;
         int len;
         byte[] data;
 
-        public MSG(int type)
+        public MSG(ADMsgType type)
         {
             this.header = HEADER;
             this.type = type;
@@ -242,20 +251,13 @@ namespace ADWinFormsApp1
                 using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
                 {
                     binaryWriter.Write(this.header);
-                    binaryWriter.Write(this.type);
+                    binaryWriter.Write((int)this.type);
                     binaryWriter.Write(this.len);
                     binaryWriter.Write(this.data);
                 }
                 return memoryStream.ToArray();
             }
         }
-
-        public static MSG hello = new MSG(0x1);
-        public static MSG helloOK = new MSG(0x2);
-        public static MSG sendFile = new MSG(0x3);
-        public static MSG sendFileOK = new MSG(0x4);
-        public static MSG sendUrl = new MSG(0x5);
-        public static MSG sendString = new MSG(0x6);
 
         public static MSG ToMSG(byte[] buf)
         {
@@ -267,7 +269,7 @@ namespace ADWinFormsApp1
 
             MSG msg;
             msg.header = HEADER;
-            msg.type = BitConverter.ToInt32(buf, 4);
+            msg.type = (ADMsgType)BitConverter.ToInt32(buf, 4);
             msg.len = BitConverter.ToInt32(buf, 8);
             msg.data = new byte[0];
 
@@ -284,27 +286,6 @@ namespace ADWinFormsApp1
         {
             uint v = BitConverter.ToUInt32(buf, 0);
             return v == HEADER;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is MSG mSG &&
-                   type == mSG.type;
-        }
-
-        public override int GetHashCode()
-        {
-            return 34944597 + type.GetHashCode();
-        }
-
-        public static bool operator ==(MSG left, MSG right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(MSG left, MSG right)
-        {
-            return !(left == right);
         }
     }
 }
