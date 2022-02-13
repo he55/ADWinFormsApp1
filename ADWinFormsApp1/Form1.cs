@@ -25,12 +25,8 @@ namespace ADWinFormsApp1
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
 
-            if (Debugger.IsAttached)
-            {
-                button1.Enabled = true;
-                IPEndPoint iPEndPoint1 = new IPEndPoint(IPAddress.Any, port);
-                socket1.Bind(iPEndPoint1);
-            }
+            IPEndPoint iPEndPoint1 = new IPEndPoint(IPAddress.Any, port);
+            socket1.Bind(iPEndPoint1);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -44,6 +40,7 @@ namespace ADWinFormsApp1
         }
 
 
+        bool isInitServer;
         List<EndPoint> eps = new List<EndPoint>();
         void met()
         {
@@ -78,7 +75,11 @@ namespace ADWinFormsApp1
                         if (true)
                         {
                             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8080);
-                            ServerTcp.StartServerTcp(remoteEP);
+                            if (!isInitServer)
+                            {
+                                ServerTcp.StartServerTcp(remoteEP);
+                                isInitServer = true;
+                            }
 
                             MSG msg2 = new MSG(ADMsgType.sendFileOK);
                             msg2.AddIPData(remoteEP);
