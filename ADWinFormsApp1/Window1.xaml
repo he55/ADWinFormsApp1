@@ -5,11 +5,16 @@
         xmlns:local="clr-namespace:ADWinFormsApp1"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Title="Window1"
-        Width="800"
-        Height="450"
-        mc:Ignorable="d">
+        Width="499"
+        Height="304"
+        mc:Ignorable="d" Loaded="Window_Loaded">
     <Grid>
-        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding MyProperty}" />
+        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding Devices}" HorizontalAlignment="Left" Width="226" />
+        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="351,54,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Hello" HorizontalAlignment="Left" Margin="252,13,0,0" VerticalAlignment="Top" Click="Button_Click_1" Width="51"/>
+        <Button Content="Text" HorizontalAlignment="Left" Margin="252,54,0,0" VerticalAlignment="Top" Click="Button_Click_2" Width="51"/>
+        <Button Content="URL" HorizontalAlignment="Left" Margin="252,93,0,0" VerticalAlignment="Top" Click="Button_Click_3" Width="51"/>
+        <Button Content="File" HorizontalAlignment="Left" Margin="252,129,0,0" VerticalAlignment="Top" Click="Button_Click_4" Width="51"/>
 
     </Grid>
 </Window>

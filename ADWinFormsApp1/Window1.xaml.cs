@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,23 +22,21 @@ namespace ADWinFormsApp1
     /// </summary>
     public partial class Window1 : Window
     {
+        const int PORT = 12500;
+
+        Socket socket1;
+        bool isInitServer;
+        IPAddress ipAddress;
+
+        public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
+
         public Window1()
         {
             InitializeComponent();
             this.DataContext = this;
         }
 
-        public object MyProperty { get; set; }
-
-
-        const int PORT = 12500;
-
-        Socket socket1;
-        bool isInitServer;
-        List<UserInfo> users = new List<UserInfo>();
-        IPAddress ipAddress;
-
-        private void Form1_Load(object sender, EventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ipAddress = GetIPAddr();
 
@@ -93,14 +94,13 @@ namespace ADWinFormsApp1
                         userInfo.Name = msg.ToNameData();
                         userInfo.IP = ((IPEndPoint)ep).Address.Address;
                         userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
-                        users.Add(userInfo);
+
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            Devices.Add(userInfo);
+                        });
 
                         iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, PORT);
-
-                        this.Invoke(new Action(() =>
-                        {
-                            listBox2.Items.Add($"{ep}");
-                        }));
                     }
                     else if (msg.type == ADMsgType.sendFile)
                     {
@@ -141,18 +141,18 @@ namespace ADWinFormsApp1
                     }
 
                     // log
-                    this.Invoke(new Action(() =>
-                    {
-                        listBox1.Items.Add($"{ep} => {msg.type} : {msg.ToStringData()}");
-                    }));
+                    //this.Invoke(new Action(() =>
+                    //{
+                    //    listBox1.Items.Add($"{ep} => {msg.type} : {msg.ToStringData()}");
+                    //}));
                 }
             }
         }
 
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            users.Clear();
+            Devices.Clear();
 
             byte[] buf = new ADMsg(ADMsgType.hello).ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
@@ -161,16 +161,16 @@ namespace ADWinFormsApp1
 
 
         IPEndPoint iPEndPoint2;
-        private void button3_Click(object sender, EventArgs e)
+        private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             ADMsg msg = new ADMsg(ADMsgType.sendString);
-            msg.AddStringData(textBox2.Text);
+            msg.AddStringData(textBox1.Text);
             byte[] buf = msg.ToArr();
 
             socket1.SendTo(buf, iPEndPoint2);
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             ADMsg msg = new ADMsg(ADMsgType.sendUrl);
             msg.AddUrlData("https://devblogs.microsoft.com/");
@@ -180,7 +180,7 @@ namespace ADWinFormsApp1
         }
 
         string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
-        private void button5_Click(object sender, EventArgs e)
+        private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             ADMsg msg = new ADMsg(ADMsgType.sendFile);
             msg.AddFileData(filePath);
@@ -188,13 +188,5 @@ namespace ADWinFormsApp1
 
             socket1.SendTo(buf, iPEndPoint2);
         }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            Window1 window1 = new Window1();
-            window1.MyProperty = users;
-            window1.Show();
-        }
-
     }
 }
