@@ -169,5 +169,11 @@ namespace ADWinFormsApp1
 
             socket1.SendTo(buf, iPEndPoint2);
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Window1 window1 = new Window1();
+            window1.Show();
+        }
     }
 }
