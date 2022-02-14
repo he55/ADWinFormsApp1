@@ -18,7 +18,7 @@ namespace ADWinFormsApp1
 
         Socket socket1;
         bool isInitServer;
-        Dictionary<long, string> ipkv = new Dictionary<long, string>();
+        List<UserInfo> list = new List<UserInfo>();
         IPAddress ipAddress;
 
         private void Form1_Load(object sender, EventArgs e)
@@ -75,8 +75,12 @@ namespace ADWinFormsApp1
                     }
                     else if (msg.type == ADMsgType.helloOK)
                     {
+                        UserInfo userInfo = new UserInfo();
+                        userInfo.Name = msg.ToNameData();
+                        userInfo.IP = ((IPEndPoint)ep).Address.Address;
+                        list.Add(userInfo);
+
                         iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, PORT);
-                        ipkv[((IPEndPoint)ep).Address.Address] = msg.ToNameData();
 
                         this.Invoke(new Action(() =>
                         {
@@ -133,7 +137,7 @@ namespace ADWinFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ipkv.Clear();
+            list.Clear();
 
             byte[] buf = new ADMsg(ADMsgType.hello).ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
@@ -175,5 +179,11 @@ namespace ADWinFormsApp1
             Window1 window1 = new Window1();
             window1.Show();
         }
+    }
+
+    public class UserInfo
+    {
+        public string Name { get; set; }
+        public long IP { get; set; }
     }
 }
