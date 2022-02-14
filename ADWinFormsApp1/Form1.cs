@@ -18,7 +18,7 @@ namespace ADWinFormsApp1
 
         Socket socket1;
         bool isInitServer;
-        List<UserInfo> list = new List<UserInfo>();
+        List<UserInfo> users = new List<UserInfo>();
         IPAddress ipAddress;
 
         private void Form1_Load(object sender, EventArgs e)
@@ -78,7 +78,8 @@ namespace ADWinFormsApp1
                         UserInfo userInfo = new UserInfo();
                         userInfo.Name = msg.ToNameData();
                         userInfo.IP = ((IPEndPoint)ep).Address.Address;
-                        list.Add(userInfo);
+                        userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
+                        users.Add(userInfo);
 
                         iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, PORT);
 
@@ -137,7 +138,7 @@ namespace ADWinFormsApp1
 
         private void button2_Click(object sender, EventArgs e)
         {
-            list.Clear();
+            users.Clear();
 
             byte[] buf = new ADMsg(ADMsgType.hello).ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
@@ -177,13 +178,8 @@ namespace ADWinFormsApp1
         private void button6_Click(object sender, EventArgs e)
         {
             Window1 window1 = new Window1();
+            window1.MyProperty = users;
             window1.Show();
         }
-    }
-
-    public class UserInfo
-    {
-        public string Name { get; set; }
-        public long IP { get; set; }
     }
 }

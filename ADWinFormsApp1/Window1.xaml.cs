@@ -22,6 +22,9 @@ namespace ADWinFormsApp1
         public Window1()
         {
             InitializeComponent();
+            this.DataContext = this;
         }
+
+        public object MyProperty { get; set; }
     }
 }
