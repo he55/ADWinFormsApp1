@@ -7,7 +7,7 @@
         Title="Window1"
         Width="499"
         Height="304"
-        mc:Ignorable="d" Loaded="Window_Loaded">
+        mc:Ignorable="d" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid>
         <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding Devices}" HorizontalAlignment="Left" Width="226" />
         <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="351,54,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>

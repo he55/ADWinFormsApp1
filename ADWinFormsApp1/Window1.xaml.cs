@@ -188,5 +188,10 @@ namespace ADWinFormsApp1
 
             socket1.SendTo(buf, iPEndPoint2);
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }
