@@ -27,6 +27,7 @@ namespace ADWinFormsApp1
         Socket socket1;
         bool isInitServer;
         IPAddress ipAddress;
+        IPEndPoint selectEP;
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
 
@@ -99,8 +100,6 @@ namespace ADWinFormsApp1
                         {
                             Devices.Add(userInfo);
                         });
-
-                        iPEndPoint2 = new IPEndPoint(((IPEndPoint)ep).Address, PORT);
                     }
                     else if (msg.type == ADMsgType.sendFile)
                     {
@@ -159,15 +158,13 @@ namespace ADWinFormsApp1
             socket1.SendTo(buf, iPEndPoint2);
         }
 
-
-        IPEndPoint iPEndPoint2;
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             ADMsg msg = new ADMsg(ADMsgType.sendString);
             msg.AddStringData(textBox1.Text);
             byte[] buf = msg.ToArr();
 
-            socket1.SendTo(buf, iPEndPoint2);
+            socket1.SendTo(buf, selectEP);
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -176,7 +173,7 @@ namespace ADWinFormsApp1
             msg.AddUrlData("https://devblogs.microsoft.com/");
             byte[] buf = msg.ToArr();
 
-            socket1.SendTo(buf, iPEndPoint2);
+            socket1.SendTo(buf, selectEP);
         }
 
         string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
@@ -186,12 +183,22 @@ namespace ADWinFormsApp1
             msg.AddFileData(filePath);
             byte[] buf = msg.ToArr();
 
-            socket1.SendTo(buf, iPEndPoint2);
+            socket1.SendTo(buf, selectEP);
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             Environment.Exit(0);
+        }
+
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int selectedIndex = listBox1.SelectedIndex;
+            if (selectedIndex !=-1)
+            {
+                selectEP = new IPEndPoint(Devices[selectedIndex].IP, PORT);
+            }
         }
     }
 }

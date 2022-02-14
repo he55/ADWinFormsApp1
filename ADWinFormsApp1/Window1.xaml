@@ -9,7 +9,7 @@
         Height="304"
         mc:Ignorable="d" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid>
-        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding Devices}" HorizontalAlignment="Left" Width="226" />
+        <ListBox x:Name="listBox1" d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding Devices}" HorizontalAlignment="Left" Width="226" SelectionChanged="ListBox_SelectionChanged" />
         <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="351,54,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
         <Button Content="Hello" HorizontalAlignment="Left" Margin="252,13,0,0" VerticalAlignment="Top" Click="Button_Click_1" Width="51"/>
         <Button Content="Text" HorizontalAlignment="Left" Margin="252,54,0,0" VerticalAlignment="Top" Click="Button_Click_2" Width="51"/>
