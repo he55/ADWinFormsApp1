@@ -25,6 +25,10 @@ namespace ADWinFormsApp1
         {
             if (lastListBoxItem != null)
                 ListBoxItemDragState.SetIsUnderDragCursor(lastListBoxItem, false);
+
+            DataObject data = (DataObject) e.Data;
+            string v = data.GetText();
+            System.Collections.Specialized.StringCollection stringCollection = data.GetFileDropList();
         }
 
 
