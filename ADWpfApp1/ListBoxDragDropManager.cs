@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace ADWinFormsApp1
+namespace ADWpfApp1
 {
     public class ListBoxDragDropManager
     {

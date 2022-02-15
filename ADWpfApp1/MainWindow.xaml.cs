@@ -14,14 +14,15 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ADWinFormsApp1
+namespace ADWpfApp1
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class MainWindow : Window
     {
         const int PORT = 12500;
 
@@ -33,10 +34,12 @@ namespace ADWinFormsApp1
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
 
-        public Window1()
+
+        public MainWindow()
         {
             InitializeComponent();
 
+            
             Devices.Add(new UserInfo {Name="qwe",IPString="ip" });
             Devices.Add(new UserInfo {Name="asd",IPString="cp" });
             Devices.Add(new UserInfo {Name="zxc",IPString="hp" });
@@ -49,6 +52,7 @@ namespace ADWinFormsApp1
 
             this.DataContext = this;
         }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -203,5 +207,6 @@ namespace ADWinFormsApp1
                 selectEP = new IPEndPoint(Devices[selectedIndex].IP, PORT);
             }
         }
+
     }
 }

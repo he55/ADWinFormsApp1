@@ -1,4 +1,4 @@
-﻿namespace ADWinFormsApp1
+﻿namespace ADWpfApp1
 {
     public class UserInfo
     {

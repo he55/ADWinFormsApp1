@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace ADWinFormsApp1
+namespace ADWpfApp1
 {
     public enum ADMsgType : int
     {
