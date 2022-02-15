@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -41,8 +42,9 @@ namespace ADWinFormsApp1
             Devices.Add(new UserInfo {Name="rty",IPString="up" });
             Devices.Add(new UserInfo {Name="fgh",IPString="dp" });
             Devices.Add(new UserInfo {Name="vbn",IPString="yp" });
-           
-            new ListBoxDragDropManager(this.listBox1);
+
+            ListBoxDragDropManager listBoxDragDropManager = new ListBoxDragDropManager(this.listBox1);
+            listBoxDragDropManager.DataAction = DataActionMet;
 
             this.DataContext = this;
         }
@@ -149,11 +151,7 @@ namespace ADWinFormsApp1
                         string v = msg.ToStringData();
                     }
 
-                    // log
-                    //this.Invoke(new Action(() =>
-                    //{
-                    //    listBox1.Items.Add($"{ep} => {msg.type} : {msg.ToStringData()}");
-                    //}));
+                    Debug.WriteLine($"{ep} => {msg.type} : {msg.ToStringData()}");
                 }
             }
         }
@@ -166,6 +164,27 @@ namespace ADWinFormsApp1
             byte[] buf = new ADMsg(ADMsgType.hello).ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
             socket1.SendTo(buf, iPEndPoint2);
+        }
+
+        void DataActionMet(int sel,bool isfile,string str)
+        {
+            selectEP = new IPEndPoint(Devices[sel].IP, PORT);
+            if (isfile)
+            {
+                ADMsg msg = new ADMsg(ADMsgType.sendFile);
+                msg.AddFileData(str);
+                byte[] buf = msg.ToArr();
+
+                socket1.SendTo(buf, selectEP);
+            }
+            else
+            {
+                ADMsg msg = new ADMsg(ADMsgType.sendString);
+                msg.AddStringData(str);
+                byte[] buf = msg.ToArr();
+
+                socket1.SendTo(buf, selectEP);
+            }
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)

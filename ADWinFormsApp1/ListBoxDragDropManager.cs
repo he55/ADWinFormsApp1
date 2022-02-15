@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -7,6 +9,8 @@ namespace ADWinFormsApp1
     public class ListBoxDragDropManager
     {
         ListBox listBox;
+        int sel;
+        public Action<int, bool, string> DataAction;
 
         public ListBoxDragDropManager(ListBox listBox)
         {
@@ -18,7 +22,7 @@ namespace ADWinFormsApp1
         void ListBox_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = DragDropEffects.Move;
-            GetIndexUnderDragCursor();
+            sel = GetIndexUnderDragCursor();
         }
 
         private void ListBox_Drop(object sender, DragEventArgs e)
@@ -26,9 +30,23 @@ namespace ADWinFormsApp1
             if (lastListBoxItem != null)
                 ListBoxItemDragState.SetIsUnderDragCursor(lastListBoxItem, false);
 
-            DataObject data = (DataObject) e.Data;
-            string v = data.GetText();
-            System.Collections.Specialized.StringCollection stringCollection = data.GetFileDropList();
+            if (sel != -1)
+            {
+                DataObject data = (DataObject)e.Data;
+                string v = data.GetText();
+                if (!string.IsNullOrEmpty(v))
+                {
+                    DataAction.Invoke(sel, false, v);
+                    return;
+                }
+
+                StringCollection stringCollection = data.GetFileDropList();
+                if (stringCollection.Count !=0)
+                {
+                    DataAction.Invoke(sel, true, stringCollection[0]);
+                    return;
+                }
+            }
         }
 
 

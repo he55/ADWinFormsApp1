@@ -86,7 +86,7 @@ namespace ADWinFormsApp1
         public IPEndPoint ToIPData()
         {
             long addr = BitConverter.ToInt64(this.data, 0);
-            int port = BitConverter.ToInt32(this.data, 4);
+            int port = BitConverter.ToInt32(this.data, 8);
             return new IPEndPoint(addr, port);
         }
 
