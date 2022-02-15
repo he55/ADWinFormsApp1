@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:ADWinFormsApp1"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Title="Window1"
-        Width="499"
+        Width="323"
         Height="304"
         mc:Ignorable="d" Loaded="Window_Loaded" Closed="Window_Closed">
     <Window.Resources>
@@ -19,7 +19,6 @@
     </Window.Resources>
     <Grid>
         <ListBox x:Name="listBox1" AllowDrop="True" ItemContainerStyle="{StaticResource ItemContStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding Devices}" HorizontalAlignment="Left" Width="226" SelectionChanged="ListBox_SelectionChanged" />
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Margin="355,14,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
         <Button Content="Hello" HorizontalAlignment="Left" Margin="252,13,0,0" VerticalAlignment="Top" Click="Button_Click_1" Width="51"/>
 
     </Grid>

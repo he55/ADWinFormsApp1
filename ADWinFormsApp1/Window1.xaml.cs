@@ -29,6 +29,7 @@ namespace ADWinFormsApp1
         bool isInitServer;
         IPAddress ipAddress;
         IPEndPoint selectEP;
+        string filePath;
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
 
@@ -134,7 +135,6 @@ namespace ADWinFormsApp1
                     }
                     else if (msg.type == ADMsgType.sendFileOK)
                     {
-                        string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
                         IPEndPoint remoteEP = msg.ToIPData();
 
                         Task.Run(() =>
@@ -171,6 +171,7 @@ namespace ADWinFormsApp1
             selectEP = new IPEndPoint(Devices[sel].IP, PORT);
             if (isfile)
             {
+                filePath = str;
                 ADMsg msg = new ADMsg(ADMsgType.sendFile);
                 msg.AddFileData(str);
                 byte[] buf = msg.ToArr();
@@ -187,33 +188,6 @@ namespace ADWinFormsApp1
             }
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            ADMsg msg = new ADMsg(ADMsgType.sendString);
-            msg.AddStringData(textBox1.Text);
-            byte[] buf = msg.ToArr();
-
-            socket1.SendTo(buf, selectEP);
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            ADMsg msg = new ADMsg(ADMsgType.sendUrl);
-            msg.AddUrlData("https://devblogs.microsoft.com/");
-            byte[] buf = msg.ToArr();
-
-            socket1.SendTo(buf, selectEP);
-        }
-
-        string filePath = @"C:\Users\luckh\Desktop\vmware.exe";
-        private void Button_Click_4(object sender, RoutedEventArgs e)
-        {
-            ADMsg msg = new ADMsg(ADMsgType.sendFile);
-            msg.AddFileData(filePath);
-            byte[] buf = msg.ToArr();
-
-            socket1.SendTo(buf, selectEP);
-        }
 
         private void Window_Closed(object sender, EventArgs e)
         {
