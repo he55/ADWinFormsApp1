@@ -52,7 +52,7 @@ namespace ADWinFormsApp1
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ipAddress = GetIPAddr();
+            ipAddress = GetIPAddr()??IPAddress.Any;
 
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
