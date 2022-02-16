@@ -8,17 +8,9 @@
         Title="MainWindow" Height="246" Width="330"
         Loaded="Window_Loaded" Closed="Window_Closed"
         AllowDrop="True" DragEnter="Window_DragEnter" DragOver="Window_DragOver" DragLeave="Window_DragLeave" Drop="Window_Drop">
-    <Window.Resources>
-        <Style x:Key="ItemContStyle" TargetType="ListBoxItem">
-            <Style.Triggers>
-                <Trigger Property="local:ListBoxItemDragState.IsUnderDragCursor" Value="True">
-                    <Setter Property="Background" Value="Blue" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
+   
     <Grid>
-        <ListBox x:Name="listBox1" AllowDrop="True" ItemContainerStyle="{StaticResource ItemContStyle}" d:ItemsSource="{d:SampleData ItemCount=5}" ItemsSource="{Binding Devices}" HorizontalAlignment="Left" Width="226" SelectionChanged="ListBox_SelectionChanged" />
+        <ListBox x:Name="listBox1"  ItemsSource="{Binding Devices}" HorizontalAlignment="Left" Width="226" SelectionChanged="ListBox_SelectionChanged" />
         <Button Content="Hello" HorizontalAlignment="Left" Margin="252,13,0,0" VerticalAlignment="Top" Click="Button_Click_1" Width="51"/>
 
     </Grid>
