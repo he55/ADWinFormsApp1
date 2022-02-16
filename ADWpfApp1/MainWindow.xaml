@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:ADWpfApp1"
         mc:Ignorable="d"
         Title="MainWindow" Height="246" Width="330"
-        Loaded="Window_Loaded" Closed="Window_Closed">
+        Loaded="Window_Loaded" Closed="Window_Closed"
+        AllowDrop="True" DragEnter="Window_DragEnter" DragOver="Window_DragOver" DragLeave="Window_DragLeave" Drop="Window_Drop">
     <Window.Resources>
         <Style x:Key="ItemContStyle" TargetType="ListBoxItem">
             <Style.Triggers>

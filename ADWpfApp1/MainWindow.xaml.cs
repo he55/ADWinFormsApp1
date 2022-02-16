@@ -12,10 +12,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using IDataObject_Com = System.Runtime.InteropServices.ComTypes.IDataObject;
 
 namespace ADWpfApp1
 {
@@ -39,13 +41,13 @@ namespace ADWpfApp1
         {
             InitializeComponent();
 
-            
-            Devices.Add(new UserInfo {Name="qwe",IPString="ip" });
-            Devices.Add(new UserInfo {Name="asd",IPString="cp" });
-            Devices.Add(new UserInfo {Name="zxc",IPString="hp" });
-            Devices.Add(new UserInfo {Name="rty",IPString="up" });
-            Devices.Add(new UserInfo {Name="fgh",IPString="dp" });
-            Devices.Add(new UserInfo {Name="vbn",IPString="yp" });
+
+            Devices.Add(new UserInfo { Name = "qwe", IPString = "ip" });
+            Devices.Add(new UserInfo { Name = "asd", IPString = "cp" });
+            Devices.Add(new UserInfo { Name = "zxc", IPString = "hp" });
+            Devices.Add(new UserInfo { Name = "rty", IPString = "up" });
+            Devices.Add(new UserInfo { Name = "fgh", IPString = "dp" });
+            Devices.Add(new UserInfo { Name = "vbn", IPString = "yp" });
 
             ListBoxDragDropManager listBoxDragDropManager = new ListBoxDragDropManager(this.listBox1);
             listBoxDragDropManager.DataAction = DataActionMet;
@@ -56,7 +58,7 @@ namespace ADWpfApp1
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ipAddress = GetIPAddr()??IPAddress.Any;
+            ipAddress = GetIPAddr() ?? IPAddress.Any;
 
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -170,7 +172,7 @@ namespace ADWpfApp1
             socket1.SendTo(buf, iPEndPoint2);
         }
 
-        void DataActionMet(int sel,bool isfile,string str)
+        void DataActionMet(int sel, bool isfile, string str)
         {
             selectEP = new IPEndPoint(Devices[sel].IP, PORT);
             if (isfile)
@@ -202,11 +204,56 @@ namespace ADWpfApp1
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int selectedIndex = listBox1.SelectedIndex;
-            if (selectedIndex !=-1)
+            if (selectedIndex != -1)
             {
                 selectEP = new IPEndPoint(Devices[selectedIndex].IP, PORT);
             }
         }
+
+
+        #region DragDropHelper
+
+        private IDropTargetHelper ddHelper = (IDropTargetHelper)new DragDropHelper();
+
+        Win32Point GetWin32Point(DragEventArgs e)
+        {
+            Point p = this.PointToScreen(e.GetPosition(this));
+            Win32Point wp;
+            wp.x = (int)p.X;
+            wp.y = (int)p.Y;
+            return wp;
+        }
+
+        private void Window_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Copy;
+            e.Handled = true;
+
+            Win32Point wp = GetWin32Point(e);
+
+            ddHelper.DragEnter(new WindowInteropHelper(this).Handle, e.Data as IDataObject_Com, ref wp, (int)e.Effects);
+        }
+
+        private void Window_DragOver(object sender, DragEventArgs e)
+        {
+            Win32Point wp = GetWin32Point(e);
+
+            ddHelper.DragOver(ref wp, (int)e.Effects);
+        }
+
+        private void Window_DragLeave(object sender, DragEventArgs e)
+        {
+            ddHelper.DragLeave();
+        }
+
+        private void Window_Drop(object sender, DragEventArgs e)
+        {
+            Win32Point wp = GetWin32Point(e);
+
+            ddHelper.Drop(e.Data as IDataObject_Com, ref wp, (int)e.Effects);
+        }
+
+        #endregion
 
     }
 }
