@@ -15,8 +15,8 @@ namespace ADWpfApp1
         public ListBoxDragDropManager(ListBox listBox)
         {
             this.listBox = listBox;
-            this.listBox.DragOver += ListBox_DragOver;
-            this.listBox.Drop += ListBox_Drop;
+            //this.listBox.DragOver += ListBox_DragOver;
+            //this.listBox.Drop += ListBox_Drop;
         }
 
         void ListBox_DragOver(object sender, DragEventArgs e)

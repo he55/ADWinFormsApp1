@@ -44,7 +44,7 @@ namespace ADWpfApp1
 
             Devices.Add(new UserInfo { Name = "qwe", IPString = "ip" });
             Devices.Add(new UserInfo { Name = "asd", IPString = "cp" });
-            Devices.Add(new UserInfo { Name = "zxc", IPString = "hp" });
+            Devices.Add(new UserInfo { Name = "zxc", IPString = "hp",IsSel=true });
             Devices.Add(new UserInfo { Name = "rty", IPString = "up" });
             Devices.Add(new UserInfo { Name = "fgh", IPString = "dp" });
             Devices.Add(new UserInfo { Name = "vbn", IPString = "yp" });
