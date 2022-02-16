@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -33,28 +34,23 @@ namespace ADWpfApp1
         IPAddress ipAddress;
         IPEndPoint selectEP;
         string filePath;
+        int selectedIndex;
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
-
 
         public MainWindow()
         {
             InitializeComponent();
 
-
             Devices.Add(new UserInfo { Name = "qwe", IPString = "ip" });
             Devices.Add(new UserInfo { Name = "asd", IPString = "cp" });
-            Devices.Add(new UserInfo { Name = "zxc", IPString = "hp",IsSel=true });
+            Devices.Add(new UserInfo { Name = "zxc", IPString = "hp", IsSel = true });
             Devices.Add(new UserInfo { Name = "rty", IPString = "up" });
             Devices.Add(new UserInfo { Name = "fgh", IPString = "dp" });
             Devices.Add(new UserInfo { Name = "vbn", IPString = "yp" });
 
-            ListBoxDragDropManager listBoxDragDropManager = new ListBoxDragDropManager(this.listBox1);
-            listBoxDragDropManager.DataAction = DataActionMet;
-
             this.DataContext = this;
         }
-
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -172,9 +168,9 @@ namespace ADWpfApp1
             socket1.SendTo(buf, iPEndPoint2);
         }
 
-        void DataActionMet(int sel, bool isfile, string str)
+        void DataActionMet(bool isfile, string str)
         {
-            selectEP = new IPEndPoint(Devices[sel].IP, PORT);
+            selectEP = new IPEndPoint(Devices[selectedIndex].IP, PORT);
             if (isfile)
             {
                 filePath = str;
@@ -195,15 +191,9 @@ namespace ADWpfApp1
         }
 
 
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            Environment.Exit(0);
-        }
-
-
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int selectedIndex = listBox1.SelectedIndex;
+            selectedIndex = listBox1.SelectedIndex;
             if (selectedIndex != -1)
             {
                 selectEP = new IPEndPoint(Devices[selectedIndex].IP, PORT);
@@ -242,7 +232,16 @@ namespace ADWpfApp1
 
             Point point = e.GetPosition(listBox1);
             int v = MyHelper.GetIndexAtPoint(listBox1, point);
-            Debug.WriteLine($"v: {v} {point}");
+
+            if (selectedIndex != -1)
+                Devices[selectedIndex].IsSel = false;
+
+            if (v != -1)
+                Devices[v].IsSel = true;
+
+            selectedIndex = v;
+
+            Debug.WriteLine($"sel: {selectedIndex} {point}");
         }
 
         private void Window_DragLeave(object sender, DragEventArgs e)
@@ -255,6 +254,28 @@ namespace ADWpfApp1
             Win32Point wp = GetWin32Point(e);
 
             ddHelper.Drop(e.Data as IDataObject_Com, ref wp, (int)e.Effects);
+
+            return;
+
+            if (selectedIndex != -1)
+            {
+                Devices[selectedIndex].IsSel = false;
+
+                DataObject data = (DataObject)e.Data;
+                string v = data.GetText();
+                if (!string.IsNullOrEmpty(v))
+                {
+                    DataActionMet(false, v);
+                    return;
+                }
+
+                StringCollection stringCollection = data.GetFileDropList();
+                if (stringCollection.Count != 0)
+                {
+                    DataActionMet(true, stringCollection[0]);
+                    return;
+                }
+            }
         }
 
         #endregion

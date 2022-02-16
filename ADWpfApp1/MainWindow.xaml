@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ADWpfApp1"
         mc:Ignorable="d"
         Title="MainWindow" Height="302" Width="287"
-        Loaded="Window_Loaded" Closed="Window_Closed"
+        Loaded="Window_Loaded" 
         AllowDrop="True" DragEnter="Window_DragEnter" DragOver="Window_DragOver" DragLeave="Window_DragLeave" Drop="Window_Drop"
         xmlns:ui="http://schemas.modernwpf.com/2019"
     ui:WindowHelper.UseModernWindowStyle="True">
