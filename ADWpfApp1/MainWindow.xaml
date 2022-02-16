@@ -5,13 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADWpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="246" Width="330"
+        Title="MainWindow" Height="302" Width="287"
         Loaded="Window_Loaded" Closed="Window_Closed"
-        AllowDrop="True" DragEnter="Window_DragEnter" DragOver="Window_DragOver" DragLeave="Window_DragLeave" Drop="Window_Drop">
-   
+        AllowDrop="True" DragEnter="Window_DragEnter" DragOver="Window_DragOver" DragLeave="Window_DragLeave" Drop="Window_Drop"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+    ui:WindowHelper.UseModernWindowStyle="True">
+
     <Grid>
-        <ListBox x:Name="listBox1"  ItemsSource="{Binding Devices}" HorizontalAlignment="Left" Width="226" SelectionChanged="ListBox_SelectionChanged" />
-        <Button Content="Hello" HorizontalAlignment="Left" Margin="252,13,0,0" VerticalAlignment="Top" Click="Button_Click_1" Width="51"/>
+        <ListBox x:Name="listBox1"  ItemsSource="{Binding Devices}" SelectionChanged="ListBox_SelectionChanged" />
+        <Button Content="Hello" Margin="0,0,10,10" VerticalAlignment="Bottom" Click="Button_Click_1" HorizontalAlignment="Right" Height="31" Width="55"/>
 
     </Grid>
 </Window>
