@@ -8,9 +8,12 @@ namespace ADWpfApp1
     {
         // How to get Item under cursor in WPF ListView
         // https://www.py4u.net/discuss/1453642 - Answer #2
-        public static object GetObjectAtPoint( ItemsControl control, Point p)
+        public static object GetObjectAtPoint(ItemsControl control, Point p)
         {
             var result = VisualTreeHelper.HitTest(control, p);
+            if (result == null)
+                return null;
+
             var obj = result.VisualHit;
 
             while (VisualTreeHelper.GetParent(obj) != null && !(obj is ListBoxItem))
@@ -27,6 +30,9 @@ namespace ADWpfApp1
         public static int GetIndexAtPoint(ItemsControl control, Point p)
         {
             var result = VisualTreeHelper.HitTest(control, p);
+            if (result == null)
+                return -1;
+
             var obj = result.VisualHit;
 
             while (VisualTreeHelper.GetParent(obj) != null && !(obj is ListBoxItem))

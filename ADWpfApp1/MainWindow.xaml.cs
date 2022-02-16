@@ -239,6 +239,10 @@ namespace ADWpfApp1
             Win32Point wp = GetWin32Point(e);
 
             ddHelper.DragOver(ref wp, (int)e.Effects);
+
+            Point point = e.GetPosition(listBox1);
+            int v = MyHelper.GetIndexAtPoint(listBox1, point);
+            Debug.WriteLine($"v: {v} {point}");
         }
 
         private void Window_DragLeave(object sender, DragEventArgs e)
