@@ -13,7 +13,8 @@
 
     <Grid>
         <ListBox x:Name="listBox1"  ItemsSource="{Binding Devices}" SelectionChanged="ListBox_SelectionChanged" />
-        <Button Content="Hello" Margin="0,0,10,10" VerticalAlignment="Bottom" Click="Button_Click_1" HorizontalAlignment="Right" Height="31" Width="55"/>
+        <Button Content="Hello" Margin="0,0,140,10" VerticalAlignment="Bottom" Click="Button_Click_1" HorizontalAlignment="Right" Height="31" Width="55"/>
+        <Button Content="Toggle Theme" Click="ToggleTheme" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="31"/>
 
     </Grid>
 </Window>
