@@ -79,8 +79,7 @@
         <ListBox
             x:Name="listBox1"
             ItemsSource="{Binding Devices}"
-            ItemTemplate="{StaticResource ContactListViewTemplate}"
-            SelectionChanged="ListBox_SelectionChanged" />
+            ItemTemplate="{StaticResource ContactListViewTemplate}" />
         <Button
             Content="Hello"
             Margin="0,0,140,10"

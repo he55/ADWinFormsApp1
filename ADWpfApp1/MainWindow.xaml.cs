@@ -123,7 +123,7 @@ namespace ADWpfApp1
 
                         if (true)
                         {
-                            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 8080);
+                            IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT);
                             if (!isInitServer)
                             {
                                 TcpServer.StartServerTcp(remoteEP);
@@ -188,16 +188,6 @@ namespace ADWpfApp1
                 byte[] buf = msg.ToArr();
 
                 socket1.SendTo(buf, selectEP);
-            }
-        }
-
-
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            selectedIndex = listBox1.SelectedIndex;
-            if (selectedIndex != -1)
-            {
-                selectEP = new IPEndPoint(Devices[selectedIndex].IP, PORT);
             }
         }
 
