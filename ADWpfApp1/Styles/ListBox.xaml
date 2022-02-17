@@ -45,7 +45,7 @@
                             <Setter TargetName="PressedBackground" Property="Fill" Value="{DynamicResource SystemControlHighlightListLowBrush}" />
                             <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource SystemControlHighlightAltBaseHighBrush}" />
                         </DataTrigger>
-                        
+
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource SystemControlDisabledBaseMediumLowBrush}" />
                         </Trigger>
