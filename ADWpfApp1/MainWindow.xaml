@@ -18,10 +18,68 @@
     Drop="Window_Drop"
     Loaded="Window_Loaded">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/ListBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextTrimming" Value="None" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="LineStackingStrategy" Value="MaxHeight" />
+            </Style>
+
+            <Style x:Key="BodyTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+
+            <!-- When using x:Bind, you need to set x:DataType -->
+            <DataTemplate x:Key="ContactListViewTemplate">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Ellipse
+                        x:Name="Ellipse"
+                        Grid.RowSpan="2"
+                        Width="50"
+                        Height="50"
+                        Margin="6"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Fill="{DynamicResource SystemControlBackgroundBaseMediumBrush}" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Text="{Binding Name, Mode=OneTime}"
+                        Style="{DynamicResource BaseTextBlockStyle}"
+                        Margin="12,6,0,0" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Text="{Binding IPString, Mode=OneTime}"
+                        Style="{DynamicResource BodyTextBlockStyle}"
+                        Margin="12,0,0,6" />
+                </Grid>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
         <ListBox
             x:Name="listBox1"
             ItemsSource="{Binding Devices}"
+            ItemTemplate="{StaticResource ContactListViewTemplate}"
             SelectionChanged="ListBox_SelectionChanged" />
         <Button
             Content="Hello"
