@@ -105,10 +105,12 @@ namespace ADWpfApp1
             return ToStringData();
         }
 
-        public void ToFileData()
+        public MyDownloadFileInfo ToFileData()
         {
-            long v = BitConverter.ToInt64(this.data, 0);
-            string v1 = Encoding.UTF8.GetString(this.data, 8, this.len - 8);
+            MyDownloadFileInfo myDownloadFileInfo = new MyDownloadFileInfo();
+            myDownloadFileInfo.Len = BitConverter.ToInt64(this.data, 0);
+            myDownloadFileInfo.FileName = Encoding.UTF8.GetString(this.data, 8, this.len - 8);
+            return myDownloadFileInfo;
         }
 
         public byte[] ToArr()

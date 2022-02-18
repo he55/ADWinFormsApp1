@@ -115,7 +115,7 @@ namespace ADWpfApp1
                     }
                     else if (msg.type == ADMsgType.sendFile)
                     {
-                        msg.ToFileData();
+                        MyDownloadFileInfo.DownloadFileInfo = msg.ToFileData();
 
                         if (true)
                         {

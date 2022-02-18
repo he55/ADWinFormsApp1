@@ -18,18 +18,16 @@ namespace ADWpfApp1
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
 
-            using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
+            int hash = 0;
+            byte[] hBuffer =BitConverter.GetBytes(hash);
+            sender.Send(hBuffer);
+
+            byte[] okBuffer = new byte[4];
+            sender.Receive(okBuffer);
+
+            if (okBuffer[0] == 1)
             {
-                long length = reader.Length;
-
-                string sendStr = "namelength," + Path.GetFileName(path) + "," + length.ToString();
-                sender.Send(Encoding.Default.GetBytes(sendStr));
-
-                byte[] buffer = new byte[32];
-                sender.Receive(buffer);
-
-                string mes = Encoding.Default.GetString(buffer);
-                if (mes.Contains("OK"))
+                using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
                 {
                     byte[] fileBuffer = new byte[BufferSize];
                     int read, sent;
@@ -40,12 +38,12 @@ namespace ADWpfApp1
                         {
                         }
                     }
-
-                    // Release the socket.  
-                    sender.Shutdown(SocketShutdown.Both);
-                    sender.Close();
                 }
             }
+
+            // Release the socket.  
+            sender.Shutdown(SocketShutdown.Both);
+            sender.Close();
         }
 
         public static void StartServerTcp(IPEndPoint remoteEP)
@@ -73,28 +71,27 @@ namespace ADWpfApp1
         {
             Socket handler = (Socket)oSocket;
 
-            byte[] buffer = new byte[1024];
-            int count = handler.Receive(buffer);
+            byte[] hashBuffer = new byte[4];
+            handler.Receive(hashBuffer);
+            int hash=BitConverter.ToInt32(hashBuffer, 0);
 
-            string[] command = Encoding.Default.GetString(buffer, 0, count).Split(',');
-
-            if (command[0] == "namelength")
+            MyDownloadFileInfo downloadFileInfo = MyDownloadFileInfo.DownloadFileInfo;
+            if(downloadFileInfo?.Hash == hash)
             {
-                string fileName = command[1];
-                long length = Convert.ToInt64(command[2]);
-                handler.Send(Encoding.Default.GetBytes("OK"));
+                byte[] okBuffer = new byte[4] {1,1,1,1};
+                handler.Send(okBuffer);
 
-                string path1 = Path.Combine(SavePath, fileName);
+                string path1 = Path.Combine(SavePath, downloadFileInfo.FileName);
                 using (FileStream writer = new FileStream(path1, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     long receive = 0L;
                     int received;
-                    byte[] buffer2 = new byte[BufferSize];
+                    byte[] fileBuffer = new byte[BufferSize];
 
-                    while (receive < length)
+                    while (receive < downloadFileInfo.Len)
                     {
-                        received = handler.Receive(buffer2);
-                        writer.Write(buffer2, 0, received);
+                        received = handler.Receive(fileBuffer);
+                        writer.Write(fileBuffer, 0, received);
                         receive += received;
                     }
                 }
