@@ -10,7 +10,7 @@ namespace ADWpfApp1
 {
     public class TcpServer
     {
-        const int BufferSize = 1024;
+        const int BufferSize = 8192;
         static string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
         public static void StartClientTcp(string path, IPEndPoint remoteEP)
@@ -73,7 +73,7 @@ namespace ADWpfApp1
         {
             Socket handler = (Socket)oSocket;
 
-            byte[] buffer = new byte[BufferSize];
+            byte[] buffer = new byte[1024];
             int count = handler.Receive(buffer);
 
             string[] command = Encoding.Default.GetString(buffer, 0, count).Split(',');
