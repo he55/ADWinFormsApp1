@@ -11,54 +11,40 @@ namespace ADWpfApp1
     public class TcpServer
     {
         const int BufferSize = 1024;
-        static string path = @"D:\";
+        static string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
         public static void StartClientTcp(string path, IPEndPoint remoteEP)
         {
             Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
-            Console.WriteLine("Connect successfully");
 
-            try
+            using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
             {
-                using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
+                long length = reader.Length;
+
+                string sendStr = "namelength," + Path.GetFileName(path) + "," + length.ToString();
+                sender.Send(Encoding.Default.GetBytes(sendStr));
+
+                byte[] buffer = new byte[32];
+                sender.Receive(buffer);
+
+                string mes = Encoding.Default.GetString(buffer);
+                if (mes.Contains("OK"))
                 {
-                    long send = 0L, length = reader.Length;
-
-                    string sendStr = "namelength," + Path.GetFileName(path) + "," + length.ToString();
-                    sender.Send(Encoding.Default.GetBytes(sendStr));
-
-                    byte[] buffer = new byte[32];
-                    sender.Receive(buffer);
-
-                    string mes = Encoding.Default.GetString(buffer);
-                    if (mes.Contains("OK"))
+                    byte[] fileBuffer = new byte[BufferSize];
+                    int read, sent;
+                    while ((read = reader.Read(fileBuffer, 0, BufferSize)) != 0)
                     {
-                        string fileName = Path.GetFileName(path);
-                        Console.WriteLine("Sending file:" + fileName + ".Plz wait...");
-
-                        byte[] fileBuffer = new byte[BufferSize];
-                        int read, sent;
-                        while ((read = reader.Read(fileBuffer, 0, BufferSize)) != 0)
+                        sent = 0;
+                        while ((sent += sender.Send(fileBuffer, sent, read, SocketFlags.None)) < read)
                         {
-                            sent = 0;
-                            while ((sent += sender.Send(fileBuffer, sent, read, SocketFlags.None)) < read)
-                            {
-                                send += sent;
-                            }
                         }
-
-                        // Release the socket.  
-                        sender.Shutdown(SocketShutdown.Both);
-                        sender.Close();
-
-                        Console.WriteLine("Send finish.\n");
                     }
+
+                    // Release the socket.  
+                    sender.Shutdown(SocketShutdown.Both);
+                    sender.Close();
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
             }
         }
 
@@ -67,7 +53,6 @@ namespace ADWpfApp1
             Socket sock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sock.Bind(remoteEP);
             sock.Listen(1);
-            Console.WriteLine("Begin listen...");
 
             Task.Run(() =>
             {
@@ -87,48 +72,35 @@ namespace ADWpfApp1
         static void myClient(object oSocket)
         {
             Socket handler = (Socket)oSocket;
-            string clientName = handler.RemoteEndPoint.ToString();
-            Console.WriteLine("新来一个客户:" + clientName);
 
-            try
+            byte[] buffer = new byte[BufferSize];
+            int count = handler.Receive(buffer);
+
+            string[] command = Encoding.Default.GetString(buffer, 0, count).Split(',');
+
+            if (command[0] == "namelength")
             {
-                byte[] buffer = new byte[BufferSize];
-                int count = handler.Receive(buffer);
+                string fileName = command[1];
+                long length = Convert.ToInt64(command[2]);
+                handler.Send(Encoding.Default.GetBytes("OK"));
 
-                Console.WriteLine("收到" + clientName + ":" + Encoding.Default.GetString(buffer, 0, count));
-                string[] command = Encoding.Default.GetString(buffer, 0, count).Split(',');
-
-                if (command[0] == "namelength")
+                string path1 = Path.Combine(SavePath, fileName);
+                using (FileStream writer = new FileStream(path1, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    string fileName = command[1];
-                    long length = Convert.ToInt64(command[2]);
-                    handler.Send(Encoding.Default.GetBytes("OK"));
+                    long receive = 0L;
+                    int received;
+                    byte[] buffer2 = new byte[BufferSize];
 
-                    Console.WriteLine("Receiveing file:" + fileName + ".Plz wait...");
-
-                    string path1 = Path.Combine(path, fileName);
-                    using (FileStream writer = new FileStream(path1, FileMode.Create, FileAccess.Write, FileShare.None))
+                    while (receive < length)
                     {
-                        long receive = 0L;
-                        int received;
-                        while (receive < length)
-                        {
-                            received = handler.Receive(buffer);
-                            writer.Write(buffer, 0, received);
-                            writer.Flush();
-                            receive += received;
-                        }
+                        received = handler.Receive(buffer2);
+                        writer.Write(buffer2, 0, received);
+                        receive += received;
                     }
-
-                    handler.Shutdown(SocketShutdown.Both);
-                    handler.Close();
-
-                    Console.WriteLine("Receive finish.\n");
                 }
-            }
-            catch
-            {
-                Console.WriteLine("客户:" + clientName + "退出");
+
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
             }
         }
     }

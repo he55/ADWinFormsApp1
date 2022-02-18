@@ -74,11 +74,7 @@ namespace ADWpfApp1
             {
                 if (item.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    byte v = (byte)(item.Address >> 16);
-                    if (v == 0)
-                    {
-                        return item;
-                    }
+                    return item;
                 }
             }
 
@@ -224,14 +220,12 @@ namespace ADWpfApp1
             e.Handled = true;
 
             Win32Point wp = GetWin32Point(e);
-
             ddHelper.DragEnter(new WindowInteropHelper(this).Handle, e.Data as IDataObject_Com, ref wp, (int)e.Effects);
         }
 
         private void Window_DragOver(object sender, DragEventArgs e)
         {
             Win32Point wp = GetWin32Point(e);
-
             ddHelper.DragOver(ref wp, (int)e.Effects);
 
             Point point = e.GetPosition(listBox1);
@@ -256,10 +250,8 @@ namespace ADWpfApp1
         private void Window_Drop(object sender, DragEventArgs e)
         {
             Win32Point wp = GetWin32Point(e);
-
             ddHelper.Drop(e.Data as IDataObject_Com, ref wp, (int)e.Effects);
 
-            return;
 
             if (selectedIndex != -1)
             {
