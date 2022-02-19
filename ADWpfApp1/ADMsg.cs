@@ -20,14 +20,14 @@ namespace ADWpfApp1
         const uint HEADER = 0xad00ad00;
 
         uint header;
-        public ADMsgType type;
+        public ADMsgType msgType;
         int len;
         byte[] data;
 
         public ADMsg(ADMsgType type)
         {
             this.header = HEADER;
-            this.type = type;
+            this.msgType = type;
             this.len = 0;
             this.data = new byte[0];
         }
@@ -48,7 +48,7 @@ namespace ADWpfApp1
 
             ADMsg msg;
             msg.header = HEADER;
-            msg.type = (ADMsgType)BitConverter.ToInt32(buf, 4);
+            msg.msgType = (ADMsgType)BitConverter.ToInt32(buf, 4);
             msg.len = BitConverter.ToInt32(buf, 8);
             msg.data = new byte[0];
 
@@ -69,8 +69,8 @@ namespace ADWpfApp1
 
         public static ADMsg helloOKData(string name)
         {
-         ADMsg adMsg= sendStringData(name);
-            adMsg.type = ADMsgType.helloOK;
+            ADMsg adMsg = sendStringData(name);
+            adMsg.msgType = ADMsgType.helloOK;
             return adMsg;
         }
 
@@ -128,10 +128,15 @@ namespace ADWpfApp1
         public static ADMsg sendUrlData(string url)
         {
             ADMsg adMsg = sendStringData(url);
-            adMsg.type = ADMsgType.sendUrl;
+            adMsg.msgType = ADMsgType.sendUrl;
             return adMsg;
         }
 
+
+        public ADMsgType GetMsgType()
+        {
+            return this.msgType;
+        }
 
         public IPEndPoint ToIPData()
         {
@@ -160,7 +165,7 @@ namespace ADWpfApp1
                 using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
                 {
                     binaryWriter.Write(this.header);
-                    binaryWriter.Write((int)this.type);
+                    binaryWriter.Write((int)this.msgType);
                     binaryWriter.Write(this.len);
                     binaryWriter.Write(this.data);
                 }

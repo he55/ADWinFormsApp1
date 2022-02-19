@@ -92,13 +92,15 @@ namespace ADWpfApp1
                 if (len >= 8 && ADMsg.IsMSG(buf))
                 {
                     ADMsg msg = ADMsg.ToMSG(buf);
-                    if (msg.type == ADMsgType.hello)
+                    ADMsgType msgType = msg.GetMsgType();
+
+                    if (msgType == ADMsgType.hello)
                     {
                         string v = Dns.GetHostName();
                         byte[] buf2 = ADMsg.helloOKData(v).ToArr();
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                     }
-                    else if (msg.type == ADMsgType.helloOK)
+                    else if (msgType == ADMsgType.helloOK)
                     {
                         UserInfo userInfo = new UserInfo();
                         userInfo.Name = msg.ToStringData();
@@ -110,7 +112,7 @@ namespace ADWpfApp1
                             Devices.Add(userInfo);
                         });
                     }
-                    else if (msg.type == ADMsgType.sendFile)
+                    else if (msgType == ADMsgType.sendFile)
                     {
                         MyDownloadFileInfo.DownloadFileInfo = msg.ToFileData();
 
@@ -127,7 +129,7 @@ namespace ADWpfApp1
                             socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                         }
                     }
-                    else if (msg.type == ADMsgType.sendFileOK)
+                    else if (msgType == ADMsgType.sendFileOK)
                     {
                         IPEndPoint remoteEP = msg.ToIPData();
 
@@ -136,16 +138,16 @@ namespace ADWpfApp1
                             TcpServer.StartClientTcp(filePath, remoteEP);
                         });
                     }
-                    else if (msg.type == ADMsgType.sendUrl)
+                    else if (msgType == ADMsgType.sendUrl)
                     {
                         string v = msg.ToStringData();
                     }
-                    else if (msg.type == ADMsgType.sendString)
+                    else if (msgType == ADMsgType.sendString)
                     {
                         string v = msg.ToStringData();
                     }
 
-                    Debug.WriteLine($"{ep} => {msg.type} : {msg.ToStringData()}");
+                    Debug.WriteLine($"{ep} => {msg.msgType} : {msg.ToStringData()}");
                 }
             }
         }
@@ -155,7 +157,7 @@ namespace ADWpfApp1
         {
             Devices.Clear();
 
-            byte[] buf =ADMsg.helloData().ToArr();
+            byte[] buf = ADMsg.helloData().ToArr();
             socket1.SendTo(buf, iPEndPoint2);
         }
 
@@ -165,7 +167,7 @@ namespace ADWpfApp1
             if (isfile)
             {
                 filePath = str;
-               
+
                 byte[] buf = ADMsg.sendFileData(str).ToArr();
                 socket1.SendTo(buf, selectEP);
             }

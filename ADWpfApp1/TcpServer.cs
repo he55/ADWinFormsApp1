@@ -36,12 +36,13 @@ namespace ADWpfApp1
                         sent = 0;
                         while ((sent += sender.Send(fileBuffer, sent, read, SocketFlags.None)) < read)
                         {
+                            read -= sent;
                         }
                     }
                 }
             }
 
-            // Release the socket.  
+            // Release the socket.
             sender.Shutdown(SocketShutdown.Both);
             sender.Close();
         }
@@ -59,18 +60,14 @@ namespace ADWpfApp1
                     Socket client = sock.Accept();
                     if (client.Connected)
                     {
-                        Thread cThread = new Thread(new ParameterizedThreadStart(myClient));
-                        cThread.IsBackground = true;
-                        cThread.Start(client);
+                        Task.Run(() => { NewClient(client); });
                     }
                 }
             });
         }
 
-        static void myClient(object oSocket)
+        static void NewClient(Socket handler)
         {
-            Socket handler = (Socket)oSocket;
-
             byte[] hashBuffer = new byte[4];
             handler.Receive(hashBuffer);
             int hash=BitConverter.ToInt32(hashBuffer, 0);
