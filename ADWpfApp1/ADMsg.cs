@@ -11,8 +11,8 @@ namespace ADWpfApp1
         helloOK,
         sendFile,
         sendFileOK,
-        sendUrl,
-        sendString
+        sendString,
+        sendUrl
     }
 
     public struct ADMsg
@@ -30,6 +30,38 @@ namespace ADWpfApp1
             this.type = type;
             this.len = 0;
             this.data = new byte[0];
+        }
+       
+        public static ADMsg helloData()
+        {
+            ADMsg adMsg = new ADMsg(ADMsgType.hello);
+            return adMsg;
+        }
+
+        public static ADMsg helloOKData(string name)
+        {
+         ADMsg adMsg= sendStringData(name);
+            adMsg.type = ADMsgType.helloOK;
+            return adMsg;
+        }
+
+        public static ADMsg sendFileData(string filePath)
+        {
+            ADMsg adMsg = new ADMsg(ADMsgType.sendFile);
+
+            FileInfo fileInfo = new FileInfo(filePath);
+            long length = fileInfo.Length;
+
+            byte[] vs1 = BitConverter.GetBytes(length);
+            byte[] vs = Encoding.UTF8.GetBytes(fileInfo.Name);
+
+            adMsg.len = 8 + vs.Length;
+            adMsg.data = new byte[adMsg.len];
+
+            vs1.CopyTo(adMsg.data, 0);
+            vs.CopyTo(adMsg.data, 8);
+
+            return adMsg;
         }
 
         public static ADMsg sendFileOKData(IPEndPoint ep)
@@ -66,40 +98,8 @@ namespace ADWpfApp1
 
         public static ADMsg sendUrlData(string url)
         {
-          ADMsg adMsg= sendStringData(url);
+            ADMsg adMsg = sendStringData(url);
             adMsg.type = ADMsgType.sendUrl;
-            return adMsg;
-        }
-
-        public static ADMsg helloData()
-        {
-            ADMsg adMsg = new ADMsg(ADMsgType.hello);
-            return adMsg;
-        }
-
-        public static ADMsg helloOKData(string name)
-        {
-         ADMsg adMsg= sendStringData(name);
-            adMsg.type = ADMsgType.helloOK;
-            return adMsg;
-        }
-
-        public static ADMsg sendFileData(string filePath)
-        {
-            ADMsg adMsg = new ADMsg(ADMsgType.sendFile);
-
-            FileInfo fileInfo = new FileInfo(filePath);
-            long length = fileInfo.Length;
-
-            byte[] vs1 = BitConverter.GetBytes(length);
-            byte[] vs = Encoding.UTF8.GetBytes(fileInfo.Name);
-
-            adMsg.len = 8 + vs.Length;
-            adMsg.data = new byte[adMsg.len];
-
-            vs1.CopyTo(adMsg.data, 0);
-            vs.CopyTo(adMsg.data, 8);
-
             return adMsg;
         }
 
