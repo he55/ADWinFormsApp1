@@ -31,7 +31,36 @@ namespace ADWpfApp1
             this.len = 0;
             this.data = new byte[0];
         }
-       
+
+        public static bool IsMSG(byte[] buf)
+        {
+            uint v = BitConverter.ToUInt32(buf, 0);
+            return v == HEADER;
+        }
+
+        public static ADMsg ToMSG(byte[] buf)
+        {
+            uint v = BitConverter.ToUInt32(buf, 0);
+            if (v != HEADER)
+            {
+                throw new Exception();
+            }
+
+            ADMsg msg;
+            msg.header = HEADER;
+            msg.type = (ADMsgType)BitConverter.ToInt32(buf, 4);
+            msg.len = BitConverter.ToInt32(buf, 8);
+            msg.data = new byte[0];
+
+            if (msg.len != 0)
+            {
+                msg.data = new byte[msg.len];
+                Array.Copy(buf, 12, msg.data, 0, msg.len);
+            }
+
+            return msg;
+        }
+
         public static ADMsg helloData()
         {
             ADMsg adMsg = new ADMsg(ADMsgType.hello);
@@ -103,6 +132,7 @@ namespace ADWpfApp1
             return adMsg;
         }
 
+
         public IPEndPoint ToIPData()
         {
             long addr = BitConverter.ToInt64(this.data, 0);
@@ -136,35 +166,6 @@ namespace ADWpfApp1
                 }
                 return memoryStream.ToArray();
             }
-        }
-
-        public static ADMsg ToMSG(byte[] buf)
-        {
-            uint v = BitConverter.ToUInt32(buf, 0);
-            if (v != HEADER)
-            {
-                throw new Exception();
-            }
-
-            ADMsg msg;
-            msg.header = HEADER;
-            msg.type = (ADMsgType)BitConverter.ToInt32(buf, 4);
-            msg.len = BitConverter.ToInt32(buf, 8);
-            msg.data = new byte[0];
-
-            if (msg.len != 0)
-            {
-                msg.data = new byte[msg.len];
-                Array.Copy(buf, 12, msg.data, 0, msg.len);
-            }
-
-            return msg;
-        }
-
-        public static bool IsMSG(byte[] buf)
-        {
-            uint v = BitConverter.ToUInt32(buf, 0);
-            return v == HEADER;
         }
     }
 }
