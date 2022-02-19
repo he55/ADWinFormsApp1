@@ -32,7 +32,7 @@ namespace ADWpfApp1
             this.data = new byte[0];
         }
 
-        public void AddIPData(IPEndPoint ep)
+        public ADMsg sendFileOKData(IPEndPoint ep)
         {
             byte[] addr = ep.Address.GetAddressBytes();
             this.len = 12;
@@ -50,25 +50,33 @@ namespace ADWpfApp1
                 (byte)(ep.Port>>16),
                 (byte)(ep.Port>>24),
             };
+
+            return this;
         }
 
-        public void AddStringData(string str)
+        public ADMsg sendStringData(string str)
         {
             this.data = Encoding.UTF8.GetBytes(str);
             this.len = this.data.Length;
+            return this;
         }
 
-        public void AddUrlData(string url)
+        public ADMsg AddUrlData(string url)
         {
-            AddStringData(url);
+           return sendStringData(url);
         }
 
-        public void AddNameData(string name)
+        public ADMsg helloData()
         {
-            AddStringData(name);
+            return this;
         }
 
-        public void AddFileData(string filePath)
+        public ADMsg helloOKData(string name)
+        {
+          return  sendStringData(name);
+        }
+
+        public ADMsg sendFileData(string filePath)
         {
             FileInfo fileInfo = new FileInfo(filePath);
             long length = fileInfo.Length;
@@ -81,6 +89,8 @@ namespace ADWpfApp1
 
             vs1.CopyTo(this.data, 0);
             vs.CopyTo(this.data, 8);
+
+            return this;
         }
 
         public IPEndPoint ToIPData()

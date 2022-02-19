@@ -77,7 +77,6 @@ namespace ADWpfApp1
                     return item;
                 }
             }
-
             return null;
         }
 
@@ -96,7 +95,7 @@ namespace ADWpfApp1
                     {
                         ADMsg msg2 = new ADMsg(ADMsgType.helloOK);
                         string v = Dns.GetHostName();
-                        msg2.AddNameData(v);
+                        msg2.helloOKData(v);
                         byte[] buf2 = msg2.ToArr();
 
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
@@ -127,7 +126,7 @@ namespace ADWpfApp1
                             }
 
                             ADMsg msg2 = new ADMsg(ADMsgType.sendFileOK);
-                            msg2.AddIPData(remoteEP);
+                            msg2.sendFileOKData(remoteEP);
                             byte[] buf2 = msg2.ToArr();
                             socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                         }
@@ -172,7 +171,7 @@ namespace ADWpfApp1
             {
                 filePath = str;
                 ADMsg msg = new ADMsg(ADMsgType.sendFile);
-                msg.AddFileData(str);
+                msg.sendFileData(str);
                 byte[] buf = msg.ToArr();
 
                 socket1.SendTo(buf, selectEP);
@@ -180,7 +179,7 @@ namespace ADWpfApp1
             else
             {
                 ADMsg msg = new ADMsg(ADMsgType.sendString);
-                msg.AddStringData(str);
+                msg.sendStringData(str);
                 byte[] buf = msg.ToArr();
 
                 socket1.SendTo(buf, selectEP);
