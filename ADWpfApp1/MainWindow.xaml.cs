@@ -56,7 +56,7 @@ namespace ADWpfApp1
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ipAddress = GetIPAddr() ?? IPAddress.Any;
+            ipAddress = GetIPAddr();
 
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -64,7 +64,7 @@ namespace ADWpfApp1
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
             socket1.Bind(localEndPoint);
 
-            Task.Run(() => OnRec());
+            Task.Run(() => { OnReceive(); });
         }
 
         static IPAddress GetIPAddr()
@@ -81,7 +81,7 @@ namespace ADWpfApp1
             return null;
         }
 
-        void OnRec()
+        void OnReceive()
         {
             byte[] buf = new byte[1024];
 
@@ -92,7 +92,7 @@ namespace ADWpfApp1
                 if (len >= 8 && ADMsg.IsMSG(buf))
                 {
                     ADMsg msg = ADMsg.ToMSG(buf);
-                    ADMsgType msgType = msg.GetMsgType();
+                    ADMsgType msgType = (ADMsgType)msg.GetMsgType();
 
                     if (msgType == ADMsgType.hello)
                     {
@@ -147,7 +147,7 @@ namespace ADWpfApp1
                         string v = msg.ToStringData();
                     }
 
-                    Debug.WriteLine($"{ep} => {msg.msgType} : {msg.ToStringData()}");
+                    Debug.WriteLine($"{ep} => {(ADMsgType)msgType} : {msg.ToStringData()}");
                 }
             }
         }
