@@ -32,11 +32,13 @@ namespace ADWpfApp1
             this.data = new byte[0];
         }
 
-        public ADMsg sendFileOKData(IPEndPoint ep)
+        public static ADMsg sendFileOKData(IPEndPoint ep)
         {
+            ADMsg adMsg = new ADMsg(ADMsgType.sendFileOK);
+
             byte[] addr = ep.Address.GetAddressBytes();
-            this.len = 12;
-            this.data = new byte[12] {
+            adMsg.len = 12;
+            adMsg.data = new byte[12] {
                 addr[0],
                 addr[1],
                 addr[2],
@@ -51,46 +53,50 @@ namespace ADWpfApp1
                 (byte)(ep.Port>>24),
             };
 
-            return this;
+            return adMsg;
         }
 
-        public ADMsg sendStringData(string str)
+        public static ADMsg sendStringData(string str)
         {
-            this.data = Encoding.UTF8.GetBytes(str);
-            this.len = this.data.Length;
-            return this;
+            ADMsg adMsg = new ADMsg(ADMsgType.sendString);
+            adMsg.data = Encoding.UTF8.GetBytes(str);
+            adMsg.len = adMsg.data.Length;
+            return adMsg;
         }
 
-        public ADMsg AddUrlData(string url)
+        public static ADMsg AddUrlData(string url)
         {
            return sendStringData(url);
         }
 
-        public ADMsg helloData()
+        public static ADMsg helloData()
         {
-            return this;
+            ADMsg adMsg = new ADMsg(ADMsgType.hello);
+            return adMsg;
         }
 
-        public ADMsg helloOKData(string name)
+        public static ADMsg helloOKData(string name)
         {
           return  sendStringData(name);
         }
 
-        public ADMsg sendFileData(string filePath)
+        public static ADMsg sendFileData(string filePath)
         {
+            ADMsg adMsg = new ADMsg(ADMsgType.sendFile);
+
             FileInfo fileInfo = new FileInfo(filePath);
             long length = fileInfo.Length;
 
             byte[] vs1 = BitConverter.GetBytes(length);
             byte[] vs = Encoding.UTF8.GetBytes(fileInfo.Name);
 
-            this.len = 8 + vs.Length;
-            this.data = new byte[this.len];
+            adMsg.len = 8 + vs.Length;
+            adMsg.data = new byte[adMsg.len];
 
-            vs1.CopyTo(this.data, 0);
-            vs.CopyTo(this.data, 8);
+            vs1.CopyTo(adMsg.data, 0);
+            vs.CopyTo(adMsg.data, 8);
 
-            return this;
+            return adMsg;
         }
 
         public IPEndPoint ToIPData()
