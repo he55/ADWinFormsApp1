@@ -101,7 +101,7 @@ namespace ADWpfApp1
                     else if (msg.type == ADMsgType.helloOK)
                     {
                         UserInfo userInfo = new UserInfo();
-                        userInfo.Name = msg.ToNameData();
+                        userInfo.Name = msg.ToStringData();
                         userInfo.IP = ((IPEndPoint)ep).Address.Address;
                         userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
 
@@ -138,7 +138,7 @@ namespace ADWpfApp1
                     }
                     else if (msg.type == ADMsgType.sendUrl)
                     {
-                        string v = msg.ToUrlData();
+                        string v = msg.ToStringData();
                     }
                     else if (msg.type == ADMsgType.sendString)
                     {

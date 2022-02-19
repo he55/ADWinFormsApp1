@@ -64,9 +64,11 @@ namespace ADWpfApp1
             return adMsg;
         }
 
-        public static ADMsg AddUrlData(string url)
+        public static ADMsg sendUrlData(string url)
         {
-           return sendStringData(url);
+          ADMsg adMsg= sendStringData(url);
+            adMsg.type = ADMsgType.sendUrl;
+            return adMsg;
         }
 
         public static ADMsg helloData()
@@ -77,7 +79,9 @@ namespace ADWpfApp1
 
         public static ADMsg helloOKData(string name)
         {
-          return  sendStringData(name);
+         ADMsg adMsg= sendStringData(name);
+            adMsg.type = ADMsgType.helloOK;
+            return adMsg;
         }
 
         public static ADMsg sendFileData(string filePath)
@@ -109,16 +113,6 @@ namespace ADWpfApp1
         public string ToStringData()
         {
             return Encoding.UTF8.GetString(this.data);
-        }
-
-        public string ToUrlData()
-        {
-            return ToStringData();
-        }
-
-        public string ToNameData()
-        {
-            return ToStringData();
         }
 
         public MyDownloadFileInfo ToFileData()
