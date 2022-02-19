@@ -31,6 +31,7 @@ namespace ADWpfApp1
         const int PORT = 12500;
 
         Socket socket1;
+        IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
         bool isInitServer;
         IPAddress ipAddress;
         IPEndPoint selectEP;
@@ -155,7 +156,6 @@ namespace ADWpfApp1
             Devices.Clear();
 
             byte[] buf =ADMsg.helloData().ToArr();
-            IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
             socket1.SendTo(buf, iPEndPoint2);
         }
 
