@@ -93,11 +93,8 @@ namespace ADWpfApp1
                     ADMsg msg = ADMsg.ToMSG(buf);
                     if (msg.type == ADMsgType.hello)
                     {
-                        ADMsg msg2 = new ADMsg(ADMsgType.helloOK);
                         string v = Dns.GetHostName();
-                        msg2.helloOKData(v);
-                        byte[] buf2 = msg2.ToArr();
-
+                        byte[] buf2 = ADMsg.helloOKData(v).ToArr();
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                     }
                     else if (msg.type == ADMsgType.helloOK)
@@ -125,9 +122,7 @@ namespace ADWpfApp1
                                 isInitServer = true;
                             }
 
-                            ADMsg msg2 = new ADMsg(ADMsgType.sendFileOK);
-                            msg2.sendFileOKData(remoteEP);
-                            byte[] buf2 = msg2.ToArr();
+                            byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
                             socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                         }
                     }
@@ -159,7 +154,7 @@ namespace ADWpfApp1
         {
             Devices.Clear();
 
-            byte[] buf = new ADMsg(ADMsgType.hello).ToArr();
+            byte[] buf =ADMsg.helloData().ToArr();
             IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
             socket1.SendTo(buf, iPEndPoint2);
         }
@@ -170,18 +165,13 @@ namespace ADWpfApp1
             if (isfile)
             {
                 filePath = str;
-                ADMsg msg = new ADMsg(ADMsgType.sendFile);
-                msg.sendFileData(str);
-                byte[] buf = msg.ToArr();
-
+               
+                byte[] buf = ADMsg.sendFileData(str).ToArr();
                 socket1.SendTo(buf, selectEP);
             }
             else
             {
-                ADMsg msg = new ADMsg(ADMsgType.sendString);
-                msg.sendStringData(str);
-                byte[] buf = msg.ToArr();
-
+                byte[] buf = ADMsg.sendStringData(str).ToArr();
                 socket1.SendTo(buf, selectEP);
             }
         }
