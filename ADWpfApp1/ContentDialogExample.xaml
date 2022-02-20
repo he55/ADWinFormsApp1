@@ -5,7 +5,6 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     Title="Save your work?"
     PrimaryButtonText="Save"
-    SecondaryButtonText="Don't Save"
     CloseButtonText="Cancel"
     DefaultButton="Primary">
 

@@ -130,10 +130,7 @@ namespace ADWpfApp1
                                     if (!isInitServer)
                                     {
                                         isInitServer = true;
-                                        Task.Run(() =>
-                                        {
-                                            TcpServer.StartServerTcp(remoteEP);
-                                        });
+                                        TcpServer.StartServerTcp(remoteEP);
                                     }
 
                                     byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
@@ -145,11 +142,7 @@ namespace ADWpfApp1
                     else if (msgType == ADMsgType.sendFileOK)
                     {
                         IPEndPoint remoteEP = msg.ToIPData();
-
-                        Task.Run(() =>
-                        {
-                            TcpServer.StartClientTcp(filePath, remoteEP);
-                        });
+                        TcpServer.StartClientTcp(filePath, remoteEP);
                     }
                     else if (msgType == ADMsgType.sendUrl)
                     {
