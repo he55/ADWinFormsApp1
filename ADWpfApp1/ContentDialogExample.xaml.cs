@@ -1,6 +1,6 @@
 ﻿using ModernWpf.Controls;
 
-namespace ModernWpf.SampleApp.ControlPages
+namespace ADWpfApp1
 {
     public partial class ContentDialogExample : ContentDialog
     {

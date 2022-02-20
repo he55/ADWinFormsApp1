@@ -1,4 +1,5 @@
 ﻿using ModernWpf;
+using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -116,18 +117,30 @@ namespace ADWpfApp1
                     {
                         MyDownloadFileInfo.DownloadFileInfo = msg.ToFileData();
 
-                        if (true)
+                        this.Dispatcher.Invoke(async () =>
                         {
-                            IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT);
-                            if (!isInitServer)
-                            {
-                                TcpServer.StartServerTcp(remoteEP);
-                                isInitServer = true;
-                            }
+                            ContentDialogExample dialog = new ContentDialogExample();
+                            var result = await dialog.ShowAsync();
 
-                            byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
-                            socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
-                        }
+                            if (result == ContentDialogResult.Primary)
+                            {
+                                Task.Run(() =>
+                                {
+                                    IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT);
+                                    if (!isInitServer)
+                                    {
+                                        isInitServer = true;
+                                        Task.Run(() =>
+                                        {
+                                            TcpServer.StartServerTcp(remoteEP);
+                                        });
+                                    }
+
+                                    byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
+                                    socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
+                                });
+                            }
+                        });
                     }
                     else if (msgType == ADMsgType.sendFileOK)
                     {
