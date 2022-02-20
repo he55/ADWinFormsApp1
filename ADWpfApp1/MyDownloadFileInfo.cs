@@ -2,7 +2,7 @@
 {
     public class MyDownloadFileInfo
     {
-      public  static MyDownloadFileInfo DownloadFileInfo { get; set; }
+        public static MyDownloadFileInfo DownloadFileInfo { get; set; }
 
         public long Len { get; set; }
         public string FileName { get; set; }

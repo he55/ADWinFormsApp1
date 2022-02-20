@@ -1,25 +1,14 @@
 ﻿using ModernWpf;
 using ModernWpf.Controls;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using IDataObject_Com = System.Runtime.InteropServices.ComTypes.IDataObject;
 
 namespace ADWpfApp1
@@ -32,7 +21,7 @@ namespace ADWpfApp1
         const int PORT = 12500;
 
         Socket socket1;
-        IPEndPoint iPEndPoint2 = new IPEndPoint(IPAddress.Broadcast, PORT);
+        readonly IPEndPoint BroadcastEP = new IPEndPoint(IPAddress.Broadcast, PORT);
         bool isInitServer;
         IPAddress ipAddress;
         IPEndPoint selectEP;
@@ -147,6 +136,9 @@ namespace ADWpfApp1
                         IPEndPoint remoteEP = msg.ToIPData();
                         TcpServer.StartClientTcp(filePath, remoteEP);
                     }
+                    else if (msgType == ADMsgType.sendFileCancel)
+                    {
+                    }
                     else if (msgType == ADMsgType.sendUrl)
                     {
                         string v = msg.ToStringData();
@@ -156,7 +148,7 @@ namespace ADWpfApp1
                         string v = msg.ToStringData();
                     }
 
-                    Debug.WriteLine($"{ep} => {(ADMsgType)msgType} : {msg.ToStringData()}");
+                    Debug.WriteLine($"{ep} => {msgType} : {msg.ToStringData()}");
                 }
             }
         }
@@ -167,7 +159,7 @@ namespace ADWpfApp1
             Devices.Clear();
 
             byte[] buf = ADMsg.helloData().ToArr();
-            socket1.SendTo(buf, iPEndPoint2);
+            socket1.SendTo(buf, BroadcastEP);
         }
 
         void DataActionMet(bool isfile, string str)

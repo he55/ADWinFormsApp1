@@ -2,8 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ADWpfApp1
@@ -11,7 +9,7 @@ namespace ADWpfApp1
     public class TcpServer
     {
         const int BufferSize = 8192;
-        static string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        static readonly string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
         public static void StartClientTcp(string path, IPEndPoint remoteEP)
         {
@@ -44,8 +42,8 @@ namespace ADWpfApp1
                     }
                 }
 
-                            // Release the socket.
-                            sender.Shutdown(SocketShutdown.Both);
+                // Release the socket.
+                sender.Shutdown(SocketShutdown.Both);
                 sender.Close();
             });
         }
@@ -81,8 +79,23 @@ namespace ADWpfApp1
                 byte[] okBuffer = new byte[4] { 1, 1, 1, 1 };
                 handler.Send(okBuffer);
 
-                string path1 = Path.Combine(SavePath, downloadFileInfo.FileName);
-                using (FileStream writer = new FileStream(path1, FileMode.Create, FileAccess.Write, FileShare.None))
+
+                string saveFilePath = Path.Combine(SavePath, downloadFileInfo.FileName);
+                if (File.Exists(saveFilePath))
+                {
+                    int nameIndex = 1;
+                    string name = Path.GetFileNameWithoutExtension(downloadFileInfo.FileName);
+                    string ext = Path.GetExtension(downloadFileInfo.FileName);
+
+                    do
+                    {
+                        saveFilePath = Path.Combine(SavePath, $"{name} - {nameIndex}{ext}");
+                        nameIndex++;
+                    } while (File.Exists(saveFilePath));
+                }
+
+
+                using (FileStream writer = new FileStream(saveFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     long receive = 0L;
                     int received;

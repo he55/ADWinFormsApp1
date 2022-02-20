@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace ADWpfApp1
 {
-    public class UserInfo: INotifyPropertyChanged
+    public class UserInfo : INotifyPropertyChanged
     {
         private bool isSel;
 
@@ -24,7 +24,7 @@ namespace ADWpfApp1
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
