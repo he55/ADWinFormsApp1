@@ -119,23 +119,26 @@ namespace ADWpfApp1
 
                         this.Dispatcher.Invoke(async () =>
                         {
-                            ContentDialogExample dialog = new ContentDialogExample();
-                            var result = await dialog.ShowAsync();
+                            this.Activate();
 
+                            ContentDialogExample dialog = new ContentDialogExample();
+                            ContentDialogResult result = await dialog.ShowAsync();
                             if (result == ContentDialogResult.Primary)
                             {
-                                Task.Run(() =>
+                                IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT);
+                                if (!isInitServer)
                                 {
-                                    IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT);
-                                    if (!isInitServer)
-                                    {
-                                        isInitServer = true;
-                                        TcpServer.StartServerTcp(remoteEP);
-                                    }
+                                    isInitServer = true;
+                                    TcpServer.StartServerTcp(remoteEP);
+                                }
 
-                                    byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
-                                    socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
-                                });
+                                byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
+                                socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
+                            }
+                            else
+                            {
+                                byte[] buf2 = ADMsg.sendFileCancelData().ToArr();
+                                socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                             }
                         });
                     }

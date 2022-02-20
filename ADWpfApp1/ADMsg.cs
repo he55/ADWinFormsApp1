@@ -11,6 +11,7 @@ namespace ADWpfApp1
         helloOK,
         sendFile,
         sendFileOK,
+        sendFileCancel,
         sendString,
         sendUrl
     }
@@ -114,6 +115,12 @@ namespace ADWpfApp1
                 (byte)(ep.Port>>24),
             };
 
+            return adMsg;
+        }
+
+        public static ADMsg sendFileCancelData()
+        {
+            ADMsg adMsg = new ADMsg(ADMsgType.sendFileCancel);
             return adMsg;
         }
 
