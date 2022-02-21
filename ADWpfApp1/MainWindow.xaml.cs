@@ -29,6 +29,7 @@ namespace ADWpfApp1
         int selectedIndex;
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
+        public UserInfo UserInfo { get; set; }
 
         public MainWindow()
         {
@@ -40,6 +41,8 @@ namespace ADWpfApp1
             Devices.Add(new UserInfo { Name = "rty", IPString = "up" });
             Devices.Add(new UserInfo { Name = "fgh", IPString = "dp" });
             Devices.Add(new UserInfo { Name = "vbn", IPString = "yp" });
+            UserInfo = Devices[0];
+            this.grid1.DataContext = UserInfo;
 
             this.DataContext = this;
         }

@@ -50,7 +50,6 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Ellipse
-                        x:Name="Ellipse"
                         Grid.RowSpan="2"
                         Width="50"
                         Height="50"
@@ -76,25 +75,61 @@
     </Window.Resources>
 
     <Grid>
-        <ListBox
-            x:Name="listBox1"
-            ItemsSource="{Binding Devices}"
-            ItemTemplate="{StaticResource ContactListViewTemplate}" />
-        <Button
-            Content="Hello"
-            Margin="0,0,140,10"
-            VerticalAlignment="Bottom"
-            Click="Button_Click_1"
-            HorizontalAlignment="Right"
-            Height="31"
-            Width="55" />
-        <Button
-            Content="Toggle Theme"
-            Click="ToggleTheme"
-            Margin="0,0,10,10"
-            VerticalAlignment="Bottom"
-            HorizontalAlignment="Right"
-            Height="31" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="65" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid x:Name="grid1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Ellipse
+                Grid.RowSpan="2"
+                Width="50"
+                Height="50"
+                Margin="6"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Fill="{DynamicResource SystemControlBackgroundBaseMediumBrush}" />
+            <TextBlock
+                Grid.Column="1"
+                Text="{Binding Name, Mode=OneTime}"
+                Style="{DynamicResource BaseTextBlockStyle}"
+                Margin="12,6,0,0" />
+            <TextBlock
+                Grid.Column="1"
+                Grid.Row="1"
+                Text="{Binding IPString, Mode=OneTime}"
+                Style="{DynamicResource BodyTextBlockStyle}"
+                Margin="12,0,0,6" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <ListBox
+                x:Name="listBox1"
+                ItemsSource="{Binding Devices}"
+                ItemTemplate="{StaticResource ContactListViewTemplate}" />
+            <Button
+                Content="Hello"
+                Margin="0,0,140,10"
+                VerticalAlignment="Bottom"
+                Click="Button_Click_1"
+                HorizontalAlignment="Right"
+                Height="31"
+                Width="55" />
+            <Button
+                Content="Toggle Theme"
+                Click="ToggleTheme"
+                Margin="0,0,10,10"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Height="31" />
+        </Grid>
 
     </Grid>
 </Window>
