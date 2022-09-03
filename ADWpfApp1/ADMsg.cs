@@ -33,6 +33,55 @@ namespace ADWpfApp1
             this.data = new byte[0];
         }
 
+        public ADMsg(ADMsgType msgType, string str)
+        {
+            this.header = HEADER;
+            this.msgType = (int)msgType;
+            this.data = Encoding.UTF8.GetBytes(str);
+            this.len = this.data.Length;
+        }
+
+        public int GetMsgType()
+        {
+            return this.msgType;
+        }
+
+        public IPEndPoint ToIPData()
+        {
+            long addr = BitConverter.ToInt64(this.data, 0);
+            int port = BitConverter.ToInt32(this.data, 8);
+            return new IPEndPoint(addr, port);
+        }
+
+        public string ToStringData()
+        {
+            return Encoding.UTF8.GetString(this.data);
+        }
+
+        public MyDownloadFileInfo ToFileData()
+        {
+            MyDownloadFileInfo myDownloadFileInfo = new MyDownloadFileInfo();
+            myDownloadFileInfo.Len = BitConverter.ToInt64(this.data, 0);
+            myDownloadFileInfo.FileName = Encoding.UTF8.GetString(this.data, 8, this.len - 8);
+            return myDownloadFileInfo;
+        }
+
+        public byte[] ToArr()
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
+                {
+                    binaryWriter.Write(this.header);
+                    binaryWriter.Write(this.msgType);
+                    binaryWriter.Write(this.len);
+                    binaryWriter.Write(this.data);
+                }
+                return memoryStream.ToArray();
+            }
+        }
+
+
         public static bool IsMSG(byte[] buf)
         {
             uint v = BitConverter.ToUInt32(buf, 0);
@@ -41,38 +90,29 @@ namespace ADWpfApp1
 
         public static ADMsg ToMSG(byte[] buf)
         {
-            uint v = BitConverter.ToUInt32(buf, 0);
-            if (v != HEADER)
-            {
+            if (!IsMSG(buf))
                 throw new Exception();
-            }
 
             ADMsg msg;
             msg.header = HEADER;
             msg.msgType = BitConverter.ToInt32(buf, 4);
             msg.len = BitConverter.ToInt32(buf, 8);
-            msg.data = new byte[0];
+            msg.data = new byte[msg.len];
 
             if (msg.len != 0)
-            {
-                msg.data = new byte[msg.len];
                 Array.Copy(buf, 12, msg.data, 0, msg.len);
-            }
 
             return msg;
         }
 
         public static ADMsg helloData()
         {
-            ADMsg adMsg = new ADMsg(ADMsgType.hello);
-            return adMsg;
+            return new ADMsg(ADMsgType.hello);
         }
 
         public static ADMsg helloOKData(string name)
         {
-            ADMsg adMsg = sendStringData(name);
-            adMsg.msgType = (int)ADMsgType.helloOK;
-            return adMsg;
+            return new ADMsg(ADMsgType.helloOK, name);
         }
 
         public static ADMsg sendFileData(string filePath)
@@ -120,64 +160,17 @@ namespace ADWpfApp1
 
         public static ADMsg sendFileCancelData()
         {
-            ADMsg adMsg = new ADMsg(ADMsgType.sendFileCancel);
-            return adMsg;
+            return new ADMsg(ADMsgType.sendFileCancel);
         }
 
         public static ADMsg sendStringData(string str)
         {
-            ADMsg adMsg = new ADMsg(ADMsgType.sendString);
-            adMsg.data = Encoding.UTF8.GetBytes(str);
-            adMsg.len = adMsg.data.Length;
-            return adMsg;
+            return new ADMsg(ADMsgType.sendString, str);
         }
 
         public static ADMsg sendUrlData(string url)
         {
-            ADMsg adMsg = sendStringData(url);
-            adMsg.msgType = (int)ADMsgType.sendUrl;
-            return adMsg;
-        }
-
-
-        public int GetMsgType()
-        {
-            return this.msgType;
-        }
-
-        public IPEndPoint ToIPData()
-        {
-            long addr = BitConverter.ToInt64(this.data, 0);
-            int port = BitConverter.ToInt32(this.data, 8);
-            return new IPEndPoint(addr, port);
-        }
-
-        public string ToStringData()
-        {
-            return Encoding.UTF8.GetString(this.data);
-        }
-
-        public MyDownloadFileInfo ToFileData()
-        {
-            MyDownloadFileInfo myDownloadFileInfo = new MyDownloadFileInfo();
-            myDownloadFileInfo.Len = BitConverter.ToInt64(this.data, 0);
-            myDownloadFileInfo.FileName = Encoding.UTF8.GetString(this.data, 8, this.len - 8);
-            return myDownloadFileInfo;
-        }
-
-        public byte[] ToArr()
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
-                {
-                    binaryWriter.Write(this.header);
-                    binaryWriter.Write(this.msgType);
-                    binaryWriter.Write(this.len);
-                    binaryWriter.Write(this.data);
-                }
-                return memoryStream.ToArray();
-            }
+            return new ADMsg(ADMsgType.sendUrl, url);
         }
     }
 }
