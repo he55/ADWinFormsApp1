@@ -165,18 +165,19 @@ namespace ADWpfApp1
             socket1.SendTo(buf, BroadcastEP);
         }
 
-        void DataActionMet(bool isfile, string str)
+        void DataActionMet(DataObject data)
         {
             selectEP = new IPEndPoint(Devices[selectedIndex].IP, PORT);
-            if (isfile)
-            {
-                filePath = str;
 
-                byte[] buf = ADMsg.sendFileData(str).ToArr();
+            if (data.ContainsFileDropList())
+            {
+                filePath = data.GetFileDropList()[0];
+                byte[] buf = ADMsg.sendFileData(filePath).ToArr();
                 socket1.SendTo(buf, selectEP);
             }
-            else
+            else if(data.ContainsText())
             {
+                string str = data.GetText();
                 byte[] buf = ADMsg.sendStringData(str).ToArr();
                 socket1.SendTo(buf, selectEP);
             }
@@ -247,25 +248,10 @@ namespace ADWpfApp1
             Win32Point wp = GetWin32Point(e);
             ddHelper.Drop(e.Data as IDataObject_Com, ref wp, (int)e.Effects);
 
-
             if (selectedIndex != -1)
             {
                 Devices[selectedIndex].IsSel = false;
-
-                DataObject data = (DataObject)e.Data;
-                string v = data.GetText();
-                if (!string.IsNullOrEmpty(v))
-                {
-                    DataActionMet(false, v);
-                    return;
-                }
-
-                StringCollection stringCollection = data.GetFileDropList();
-                if (stringCollection.Count != 0)
-                {
-                    DataActionMet(true, stringCollection[0]);
-                    return;
-                }
+                DataActionMet((DataObject)e.Data);
             }
         }
 
