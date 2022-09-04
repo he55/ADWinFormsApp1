@@ -35,21 +35,15 @@ namespace ADWpfApp1
         {
             InitializeComponent();
 
-            Devices.Add(new UserInfo { Name = "qwe", IPString = "ip" });
-            Devices.Add(new UserInfo { Name = "asd", IPString = "cp" });
-            Devices.Add(new UserInfo { Name = "zxc", IPString = "hp", IsSel = true });
-            Devices.Add(new UserInfo { Name = "rty", IPString = "up" });
-            Devices.Add(new UserInfo { Name = "fgh", IPString = "dp" });
-            Devices.Add(new UserInfo { Name = "vbn", IPString = "yp" });
-            UserInfo = Devices[0];
-            this.grid1.DataContext = UserInfo;
-
             this.DataContext = this;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ipAddress = GetIPAddr();
+
+            UserInfo=new UserInfo { Name="he55", IPString=ipAddress.ToString()};
+            this.grid1.DataContext = UserInfo;
 
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -58,6 +52,9 @@ namespace ADWpfApp1
             socket1.Bind(localEndPoint);
 
             Task.Run(() => { OnReceive(); });
+
+            await Task.Delay(300);
+            Button_Click_1(null, null);
         }
 
         static IPAddress GetIPAddr()
@@ -178,8 +175,16 @@ namespace ADWpfApp1
             else if(data.ContainsText())
             {
                 string str = data.GetText();
-                byte[] buf = ADMsg.sendStringData(str).ToArr();
-                socket1.SendTo(buf, selectEP);
+                if (str.StartsWith("http"))
+                {
+                    byte[] buf = ADMsg.sendUrlData(str).ToArr();
+                    socket1.SendTo(buf, selectEP);
+                }
+                else
+                {
+                    byte[] buf = ADMsg.sendStringData(str).ToArr();
+                    socket1.SendTo(buf, selectEP);
+                }
             }
         }
 
