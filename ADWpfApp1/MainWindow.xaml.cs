@@ -165,7 +165,19 @@ namespace ADWpfApp1
                     }
                     else if (msgType == ADMsgType.sendUrl)
                     {
-                        string v = msg.ToStringData();
+                        string url = msg.ToStringData();
+
+                        this.Dispatcher.Invoke(async () =>
+                        {
+                            this.Activate();
+
+                            ContentDialogExample dialog = new ContentDialogExample();
+                            ContentDialogResult result = await dialog.ShowAsync();
+                            if (result == ContentDialogResult.Primary)
+                            {
+                                Process.Start(url);
+                            }
+                        });
                     }
                     else if (msgType == ADMsgType.sendString)
                     {
