@@ -8,7 +8,7 @@
     xmlns:local="clr-namespace:ADWpfApp1"
     mc:Ignorable="d"
     Title="MainWindow"
-    Height="302"
+    Height="400"
     Width="287"
     ui:WindowHelper.UseModernWindowStyle="True"
     AllowDrop="True"
@@ -98,13 +98,15 @@
                 Fill="{DynamicResource SystemControlBackgroundBaseMediumBrush}" />
             <TextBlock
                 Grid.Column="1"
-                Text="{Binding Name, Mode=OneTime}"
+                d:Text="he55"
+                Text="{Binding UserInfo.Name, Mode=OneWay}"
                 Style="{DynamicResource BaseTextBlockStyle}"
                 Margin="12,6,0,0" />
             <TextBlock
                 Grid.Column="1"
                 Grid.Row="1"
-                Text="{Binding IPString, Mode=OneTime}"
+                d:Text="192.168.1.17"
+                Text="{Binding UserInfo.IPString, Mode=OneWay}"
                 Style="{DynamicResource BodyTextBlockStyle}"
                 Margin="12,0,0,6" />
         </Grid>

@@ -3,9 +3,11 @@ using ModernWpf.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -16,7 +18,7 @@ namespace ADWpfApp1
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         const int PORT = 12500;
 
@@ -29,12 +31,35 @@ namespace ADWpfApp1
         int selectedIndex;
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
-        public UserInfo UserInfo { get; set; }
+
+        private UserInfo userInfo;
+        public UserInfo UserInfo
+        {
+            get => userInfo;
+            set
+            {
+                if(userInfo!=value)
+                {
+                    userInfo = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        #region MyRegion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
 
         public MainWindow()
         {
             InitializeComponent();
-
             this.DataContext = this;
         }
 
@@ -42,8 +67,7 @@ namespace ADWpfApp1
         {
             ipAddress = GetIPAddr();
 
-            UserInfo=new UserInfo { Name="he55", IPString=ipAddress.ToString()};
-            this.grid1.DataContext = UserInfo;
+            UserInfo = new UserInfo { Name = "he55", IPString = ipAddress.ToString() };
 
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -172,7 +196,7 @@ namespace ADWpfApp1
                 byte[] buf = ADMsg.sendFileData(filePath).ToArr();
                 socket1.SendTo(buf, selectEP);
             }
-            else if(data.ContainsText())
+            else if (data.ContainsText())
             {
                 string str = data.GetText();
                 if (str.StartsWith("http"))
