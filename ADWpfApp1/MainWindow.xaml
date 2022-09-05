@@ -88,13 +88,13 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Ellipse
+            <ui:PersonPicture
                 Grid.RowSpan="2"
                 Width="50"
                 Height="50"
                 Margin="6"
                 VerticalAlignment="Center"
-                HorizontalAlignment="Center" />
+                HorizontalAlignment="Center" ProfilePicture="/IMG_0306.JPG" />
             <TextBox
                 Grid.Column="1"
                 ui:ControlHelper.PlaceholderText="Name"
