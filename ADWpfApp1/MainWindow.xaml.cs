@@ -84,8 +84,7 @@ namespace ADWpfApp1
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
             socket1.Bind(localEndPoint);
 
-            UserName = "he55";
-            MachineName = Dns.GetHostName();
+           UserName= MachineName = Dns.GetHostName();
             IPString = ipAddress.ToString();
             NotifyPropertyChanged("MachineName");
             NotifyPropertyChanged("IPString");
