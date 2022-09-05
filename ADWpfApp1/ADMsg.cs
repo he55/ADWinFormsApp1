@@ -9,6 +9,7 @@ namespace ADWpfApp1
     {
         hello = 0x1,
         helloOK,
+        sendInfo,
         sendFile,
         sendFileOK,
         sendFileCancel,
