@@ -16,7 +16,7 @@
     DragOver="Window_DragOver"
     DragLeave="Window_DragLeave"
     Drop="Window_Drop"
-    Loaded="Window_Loaded">
+    Loaded="Window_Loaded" MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -76,10 +76,10 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="65" />
+            <RowDefinition Height="75" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid x:Name="grid1">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
@@ -94,21 +94,19 @@
                 Height="50"
                 Margin="6"
                 VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                Fill="{DynamicResource SystemControlBackgroundBaseMediumBrush}" />
-            <TextBlock
+                HorizontalAlignment="Center" />
+            <TextBox
                 Grid.Column="1"
-                d:Text="he55"
+                ui:ControlHelper.PlaceholderText="Name"
                 Text="{Binding UserInfo.Name, Mode=OneWay}"
-                Style="{DynamicResource BaseTextBlockStyle}"
-                Margin="12,6,0,0" />
+                Margin="12,3" />
             <TextBlock
                 Grid.Column="1"
                 Grid.Row="1"
                 d:Text="192.168.1.17"
                 Text="{Binding UserInfo.IPString, Mode=OneWay}"
                 Style="{DynamicResource BodyTextBlockStyle}"
-                Margin="12,0,0,6" />
+                Margin="12,3" />
         </Grid>
 
         <Grid Grid.Row="1">

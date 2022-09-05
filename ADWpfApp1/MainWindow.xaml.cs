@@ -81,6 +81,11 @@ namespace ADWpfApp1
             Button_Click_1(null, null);
         }
 
+        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            listBox1.Focus();
+        }
+
         static IPAddress GetIPAddr()
         {
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
