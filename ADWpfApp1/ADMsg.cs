@@ -10,11 +10,11 @@ namespace ADWpfApp1
         hello = 0x1,
         helloOK,
         sendInfo,
+        sendString,
+        sendUrl,
         sendFile,
         sendFileOK,
-        sendFileCancel,
-        sendString,
-        sendUrl
+        sendFileCancel
     }
 
     public struct ADMsg
