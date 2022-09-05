@@ -116,6 +116,11 @@ namespace ADWpfApp1
             return new ADMsg(ADMsgType.helloOK, name);
         }
 
+        public static ADMsg sendInfoData(string name)
+        {
+            return new ADMsg(ADMsgType.sendInfo, name);
+        }
+
         public static ADMsg sendFileData(string filePath)
         {
             ADMsg adMsg = new ADMsg(ADMsgType.sendFile);

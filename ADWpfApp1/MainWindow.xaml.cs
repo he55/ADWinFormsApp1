@@ -51,6 +51,7 @@ namespace ADWpfApp1
                     {
                         userName = value;
                         NotifyPropertyChanged();
+                        SendInfo();
                     }
                 }
             }
@@ -76,24 +77,20 @@ namespace ADWpfApp1
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+
             ipAddress = Helper.GetIPAddr();
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
+            socket1.Bind(localEndPoint);
 
             UserName = "he55";
-            MachineName = Dns.GetHostName(); 
+            MachineName = Dns.GetHostName();
             IPString = ipAddress.ToString();
             NotifyPropertyChanged("MachineName");
             NotifyPropertyChanged("IPString");
 
-            socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
-
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
-            socket1.Bind(localEndPoint);
-
             Task.Run(() => { OnReceive(); });
-
-            await Task.Delay(300);
-            Button_Click_1(null, null);
         }
 
         private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -116,11 +113,10 @@ namespace ADWpfApp1
 
                     if (msgType == ADMsgType.hello)
                     {
-                        string v = Dns.GetHostName();
-                        byte[] buf2 = ADMsg.helloOKData(v).ToArr();
+                        byte[] buf2 = ADMsg.helloOKData(UserName).ToArr();
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                     }
-                    else if (msgType == ADMsgType.helloOK)
+                    else if (msgType == ADMsgType.helloOK||msgType== ADMsgType.sendInfo)
                     {
                         UserInfo userInfo = new UserInfo();
                         userInfo.UserName = msg.ToStringData();
@@ -201,6 +197,12 @@ namespace ADWpfApp1
             Devices.Clear();
 
             byte[] buf = ADMsg.helloData().ToArr();
+            socket1.SendTo(buf, BroadcastEP);
+        }
+
+        void SendInfo()
+        {
+            byte[] buf = ADMsg.sendInfoData(UserName).ToArr();
             socket1.SendTo(buf, BroadcastEP);
         }
 
