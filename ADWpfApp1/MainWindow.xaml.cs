@@ -65,7 +65,7 @@ namespace ADWpfApp1
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ipAddress = GetIPAddr();
+            ipAddress = Helper.GetIPAddr();
 
             UserInfo = new UserInfo { Name = "he55", IPString = ipAddress.ToString() };
 
@@ -84,20 +84,6 @@ namespace ADWpfApp1
         private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             listBox1.Focus();
-        }
-
-        static IPAddress GetIPAddr()
-        {
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-
-            foreach (var item in ipHostInfo.AddressList)
-            {
-                if (item.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return item;
-                }
-            }
-            return null;
         }
 
         void OnReceive()
