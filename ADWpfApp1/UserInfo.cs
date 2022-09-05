@@ -6,8 +6,28 @@ namespace ADWpfApp1
     public class UserInfo : INotifyPropertyChanged
     {
         private bool isSel;
+        private string name;
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if(name != value)
+                {
+                    if (string.IsNullOrWhiteSpace(value))
+                    {
+                        Name = MachineName;
+                        return;
+                    }
+
+                    name = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public string MachineName { get; set; }
         public long IP { get; set; }
         public string IPString { get; set; }
         public bool IsSel

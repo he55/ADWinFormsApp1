@@ -67,7 +67,8 @@ namespace ADWpfApp1
         {
             ipAddress = Helper.GetIPAddr();
 
-            UserInfo = new UserInfo { Name = "he55", IPString = ipAddress.ToString() };
+            string v = Dns.GetHostName();
+            UserInfo = new UserInfo {MachineName=v, Name = "he55", IPString = ipAddress.ToString() };
 
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);

@@ -97,8 +97,8 @@
                 HorizontalAlignment="Center" ProfilePicture="/IMG_0306.JPG" />
             <TextBox
                 Grid.Column="1"
-                ui:ControlHelper.PlaceholderText="Name"
-                Text="{Binding UserInfo.Name, Mode=OneWay}"
+                ui:ControlHelper.PlaceholderText="{Binding UserInfo.MachineName, Mode=OneWay}"
+                Text="{Binding UserInfo.Name}"
                 Margin="12,3" />
             <TextBlock
                 Grid.Column="1"
