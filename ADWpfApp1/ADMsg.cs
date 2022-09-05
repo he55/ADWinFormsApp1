@@ -108,7 +108,7 @@ namespace ADWpfApp1
 
         public static ADMsg helloData(string name)
         {
-            return new ADMsg(ADMsgType.hello,name);
+            return new ADMsg(ADMsgType.hello, name);
         }
 
         public static ADMsg helloOKData(string name)

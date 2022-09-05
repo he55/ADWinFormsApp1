@@ -2,7 +2,6 @@
 using ModernWpf.Controls;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
@@ -59,7 +58,7 @@ namespace ADWpfApp1
 
         public string MachineName { get; set; }
         public string IPString { get; set; }
-       
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -84,7 +83,7 @@ namespace ADWpfApp1
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
             socket1.Bind(localEndPoint);
 
-           UserName= MachineName = Dns.GetHostName();
+            UserName = MachineName = Dns.GetHostName();
             IPString = ipAddress.ToString();
             NotifyPropertyChanged("MachineName");
             NotifyPropertyChanged("IPString");
@@ -126,7 +125,7 @@ namespace ADWpfApp1
                         byte[] buf2 = ADMsg.helloOKData(UserName).ToArr();
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                     }
-                    else if (msgType == ADMsgType.helloOK||msgType== ADMsgType.sendInfo)
+                    else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
                     {
                         UserInfo userInfo = new UserInfo();
                         userInfo.UserName = msg.ToStringData();
