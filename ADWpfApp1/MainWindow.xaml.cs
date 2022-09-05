@@ -113,6 +113,17 @@ namespace ADWpfApp1
 
                     if (msgType == ADMsgType.hello)
                     {
+                        UserInfo userInfo = new UserInfo();
+                        userInfo.UserName = msg.ToStringData();
+                        userInfo.IP = ((IPEndPoint)ep).Address.Address;
+                        userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
+
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            Devices.Add(userInfo);
+                        });
+
+
                         byte[] buf2 = ADMsg.helloOKData(UserName).ToArr();
                         socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                     }
@@ -196,7 +207,7 @@ namespace ADWpfApp1
         {
             Devices.Clear();
 
-            byte[] buf = ADMsg.helloData().ToArr();
+            byte[] buf = ADMsg.helloData(UserName).ToArr();
             socket1.SendTo(buf, BroadcastEP);
         }
 
