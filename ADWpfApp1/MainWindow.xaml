@@ -59,7 +59,7 @@
                         Fill="{DynamicResource SystemControlBackgroundBaseMediumBrush}" />
                     <TextBlock
                         Grid.Column="1"
-                        Text="{Binding Name, Mode=OneTime}"
+                        Text="{Binding UserName, Mode=OneTime}"
                         Style="{DynamicResource BaseTextBlockStyle}"
                         Margin="12,6,0,0" />
                     <TextBlock
@@ -97,14 +97,14 @@
                 HorizontalAlignment="Center" ProfilePicture="/IMG_0306.JPG" />
             <TextBox
                 Grid.Column="1"
-                ui:ControlHelper.PlaceholderText="{Binding UserInfo.MachineName, Mode=OneWay}"
-                Text="{Binding UserInfo.Name}"
+                ui:ControlHelper.PlaceholderText="{Binding MachineName, Mode=OneWay}"
+                Text="{Binding UserName}"
                 Margin="12,3" />
             <TextBlock
                 Grid.Column="1"
                 Grid.Row="1"
                 d:Text="192.168.1.17"
-                Text="{Binding UserInfo.IPString, Mode=OneWay}"
+                Text="{Binding IPString, Mode=OneWay}"
                 Style="{DynamicResource BodyTextBlockStyle}"
                 Margin="12,3" />
         </Grid>

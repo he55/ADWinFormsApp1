@@ -32,22 +32,33 @@ namespace ADWpfApp1
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
 
-        private UserInfo userInfo;
-        public UserInfo UserInfo
+        #region LocalUserInfo
+
+        private string userName;
+
+        public string UserName
         {
-            get => userInfo;
+            get => userName;
             set
             {
-                if(userInfo!=value)
+                if (userName != value)
                 {
-                    userInfo = value;
-                    NotifyPropertyChanged();
+                    if (string.IsNullOrWhiteSpace(value))
+                    {
+                        UserName = MachineName;
+                    }
+                    else
+                    {
+                        userName = value;
+                        NotifyPropertyChanged();
+                    }
                 }
             }
         }
 
-        #region MyRegion
-
+        public string MachineName { get; set; }
+        public string IPString { get; set; }
+       
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -67,8 +78,11 @@ namespace ADWpfApp1
         {
             ipAddress = Helper.GetIPAddr();
 
-            string v = Dns.GetHostName();
-            UserInfo = new UserInfo {MachineName=v, Name = "he55", IPString = ipAddress.ToString() };
+            UserName = "he55";
+            MachineName = Dns.GetHostName(); 
+            IPString = ipAddress.ToString();
+            NotifyPropertyChanged("MachineName");
+            NotifyPropertyChanged("IPString");
 
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -109,7 +123,7 @@ namespace ADWpfApp1
                     else if (msgType == ADMsgType.helloOK)
                     {
                         UserInfo userInfo = new UserInfo();
-                        userInfo.Name = msg.ToStringData();
+                        userInfo.UserName = msg.ToStringData();
                         userInfo.IP = ((IPEndPoint)ep).Address.Address;
                         userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
 
