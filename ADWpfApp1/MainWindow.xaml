@@ -98,7 +98,10 @@
             <TextBox
                 Grid.Column="1"
                 ui:ControlHelper.PlaceholderText="{Binding MachineName, Mode=OneWay}"
+                d:Text="UserName"
                 Text="{Binding UserName}"
+                BorderThickness="0"
+                KeyDown="TextBox_KeyDown"
                 Margin="12,3" />
             <TextBlock
                 Grid.Column="1"

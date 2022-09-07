@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using IDataObject_Com = System.Runtime.InteropServices.ComTypes.IDataObject;
 
@@ -96,6 +97,12 @@ namespace ADWpfApp1
             listBox1.Focus();
         }
 
+        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+                listBox1.Focus();
+        }
+
         void OnReceive()
         {
             byte[] buf = new byte[1024];
@@ -127,15 +134,19 @@ namespace ADWpfApp1
                     }
                     else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
                     {
-                        UserInfo userInfo = new UserInfo();
-                        userInfo.UserName = msg.ToStringData();
-                        userInfo.IP = ((IPEndPoint)ep).Address.Address;
-                        userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
-
-                        this.Dispatcher.Invoke(() =>
+                        long address = ((IPEndPoint)ep).Address.Address;
+                        if (ipAddress.Address != address)
                         {
-                            Devices.Add(userInfo);
-                        });
+                            UserInfo userInfo = new UserInfo();
+                            userInfo.UserName = msg.ToStringData();
+                            userInfo.IP = address;
+                            userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
+
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                Devices.Add(userInfo);
+                            });
+                        }
                     }
                     else if (msgType == ADMsgType.sendFile)
                     {
