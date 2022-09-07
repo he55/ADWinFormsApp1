@@ -3,10 +3,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.modernwpf.com/2019"
              xmlns:local="clr-namespace:ADWpfApp1"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:Background="White"
+             d:DesignHeight="100" d:DesignWidth="100">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation To="1" Duration="0:0:0.1" 
+                Storyboard.TargetProperty="Opacity" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation To="0" Duration="0:0:0.1" 
+                Storyboard.TargetProperty="Opacity" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-            
+        <ui:PersonPicture x:Name="img"/>
+        <Label Content="+" 
+               Opacity="0"
+               d:Opacity="1"
+               FontSize="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </UserControl>

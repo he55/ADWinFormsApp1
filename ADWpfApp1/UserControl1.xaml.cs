@@ -24,5 +24,7 @@ namespace ADWpfApp1
         {
             InitializeComponent();
         }
+
+        public ImageSource ProfilePicture { get => img.ProfilePicture; set => img.ProfilePicture = value; }
     }
 }
