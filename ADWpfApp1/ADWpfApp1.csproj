@@ -7,15 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="IMG_0306.JPG" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="ModernWpfUI" Version="0.9.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="IMG_0306.JPG" />
   </ItemGroup>
 
 </Project>
