@@ -9,7 +9,6 @@ namespace ADWpfApp1
     public class TcpServer
     {
         const int BufferSize = 8192;
-        static readonly string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
         public static void StartClientTcp(string path, IPEndPoint remoteEP)
         {
@@ -79,7 +78,7 @@ namespace ADWpfApp1
                 byte[] okBuffer = new byte[4] { 1, 1, 1, 1 };
                 handler.Send(okBuffer);
 
-                string saveFilePath = GetSafeFileName(downloadFileInfo.FileName);
+                string saveFilePath = Helper.GetSafeFileName(downloadFileInfo.FileName);
                 using (FileStream writer = new FileStream(saveFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     long receive = 0L;
@@ -97,24 +96,6 @@ namespace ADWpfApp1
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
             }
-        }
-
-        static string GetSafeFileName(string fileName)
-        {
-            string saveFilePath = Path.Combine(SavePath, fileName);
-            if (File.Exists(saveFilePath))
-            {
-                int nameIndex = 1;
-                string name = Path.GetFileNameWithoutExtension(fileName);
-                string ext = Path.GetExtension(fileName);
-
-                do
-                {
-                    saveFilePath = Path.Combine(SavePath, $"{name} - {nameIndex}{ext}");
-                    nameIndex++;
-                } while (File.Exists(saveFilePath));
-            }
-            return saveFilePath;
         }
     }
 }
