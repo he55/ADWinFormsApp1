@@ -144,6 +144,15 @@ namespace ADWpfApp1
 
                             this.Dispatcher.Invoke(() =>
                             {
+                                for (int i = 0; i < Devices.Count; i++)
+                                {
+                                    if (Devices[i].IP == address)
+                                    {
+                                        Devices.RemoveAt(i);
+                                        Devices.Insert(i, userInfo);
+                                        return;
+                                    }
+                                }
                                 Devices.Add(userInfo);
                             });
                         }

@@ -75,7 +75,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="75" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid>
@@ -100,8 +100,9 @@
                 d:Text="UserName"
                 Text="{Binding UserName}"
                 BorderThickness="0"
+                d:BorderThickness="1"
                 KeyDown="TextBox_KeyDown"
-                Margin="12,3" />
+                Margin="12,3" VerticalContentAlignment="Center" />
             <TextBlock
                 Grid.Column="1"
                 Grid.Row="1"
@@ -114,6 +115,7 @@
         <Grid Grid.Row="1">
             <ListBox
                 x:Name="listBox1"
+                FocusVisualStyle="{x:Null}"
                 ItemsSource="{Binding Devices}"
                 ItemTemplate="{StaticResource ContactListViewTemplate}" />
             <Button
