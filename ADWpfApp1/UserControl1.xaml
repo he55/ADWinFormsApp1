@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="ADWpfApp1.UserControl1"
+﻿<UserControl x:Name="userControl" x:Class="ADWpfApp1.UserControl1"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,7 +9,8 @@
              d:Background="White"
              d:DesignHeight="100" d:DesignWidth="100">
     <UserControl.Resources>
-        <Style TargetType="Label">
+        <Style x:Key="LabelOpacityStyle" TargetType="Label">
+            <Setter Property="Opacity" Value="0"/>
             <Style.Triggers>
                 <EventTrigger RoutedEvent="MouseEnter">
                     <BeginStoryboard>
@@ -31,10 +32,11 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ui:PersonPicture x:Name="img"/>
+        <ui:PersonPicture x:Name="img" Width="{Binding Width, ElementName=userControl}"/>
         <Label Content="+" 
-               Opacity="0"
                d:Opacity="1"
-               FontSize="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+               Style="{StaticResource LabelOpacityStyle}"
+               MouseLeftButtonDown="Label_MouseLeftButtonDown"
+               FontSize="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0,5,5"/>
     </Grid>
 </UserControl>

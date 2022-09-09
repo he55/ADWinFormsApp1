@@ -26,5 +26,10 @@ namespace ADWpfApp1
         }
 
         public ImageSource ProfilePicture { get => img.ProfilePicture; set => img.ProfilePicture = value; }
+
+        private void Label_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }
