@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace ADWpfApp1
     /// </summary>
     public partial class UserControl1 : UserControl
     {
+        public Action<string> ImageChanged;
+
         public UserControl1()
         {
             InitializeComponent();
@@ -29,7 +32,13 @@ namespace ADWpfApp1
 
         private void Label_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files|*.png;*.jpg;*.bmp";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                img.ProfilePicture = new BitmapImage(new Uri(openFileDialog.FileName));
+                ImageChanged?.Invoke(openFileDialog.FileName);
+            }
         }
     }
 }
