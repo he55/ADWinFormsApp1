@@ -180,6 +180,7 @@ namespace ADWpfApp1
                             {
                                 ContentDialogExample2 dialog2 = new ContentDialogExample2();
                                 dialog2.TextBlock1.Text ="正在接收文件...";
+                                dialog2.TextBlock2.Text = downloadFileInfo.FileName;
                                 dialog2.ShowAsync();
 
                                 TcpServer.ReceiveFileProgressCallback = (double val) => {

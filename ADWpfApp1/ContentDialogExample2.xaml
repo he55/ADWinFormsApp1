@@ -8,7 +8,7 @@
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <!-- Content body -->
         <TextBlock x:Name="TextBlock1" TextWrapping="Wrap" />
-        <TextBlock  TextWrapping="Wrap" />
+        <TextBlock x:Name="TextBlock2" TextWrapping="Wrap" />
         <ProgressBar x:Name="ProgressBar1" />
     </StackPanel>
 
