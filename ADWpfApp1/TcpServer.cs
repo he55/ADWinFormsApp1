@@ -10,6 +10,9 @@ namespace ADWpfApp1
     {
         const int BufferSize = 8192;
 
+        public static Action<double> SendFileProgressCallback;
+        public static Action<double> ReceiveFileProgressCallback;
+
         public static void StartClientTcp(string path, IPEndPoint remoteEP)
         {
             Task.Run(() =>
@@ -37,6 +40,8 @@ namespace ADWpfApp1
                             {
                                 read -= sent;
                             }
+
+                            SendFileProgressCallback?.Invoke(reader.Position / reader.Length);
                         }
                     }
                 }
@@ -101,6 +106,8 @@ namespace ADWpfApp1
                         received = handler.Receive(fileBuffer);
                         writer.Write(fileBuffer, 0, received);
                         receive += received;
+
+                        ReceiveFileProgressCallback?.Invoke(receive / downloadFileInfo.Len);
                     }
                 }
             }

@@ -178,6 +178,22 @@ namespace ADWpfApp1
                             ContentDialogResult result = await dialog.ShowAsync();
                             if (result == ContentDialogResult.Primary)
                             {
+                                ContentDialogExample2 dialog2 = new ContentDialogExample2();
+                                dialog2.TextBlock1.Text ="正在接收文件...";
+                                dialog2.ShowAsync();
+
+                                TcpServer.ReceiveFileProgressCallback = (double val) => {
+                                    this.Dispatcher.Invoke(async () => {
+                                        dialog2.ProgressBar1.Value = val * 100;
+                                        if (val == 1.0)
+                                        {
+                                            TcpServer.ReceiveFileProgressCallback = null;
+                                            await Task.Delay(500);
+                                            dialog2.Hide();
+                                        }
+                                    });
+                                };
+
                                 MyDownloadFileInfo.DownloadFileInfos.Add(downloadFileInfo);
 
                                 byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();

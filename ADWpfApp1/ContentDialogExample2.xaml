@@ -1,0 +1,15 @@
+﻿<ui:ContentDialog
+    x:Class="ADWpfApp1.ContentDialogExample2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    Title="AirDrop">
+
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <!-- Content body -->
+        <TextBlock x:Name="TextBlock1" TextWrapping="Wrap" />
+        <TextBlock  TextWrapping="Wrap" />
+        <ProgressBar x:Name="ProgressBar1" Value="30"/>
+    </StackPanel>
+
+</ui:ContentDialog>
