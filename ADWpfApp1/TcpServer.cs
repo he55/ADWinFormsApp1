@@ -41,7 +41,7 @@ namespace ADWpfApp1
                                 read -= sent;
                             }
 
-                            SendFileProgressCallback?.Invoke(reader.Position / reader.Length);
+                            SendFileProgressCallback?.Invoke((double)reader.Position / reader.Length);
                         }
                     }
                 }
@@ -107,7 +107,7 @@ namespace ADWpfApp1
                         writer.Write(fileBuffer, 0, received);
                         receive += received;
 
-                        ReceiveFileProgressCallback?.Invoke(receive / downloadFileInfo.Len);
+                        ReceiveFileProgressCallback?.Invoke((double)receive / downloadFileInfo.Len);
                     }
                 }
             }

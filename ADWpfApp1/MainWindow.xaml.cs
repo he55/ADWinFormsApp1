@@ -183,12 +183,11 @@ namespace ADWpfApp1
                                 dialog2.ShowAsync();
 
                                 TcpServer.ReceiveFileProgressCallback = (double val) => {
-                                    this.Dispatcher.Invoke(async () => {
+                                    this.Dispatcher.Invoke( () => {
                                         dialog2.ProgressBar1.Value = val * 100;
                                         if (val == 1.0)
                                         {
                                             TcpServer.ReceiveFileProgressCallback = null;
-                                            await Task.Delay(500);
                                             dialog2.Hide();
                                         }
                                     });
