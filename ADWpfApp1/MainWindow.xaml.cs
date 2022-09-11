@@ -24,8 +24,8 @@ namespace ADWpfApp1
 
         Socket socket1;
         readonly IPEndPoint BroadcastEP = new IPEndPoint(IPAddress.Broadcast, PORT);
-        bool isInitServer;
         IPAddress ipAddress;
+        IPEndPoint remoteEP;
         IPEndPoint selectEP;
         string filePath;
         int selectedIndex;
@@ -75,7 +75,7 @@ namespace ADWpfApp1
             this.DataContext = this;
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -83,6 +83,9 @@ namespace ADWpfApp1
             ipAddress = Helper.GetIPAddr();
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
             socket1.Bind(localEndPoint);
+
+            remoteEP = new IPEndPoint(ipAddress, PORT);
+            TcpServer.StartServerTcp(remoteEP);
 
             UserName = MachineName = Dns.GetHostName();
             IPString = ipAddress.ToString();
@@ -169,13 +172,6 @@ namespace ADWpfApp1
                             ContentDialogResult result = await dialog.ShowAsync();
                             if (result == ContentDialogResult.Primary)
                             {
-                                IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT);
-                                if (!isInitServer)
-                                {
-                                    isInitServer = true;
-                                    TcpServer.StartServerTcp(remoteEP);
-                                }
-
                                 byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
                                 socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
                             }
