@@ -152,6 +152,7 @@ namespace ADWpfApp1
                     else if (msgType == ADMsgType.sendFile)
                     {
                         MyDownloadFileInfo downloadFileInfo = msg.ToFileData();
+                        string name = GetUserName(address2.Address);
 
                         this.Dispatcher.Invoke(async () =>
                         {
@@ -159,7 +160,7 @@ namespace ADWpfApp1
 
                             ContentDialogExample dialog = new ContentDialogExample();
                             dialog.PrimaryButtonText = "保存到桌面";
-                            dialog.TextBlock1.Text = "接收来自 {0} 的文件";
+                            dialog.TextBlock1.Text = $"接收来自 {name} 的文件";
                             dialog.TextBlock2.Text = downloadFileInfo.FileName;
                             ContentDialogResult result = await dialog.ShowAsync();
                             if (result == ContentDialogResult.Primary)
@@ -207,6 +208,7 @@ namespace ADWpfApp1
                     else if (msgType == ADMsgType.sendUrl)
                     {
                         string url = msg.ToStringData();
+                        string name = GetUserName(address2.Address);
 
                         this.Dispatcher.Invoke(async () =>
                         {
@@ -214,7 +216,7 @@ namespace ADWpfApp1
 
                             ContentDialogExample dialog = new ContentDialogExample();
                             dialog.PrimaryButtonText = "在浏览器中打开";
-                            dialog.TextBlock1.Text = "接收来自 {0} 的链接";
+                            dialog.TextBlock1.Text = $"接收来自 {name} 的链接";
                             dialog.TextBlock2.Text = url;
                             ContentDialogResult result = await dialog.ShowAsync();
                             if (result == ContentDialogResult.Primary)
@@ -257,6 +259,16 @@ namespace ADWpfApp1
                     Devices.Add(userInfo);
                 });
             }
+        }
+
+        string GetUserName(long ip)
+        {
+            foreach (var item in Devices)
+            {
+                if (item.IP == ip)
+                    return item.UserName;
+            }
+            return "匿名";
         }
 
 
