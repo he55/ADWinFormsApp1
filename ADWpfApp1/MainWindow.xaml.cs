@@ -166,7 +166,6 @@ namespace ADWpfApp1
                     else if (msgType == ADMsgType.sendFile)
                     {
                         MyDownloadFileInfo downloadFileInfo = msg.ToFileData();
-                        MyDownloadFileInfo.DownloadFileInfos.Add(downloadFileInfo);
 
                         this.Dispatcher.Invoke(async () =>
                         {
@@ -179,6 +178,8 @@ namespace ADWpfApp1
                             ContentDialogResult result = await dialog.ShowAsync();
                             if (result == ContentDialogResult.Primary)
                             {
+                                MyDownloadFileInfo.DownloadFileInfos.Add(downloadFileInfo);
+
                                 byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
                                 socket1.SendTo(buf2, remoteEP2);
                             }
