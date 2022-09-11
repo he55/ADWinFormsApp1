@@ -124,15 +124,22 @@ namespace ADWpfApp1
 
                     if (msgType == ADMsgType.hello)
                     {
-                        UserInfo userInfo = new UserInfo();
-                        userInfo.UserName = msg.ToStringData();
-                        userInfo.IP = address2.Address;
-                        userInfo.IPString = address2.ToString();
-
-                        this.Dispatcher.Invoke(() =>
+                        if (Debugger.IsAttached)
                         {
-                            Devices.Add(userInfo);
-                        });
+                            UserInfo userInfo = new UserInfo();
+                            userInfo.UserName = msg.ToStringData();
+                            userInfo.IP = address2.Address;
+                            userInfo.IPString = address2.ToString();
+
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                Devices.Add(userInfo);
+                            });
+                        }
+                        else
+                        {
+                            AddDevice(address2, msg);
+                        }
 
 
                         byte[] buf2 = ADMsg.helloOKData(UserName).ToArr();
@@ -140,28 +147,7 @@ namespace ADWpfApp1
                     }
                     else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
                     {
-                        long address = address2.Address;
-                        if (ipAddress.Address != address)
-                        {
-                            UserInfo userInfo = new UserInfo();
-                            userInfo.UserName = msg.ToStringData();
-                            userInfo.IP = address;
-                            userInfo.IPString = address2.ToString();
-
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                for (int i = 0; i < Devices.Count; i++)
-                                {
-                                    if (Devices[i].IP == address)
-                                    {
-                                        Devices.RemoveAt(i);
-                                        Devices.Insert(i, userInfo);
-                                        return;
-                                    }
-                                }
-                                Devices.Add(userInfo);
-                            });
-                        }
+                        AddDevice(address2, msg);
                     }
                     else if (msgType == ADMsgType.sendFile)
                     {
@@ -244,6 +230,32 @@ namespace ADWpfApp1
 
                     Debug.WriteLine($"{ep} => {msgType} : {msg.ToStringData()}");
                 }
+            }
+        }
+
+        void AddDevice(IPAddress address2,ADMsg msg)
+        {
+            long address = address2.Address;
+            if (ipAddress.Address != address)
+            {
+                UserInfo userInfo = new UserInfo();
+                userInfo.UserName = msg.ToStringData();
+                userInfo.IP = address;
+                userInfo.IPString = address2.ToString();
+
+                this.Dispatcher.Invoke(() =>
+                {
+                    for (int i = 0; i < Devices.Count; i++)
+                    {
+                        if (Devices[i].IP == address)
+                        {
+                            Devices.RemoveAt(i);
+                            Devices.Insert(i, userInfo);
+                            return;
+                        }
+                    }
+                    Devices.Add(userInfo);
+                });
             }
         }
 
