@@ -95,12 +95,12 @@ namespace ADWpfApp1
             Task.Run(() => { OnReceive(); });
         }
 
-        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             listBox1.Focus();
         }
 
-        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
                 listBox1.Focus();
@@ -119,12 +119,15 @@ namespace ADWpfApp1
                     ADMsg msg = ADMsg.ToMSG(buf);
                     ADMsgType msgType = (ADMsgType)msg.GetMsgType();
 
+                    IPAddress address2 = ((IPEndPoint)ep).Address;
+                    IPEndPoint remoteEP2 = new IPEndPoint(address2, PORT);
+
                     if (msgType == ADMsgType.hello)
                     {
                         UserInfo userInfo = new UserInfo();
                         userInfo.UserName = msg.ToStringData();
-                        userInfo.IP = ((IPEndPoint)ep).Address.Address;
-                        userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
+                        userInfo.IP = address2.Address;
+                        userInfo.IPString = address2.ToString();
 
                         this.Dispatcher.Invoke(() =>
                         {
@@ -133,17 +136,17 @@ namespace ADWpfApp1
 
 
                         byte[] buf2 = ADMsg.helloOKData(UserName).ToArr();
-                        socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
+                        socket1.SendTo(buf2, remoteEP2);
                     }
                     else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
                     {
-                        long address = ((IPEndPoint)ep).Address.Address;
+                        long address = address2.Address;
                         if (ipAddress.Address != address)
                         {
                             UserInfo userInfo = new UserInfo();
                             userInfo.UserName = msg.ToStringData();
                             userInfo.IP = address;
-                            userInfo.IPString = ((IPEndPoint)ep).Address.ToString();
+                            userInfo.IPString = address2.ToString();
 
                             this.Dispatcher.Invoke(() =>
                             {
@@ -173,12 +176,12 @@ namespace ADWpfApp1
                             if (result == ContentDialogResult.Primary)
                             {
                                 byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
-                                socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
+                                socket1.SendTo(buf2, remoteEP2);
                             }
                             else
                             {
                                 byte[] buf2 = ADMsg.sendFileCancelData().ToArr();
-                                socket1.SendTo(buf2, new IPEndPoint(((IPEndPoint)ep).Address, PORT));
+                                socket1.SendTo(buf2, remoteEP2);
                             }
                         });
                     }
