@@ -9,7 +9,7 @@
         <!-- Content body -->
         <TextBlock x:Name="TextBlock1" TextWrapping="Wrap" />
         <TextBlock  TextWrapping="Wrap" />
-        <ProgressBar x:Name="ProgressBar1" Value="30"/>
+        <ProgressBar x:Name="ProgressBar1" />
     </StackPanel>
 
 </ui:ContentDialog>
