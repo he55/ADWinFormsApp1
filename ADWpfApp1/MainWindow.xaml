@@ -120,19 +120,18 @@
                 ItemTemplate="{StaticResource ContactListViewTemplate}" />
             <Button
                 Content="Hello"
+                Visibility="Hidden"
+                d:Visibility="Visible"
                 Margin="0,0,140,10"
                 VerticalAlignment="Bottom"
                 Click="Button_Click_1"
-                HorizontalAlignment="Right"
-                Height="31"
-                Width="55" />
+                HorizontalAlignment="Right" />
             <Button
                 Content="Toggle Theme"
                 Click="ToggleTheme"
                 Margin="0,0,10,10"
                 VerticalAlignment="Bottom"
-                HorizontalAlignment="Right"
-                Height="31" />
+                HorizontalAlignment="Right" />
         </Grid>
 
     </Grid>
