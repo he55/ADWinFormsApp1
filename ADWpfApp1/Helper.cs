@@ -9,7 +9,7 @@ namespace ADWpfApp1
     {
         static readonly string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-       public static string GetSafeFileName(string fileName)
+        public static string GetSafeFileName(string fileName)
         {
             string saveFilePath = Path.Combine(SavePath, fileName);
             if (File.Exists(saveFilePath))

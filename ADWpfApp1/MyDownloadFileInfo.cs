@@ -1,8 +1,10 @@
-﻿namespace ADWpfApp1
+﻿using System.Collections.Generic;
+
+namespace ADWpfApp1
 {
     public class MyDownloadFileInfo
     {
-        public static MyDownloadFileInfo DownloadFileInfo { get; set; }
+        public static List<MyDownloadFileInfo> DownloadFileInfos = new List<MyDownloadFileInfo>();
 
         public long Len { get; set; }
         public string FileName { get; set; }

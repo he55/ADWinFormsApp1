@@ -72,8 +72,19 @@ namespace ADWpfApp1
             handler.Receive(hashBuffer);
             int hash = BitConverter.ToInt32(hashBuffer, 0);
 
-            MyDownloadFileInfo downloadFileInfo = MyDownloadFileInfo.DownloadFileInfo;
-            if (downloadFileInfo?.Hash == hash)
+            MyDownloadFileInfo downloadFileInfo = null;
+            for (int i = 0; i < MyDownloadFileInfo.DownloadFileInfos.Count; i++)
+            {
+                MyDownloadFileInfo item = MyDownloadFileInfo.DownloadFileInfos[i];
+                if (item.Hash == hash)
+                {
+                    downloadFileInfo = item;
+                    MyDownloadFileInfo.DownloadFileInfos.Remove(item);
+                    break;
+                }
+            }
+
+            if (downloadFileInfo != null)
             {
                 byte[] okBuffer = new byte[4] { 1, 1, 1, 1 };
                 handler.Send(okBuffer);
@@ -92,10 +103,15 @@ namespace ADWpfApp1
                         receive += received;
                     }
                 }
-
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
             }
+            else
+            {
+                byte[] cancelBuffer = new byte[4] { 0, 0, 0, 0 };
+                handler.Send(cancelBuffer);
+            }
+
+            handler.Shutdown(SocketShutdown.Both);
+            handler.Close();
         }
     }
 }

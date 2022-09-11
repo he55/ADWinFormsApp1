@@ -165,13 +165,17 @@ namespace ADWpfApp1
                     }
                     else if (msgType == ADMsgType.sendFile)
                     {
-                        MyDownloadFileInfo.DownloadFileInfo = msg.ToFileData();
+                        MyDownloadFileInfo downloadFileInfo = msg.ToFileData();
+                        MyDownloadFileInfo.DownloadFileInfos.Add(downloadFileInfo);
 
                         this.Dispatcher.Invoke(async () =>
                         {
                             this.Activate();
 
                             ContentDialogExample dialog = new ContentDialogExample();
+                            dialog.PrimaryButtonText = "保存到桌面";
+                            dialog.TextBlock1.Text = "接收来自 {0} 的文件";
+                            dialog.TextBlock2.Text = downloadFileInfo.FileName;
                             ContentDialogResult result = await dialog.ShowAsync();
                             if (result == ContentDialogResult.Primary)
                             {
@@ -202,6 +206,9 @@ namespace ADWpfApp1
                             this.Activate();
 
                             ContentDialogExample dialog = new ContentDialogExample();
+                            dialog.PrimaryButtonText = "在浏览器中打开";
+                            dialog.TextBlock1.Text = "接收来自 {0} 的链接";
+                            dialog.TextBlock2.Text = url;
                             ContentDialogResult result = await dialog.ShowAsync();
                             if (result == ContentDialogResult.Primary)
                             {
