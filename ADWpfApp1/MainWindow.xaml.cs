@@ -75,7 +75,7 @@ namespace ADWpfApp1
             this.DataContext = this;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -93,6 +93,9 @@ namespace ADWpfApp1
             NotifyPropertyChanged("IPString");
 
             Task.Run(() => { OnReceive(); });
+
+            await Task.Delay(800);
+            Button_Click_1(null, null);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

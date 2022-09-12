@@ -119,9 +119,7 @@
                 ItemsSource="{Binding Devices}"
                 ItemTemplate="{StaticResource ContactListViewTemplate}" />
             <Button
-                Content="Hello"
-                Visibility="Hidden"
-                d:Visibility="Visible"
+                Content="Refresh"
                 Margin="0,0,140,10"
                 VerticalAlignment="Bottom"
                 Click="Button_Click_1"
