@@ -14,7 +14,8 @@ namespace ADWpfApp1
         sendUrl,
         sendFile,
         sendFileOK,
-        sendFileCancel
+        sendFileCancel,
+        sendFileCancel2
     }
 
     public struct ADMsg
@@ -167,6 +168,11 @@ namespace ADWpfApp1
         public static ADMsg sendFileCancelData()
         {
             return new ADMsg(ADMsgType.sendFileCancel);
+        }
+
+        public static ADMsg sendFileCancel2Data()
+        {
+            return new ADMsg(ADMsgType.sendFileCancel2);
         }
 
         public static ADMsg sendStringData(string str)

@@ -5,7 +5,7 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     Title="AirDrop"
     PrimaryButtonText="Action"
-    CloseButtonText="取消"
+    SecondaryButtonText="取消"
     DefaultButton="Primary">
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
