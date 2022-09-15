@@ -7,6 +7,7 @@ namespace ADWpfApp1
     {
         private bool isSel;
 
+        public string ImagePath { get; set; }
         public string UserName { get; set; }
         public long IP { get; set; }
         public string IPString { get; set; }
