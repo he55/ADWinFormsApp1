@@ -170,6 +170,9 @@ namespace ADWpfApp1
 
                                             TcpServer.ReceiveFileProgressCallback = null;
                                             dialog2.Hide();
+
+                                            Process.Start("explorer.exe",$"/select,{TcpServer.CurrentSaveFilePath}");
+                                            TcpServer.CurrentSaveFilePath = null;
                                         }
                                     });
                                 };

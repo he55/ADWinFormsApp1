@@ -10,6 +10,7 @@ namespace ADWpfApp1
     {
         const int BufferSize = 8192;
 
+        public static string CurrentSaveFilePath;
         public static Action<double> SendFileProgressCallback;
         public static Action<double> ReceiveFileProgressCallback;
 
@@ -95,6 +96,7 @@ namespace ADWpfApp1
                 handler.Send(okBuffer);
 
                 string saveFilePath = Helper.GetSafeFileName(downloadFileInfo.FileName);
+                CurrentSaveFilePath = saveFilePath;
                 using (FileStream writer = new FileStream(saveFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     long receive = 0L;
