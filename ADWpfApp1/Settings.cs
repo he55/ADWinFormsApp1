@@ -10,22 +10,6 @@ namespace ADWpfApp1
 
         private Settings() { }
 
-        public bool FirstRun { get; set; } = true;
-        public bool AutoPlay { get; set; }
-
-        public bool AutoPause1 { get; set; }
-        public bool AutoPause2 { get; set; }
-        public bool AutoPause3 { get; set; }
-
-        public bool IsMuted { get; set; }
-        public bool DisableWebSecurity { get; set; }
-        public bool UseDesktopInteraction { get; set; } = true;
-
-        public bool CanPause()
-        {
-            return AutoPause1 || AutoPause2 || AutoPause3;
-        }
-
         public static Settings Load()
         {
             if (s_settings == null)
