@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +23,14 @@ namespace ADWpfApp1
     public partial class UserControl1 : UserControl
     {
         public Action<string> ImageChanged;
+        string imagePath = Helper.ImagePath();
 
         public UserControl1()
         {
             InitializeComponent();
+
+            if(File.Exists(imagePath))
+                img.ProfilePicture = new BitmapImage(new Uri(imagePath));
         }
 
         public ImageSource ProfilePicture { get => img.ProfilePicture; set => img.ProfilePicture = value; }
@@ -37,6 +42,7 @@ namespace ADWpfApp1
             if (openFileDialog.ShowDialog() == true)
             {
                 img.ProfilePicture = new BitmapImage(new Uri(openFileDialog.FileName));
+                File.Copy(openFileDialog.FileName, imagePath, true);
                 ImageChanged?.Invoke(openFileDialog.FileName);
             }
         }

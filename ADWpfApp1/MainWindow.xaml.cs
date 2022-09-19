@@ -30,19 +30,18 @@ namespace ADWpfApp1
         IPEndPoint selectEP;
         string filePath;
         int selectedIndex;
+        Settings _settings = Settings.Load();
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
 
         #region LocalUserInfo
 
-        private string userName;
-
         public string UserName
         {
-            get => userName;
+            get => _settings.UserName??MachineName;
             set
             {
-                if (userName != value)
+                if (_settings.UserName != value)
                 {
                     if (string.IsNullOrWhiteSpace(value))
                     {
@@ -50,7 +49,7 @@ namespace ADWpfApp1
                     }
                     else
                     {
-                        userName = value;
+                        _settings.UserName = value;
                         NotifyPropertyChanged();
                         SendInfo();
                     }
@@ -73,6 +72,7 @@ namespace ADWpfApp1
         public MainWindow()
         {
             InitializeComponent();
+          MachineName = Dns.GetHostName();
             this.DataContext = this;
         }
 
@@ -88,9 +88,7 @@ namespace ADWpfApp1
             remoteEP = new IPEndPoint(ipAddress, PORT);
             TcpServer.StartServerTcp(remoteEP);
 
-            UserName = MachineName = Dns.GetHostName();
             IPString = ipAddress.ToString();
-            NotifyPropertyChanged("MachineName");
             NotifyPropertyChanged("IPString");
 
             Task.Run(() => { OnReceive(); });
