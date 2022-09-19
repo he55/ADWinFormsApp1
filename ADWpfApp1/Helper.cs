@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-namespace DreamScene2
+namespace ADWpfApp1
 {
     public static class Helper
     {

@@ -1,4 +1,4 @@
-﻿namespace DreamScene2
+﻿namespace ADWpfApp1
 {
     public static class Constant
     {
