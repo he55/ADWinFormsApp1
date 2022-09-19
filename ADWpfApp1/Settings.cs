@@ -10,6 +10,8 @@ namespace ADWpfApp1
 
         private Settings() { }
 
+        public string UserName { get; set; }
+
         public static Settings Load()
         {
             if (s_settings == null)
