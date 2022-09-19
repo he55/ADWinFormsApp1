@@ -20,6 +20,11 @@ namespace ADWpfApp1
             });
         }
 
+        public static string ImagePath()
+        {
+            return GetPathForUserAppDataFolder("Image.png");
+        }
+
         public static string GetPathForStartupFolder(string subPath)
         {
             return Path.Combine(Application.StartupPath, subPath);
