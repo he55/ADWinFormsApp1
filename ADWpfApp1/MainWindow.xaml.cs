@@ -81,7 +81,7 @@ namespace ADWpfApp1
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
 
-            ipAddress = Helper.GetIPAddr();
+            ipAddress = Helper2.GetIPAddr();
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
             socket1.Bind(localEndPoint);
 

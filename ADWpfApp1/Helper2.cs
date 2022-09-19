@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace ADWpfApp1
 {
-    public static class Helper
+    public static class Helper2
     {
         static readonly string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 

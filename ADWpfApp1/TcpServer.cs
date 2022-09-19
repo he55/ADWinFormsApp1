@@ -95,7 +95,7 @@ namespace ADWpfApp1
                 byte[] okBuffer = new byte[4] { 1, 1, 1, 1 };
                 handler.Send(okBuffer);
 
-                string saveFilePath = Helper.GetSafeFileName(downloadFileInfo.FileName);
+                string saveFilePath = Helper2.GetSafeFileName(downloadFileInfo.FileName);
                 CurrentSaveFilePath = saveFilePath;
                 using (FileStream writer = new FileStream(saveFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
