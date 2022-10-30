@@ -18,12 +18,18 @@ namespace ADNewUI
             dc.DrawRectangle(this.Background, null, new Rect(0, 0, w, h));
 
             // center point
-            Point center = new Point(w / 2, h / 2);
-            dc.DrawEllipse(Brushes.Red, null, center, 2, 2);
+            double offsetY = 120.0;
+            Point center = new Point(w / 2, h -offsetY);
+            dc.DrawEllipse(Brushes.Red, null, center, 3,3);
 
             Pen pen = new Pen(Brushes.Red, 2);
-            double radius = w > h ? h / 2 : w / 2;
-            dc.DrawEllipse(Brushes.Transparent, pen, center, radius, radius);
+            double maxR = Math.Sqrt(w * w + h * h) / 2;
+            double minR = 70.0;
+            double minT = 70.0;
+            for (double i = minR; i < maxR; i+=minT)
+            {
+                dc.DrawEllipse(Brushes.Transparent, pen, center, i, i);
+            }
         }
     }
 }
