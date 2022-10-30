@@ -23,7 +23,7 @@ namespace ADNewUI
             dc.DrawEllipse(Brushes.Red, null, center, 3,3);
 
             Pen pen = new Pen(Brushes.Red, 2);
-            double maxR = Math.Sqrt(w * w + h * h) / 2;
+            double maxR = Math.Sqrt(center.X * center.X + center.Y * center.Y);
             double minR = 70.0;
             double minT = 70.0;
             for (double i = minR; i < maxR; i+=minT)
