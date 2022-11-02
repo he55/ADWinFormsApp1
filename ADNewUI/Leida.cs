@@ -31,13 +31,13 @@ namespace ADNewUI
         {
             double w = this.ActualWidth;
             double h = this.ActualHeight;
-            dc.DrawRectangle(this.Background, null, new Rect(0, 0, w, h));
+            dc.DrawRectangle(Brushes.Black, null, new Rect(0, 0, w, h));
 
             // center point
             double offsetY = 120.0;
             Point center = new Point(w / 2, h -offsetY);
             dc.DrawEllipse(Brushes.Red, null, center, 3,3);
-            dc.DrawEllipse(Brushes.Transparent, new Pen(Brushes.Red, 20),
+            dc.DrawEllipse(Brushes.Transparent, new Pen(this.Background, 20),
                 center, null,
                 3, animationClock,
                 3, animationClock);

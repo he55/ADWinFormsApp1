@@ -7,7 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <local:Leida Background="#FF2F2929"/>
+        <local:Leida>
+            <local:Leida.Background>
+                <RadialGradientBrush Opacity="0.8">
+                    <GradientStop Color="Red" Offset="0.9"/>
+                    <GradientStop Color="#CCFFFFFF" Offset="1"/>
+                </RadialGradientBrush>
+            </local:Leida.Background>
+        </local:Leida>
 
     </Grid>
 </Window>
