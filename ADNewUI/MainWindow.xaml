@@ -9,9 +9,9 @@
     <Grid>
         <local:Leida>
             <local:Leida.Background>
-                <RadialGradientBrush Opacity="0.8">
+                <RadialGradientBrush>
                     <GradientStop Color="Red" Offset="0.9"/>
-                    <GradientStop Color="#CCFFFFFF" Offset="1"/>
+                    <GradientStop Offset="1"/>
                 </RadialGradientBrush>
             </local:Leida.Background>
         </local:Leida>

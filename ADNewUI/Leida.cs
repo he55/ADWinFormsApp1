@@ -37,7 +37,7 @@ namespace ADNewUI
             double offsetY = 120.0;
             Point center = new Point(w / 2, h -offsetY);
             dc.DrawEllipse(Brushes.Red, null, center, 3,3);
-            dc.DrawEllipse(Brushes.Transparent, new Pen(this.Background, 20),
+            dc.DrawEllipse(Brushes.Transparent, new Pen(this.Background, 10),
                 center, null,
                 3, animationClock,
                 3, animationClock);
