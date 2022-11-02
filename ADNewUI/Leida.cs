@@ -6,11 +6,27 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace ADNewUI
 {
     public class Leida:Canvas
     {
+        AnimationClock animationClock ;
+
+        public Leida()
+        {
+            double w = SystemParameters.PrimaryScreenWidth;
+            double h = SystemParameters.PrimaryScreenHeight;
+            double r = Math.Sqrt(w * w + h * h) / 2;
+
+            DoubleAnimation doubleAnimation = new DoubleAnimation();
+            doubleAnimation.To = r;
+            doubleAnimation.Duration = TimeSpan.FromSeconds(2);
+            doubleAnimation.RepeatBehavior = RepeatBehavior.Forever;
+             animationClock = doubleAnimation.CreateClock();
+        }
+
         protected override void OnRender(DrawingContext dc)
         {
             double w = this.ActualWidth;
