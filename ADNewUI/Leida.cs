@@ -37,6 +37,10 @@ namespace ADNewUI
             double offsetY = 120.0;
             Point center = new Point(w / 2, h -offsetY);
             dc.DrawEllipse(Brushes.Red, null, center, 3,3);
+            dc.DrawEllipse(Brushes.Transparent, new Pen(Brushes.Red, 20),
+                center, null,
+                3, animationClock,
+                3, animationClock);
 
             Pen pen = new Pen(Brushes.Red, 2);
             double maxR = Math.Sqrt(center.X * center.X + center.Y * center.Y);
