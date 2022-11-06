@@ -31,7 +31,9 @@ namespace ADNewUI
         {
             double w = this.ActualWidth;
             double h = this.ActualHeight;
-            dc.DrawRectangle(Brushes.Black, null, new Rect(0, 0, w, h));
+            Rect rectangle = new Rect(0, 0, w, h);
+            dc.PushClip(new RectangleGeometry(rectangle));
+            dc.DrawRectangle(Brushes.Black, null, rectangle);
 
             // center point
             double offsetY = 120.0;
