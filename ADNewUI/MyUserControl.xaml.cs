@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,20 +16,13 @@ using System.Windows.Shapes;
 namespace ADNewUI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MyUserControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MyUserControl : UserControl
     {
-        public MainWindow()
+        public MyUserControl()
         {
             InitializeComponent();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            Point point = e.GetPosition(leida);
-            leida.SetPoint(point);
-            Debug.WriteLine($"point: {point}");
         }
     }
 }

@@ -25,6 +25,41 @@ namespace ADNewUI
             doubleAnimation.Duration = TimeSpan.FromSeconds(2);
             doubleAnimation.RepeatBehavior = RepeatBehavior.Forever;
              animationClock = doubleAnimation.CreateClock();
+
+            AddMyUserControl();
+        }
+
+        List<(Rect,Control)> list= new List<(Rect,Control)> ();
+        void AddMyUserControl()
+        {
+            MyUserControl myUserControl = new MyUserControl();
+            Canvas.SetLeft(myUserControl, 100);
+            Canvas.SetTop(myUserControl, 100);
+            this.Children.Add(myUserControl);
+            list.Add((new Rect(100, 100, myUserControl.Width, myUserControl.Height), myUserControl));
+
+            MyUserControl myUserControl2 = new MyUserControl();
+            Canvas.SetLeft(myUserControl2, 400);
+            Canvas.SetTop(myUserControl2, 100);
+            this.Children.Add(myUserControl2);
+            list.Add((new Rect(400, 100, myUserControl2.Width, myUserControl2.Height), myUserControl2));
+        }
+
+        public void SetPoint(Point point)
+        {
+            foreach (var item in list)
+            {
+                if (item.Item1.Contains(point))
+                {
+                    //if(item.Item2.Background!=Brushes.Red)
+                    item.Item2.Background = Brushes.Red;
+                }
+                else
+                {
+                    //if (item.Item2.Background != Brushes.Transparent)
+                        item.Item2.Background = Brushes.Transparent;
+                }
+            }
         }
 
         protected override void OnRender(DrawingContext dc)
