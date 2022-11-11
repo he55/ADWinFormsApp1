@@ -51,7 +51,7 @@ namespace ADWpfApp1
                     {
                         _settings.UserName = value;
                         NotifyPropertyChanged();
-                        SendInfo();
+                        SendTo(ADMsg.sendInfoData(UserName), BroadcastEP);
                     }
                 }
             }
@@ -329,11 +329,6 @@ namespace ADWpfApp1
         {
             Devices.Clear();
             SendTo(ADMsg.helloData(UserName), BroadcastEP);
-        }
-
-        void SendInfo()
-        {
-            SendTo(ADMsg.sendInfoData(UserName), BroadcastEP);
         }
 
         ContentDialog contentDialog2;
