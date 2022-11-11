@@ -315,6 +315,12 @@ namespace ADWpfApp1
             return "匿名";
         }
 
+        void SendTo(ADMsg msg,IPEndPoint endPoint)
+        {
+            byte[] buf =msg.ToArr();
+            socket1.SendTo(buf, endPoint);
+        }
+
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
