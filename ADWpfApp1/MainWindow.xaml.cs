@@ -38,7 +38,7 @@ namespace ADWpfApp1
 
         public string UserName
         {
-            get => _settings.UserName??MachineName;
+            get => _settings.UserName ?? MachineName;
             set
             {
                 if (_settings.UserName != value)
@@ -72,7 +72,7 @@ namespace ADWpfApp1
         public MainWindow()
         {
             InitializeComponent();
-          MachineName = Dns.GetHostName();
+            MachineName = Dns.GetHostName();
             this.DataContext = this;
         }
 
@@ -129,8 +129,7 @@ namespace ADWpfApp1
                     {
                         AddDevice(address2, msg);
 
-                        byte[] buf2 = ADMsg.helloOKData(UserName).ToArr();
-                        socket1.SendTo(buf2, remoteEP2);
+                        SendTo(ADMsg.helloOKData(UserName), remoteEP2);
                     }
                     else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
                     {
@@ -145,7 +144,7 @@ namespace ADWpfApp1
                         {
                             this.Activate();
 
-                             dialog1 = new ContentDialogExample();
+                            dialog1 = new ContentDialogExample();
                             dialog1.PrimaryButtonText = "保存到桌面";
                             dialog1.TextBlock1.Text = $"接收来自 {name} 的文件";
                             dialog1.TextBlock2.Text = downloadFileInfo.FileName;
@@ -153,14 +152,16 @@ namespace ADWpfApp1
                             if (result == ContentDialogResult.Primary)
                             {
                                 ContentDialogExample2 dialog2 = new ContentDialogExample2();
-                                dialog2.TextBlock1.Text ="正在接收文件...";
+                                dialog2.TextBlock1.Text = "正在接收文件...";
                                 dialog2.TextBlock2.Text = downloadFileInfo.FileName;
                                 dialog2.ShowAsync();
 
-                                TcpServer.ReceiveFileProgressCallback = (double val) => {
-                                    this.Dispatcher.Invoke( () => {
-                                        if((val*100-dialog2.ProgressBar1.Value)>=0.5)
-                                        dialog2.ProgressBar1.Value = val * 100;
+                                TcpServer.ReceiveFileProgressCallback = (double val) =>
+                                {
+                                    this.Dispatcher.Invoke(() =>
+                                    {
+                                        if ((val * 100 - dialog2.ProgressBar1.Value) >= 0.5)
+                                            dialog2.ProgressBar1.Value = val * 100;
 
                                         if (val == 1.0)
                                         {
@@ -169,7 +170,7 @@ namespace ADWpfApp1
                                             TcpServer.ReceiveFileProgressCallback = null;
                                             dialog2.Hide();
 
-                                            Process.Start("explorer.exe",$"/select,{TcpServer.CurrentSaveFilePath}");
+                                            Process.Start("explorer.exe", $"/select,{TcpServer.CurrentSaveFilePath}");
                                             TcpServer.CurrentSaveFilePath = null;
                                         }
                                     });
@@ -177,19 +178,18 @@ namespace ADWpfApp1
 
                                 MyDownloadFileInfo.DownloadFileInfos.Add(downloadFileInfo);
 
-                                byte[] buf2 = ADMsg.sendFileOKData(remoteEP).ToArr();
-                                socket1.SendTo(buf2, remoteEP2);
+                                SendTo(ADMsg.sendFileOKData(remoteEP), remoteEP2);
                             }
-                            else if(result== ContentDialogResult.Secondary)
+                            else if (result == ContentDialogResult.Secondary)
                             {
-                                byte[] buf2 = ADMsg.sendFileCancelData().ToArr();
-                                socket1.SendTo(buf2, remoteEP2);
+                                SendTo(ADMsg.sendFileCancelData(), remoteEP2);
                             }
                         });
                     }
                     else if (msgType == ADMsgType.sendFileOK)
                     {
-                        this.Dispatcher.Invoke(() => {
+                        this.Dispatcher.Invoke(() =>
+                        {
                             this.Activate();
                             contentDialog2.Hide();
 
@@ -198,8 +198,10 @@ namespace ADWpfApp1
                             dialog2.TextBlock2.Text = Path.GetFileName(filePath);
                             dialog2.ShowAsync();
 
-                            TcpServer.SendFileProgressCallback = (double val) => {
-                                this.Dispatcher.Invoke(() => {
+                            TcpServer.SendFileProgressCallback = (double val) =>
+                            {
+                                this.Dispatcher.Invoke(() =>
+                                {
                                     if ((val * 100 - dialog2.ProgressBar1.Value) >= 0.5)
                                         dialog2.ProgressBar1.Value = val * 100;
 
@@ -219,7 +221,8 @@ namespace ADWpfApp1
                     }
                     else if (msgType == ADMsgType.sendFileCancel)
                     {
-                        this.Dispatcher.Invoke(async () => {
+                        this.Dispatcher.Invoke(async () =>
+                        {
                             if (contentDialog2 == null)
                                 return;
 
@@ -230,12 +233,13 @@ namespace ADWpfApp1
                             contentDialog.Content = "对方已取消文件传送";
                             contentDialog.PrimaryButtonText = "好";
                             contentDialog.DefaultButton = ContentDialogButton.Primary;
-                           await contentDialog.ShowAsync();
+                            await contentDialog.ShowAsync();
                         });
                     }
                     else if (msgType == ADMsgType.sendFileCancel2)
                     {
-                        this.Dispatcher.Invoke(async () => {
+                        this.Dispatcher.Invoke(async () =>
+                        {
                             if (dialog1 == null)
                                 return;
 
@@ -279,7 +283,7 @@ namespace ADWpfApp1
             }
         }
 
-        void AddDevice(IPAddress address2,ADMsg msg)
+        void AddDevice(IPAddress address2, ADMsg msg)
         {
             long address = address2.Address;
             if (ipAddress.Address != address)
@@ -315,25 +319,21 @@ namespace ADWpfApp1
             return "匿名";
         }
 
-        void SendTo(ADMsg msg,IPEndPoint endPoint)
+        void SendTo(ADMsg msg, IPEndPoint endPoint)
         {
-            byte[] buf =msg.ToArr();
+            byte[] buf = msg.ToArr();
             socket1.SendTo(buf, endPoint);
         }
-
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Devices.Clear();
-
-            byte[] buf = ADMsg.helloData(UserName).ToArr();
-            socket1.SendTo(buf, BroadcastEP);
+            SendTo(ADMsg.helloData(UserName), BroadcastEP);
         }
 
         void SendInfo()
         {
-            byte[] buf = ADMsg.sendInfoData(UserName).ToArr();
-            socket1.SendTo(buf, BroadcastEP);
+            SendTo(ADMsg.sendInfoData(UserName), BroadcastEP);
         }
 
         ContentDialog contentDialog2;
@@ -344,19 +344,17 @@ namespace ADWpfApp1
             if (data.ContainsFileDropList())
             {
                 filePath = data.GetFileDropList()[0];
-                byte[] buf = ADMsg.sendFileData(filePath).ToArr();
-                socket1.SendTo(buf, selectEP);
+                SendTo(ADMsg.sendFileData(filePath), selectEP);
 
                 this.Activate();
-                 contentDialog2 = new ContentDialog();
+                contentDialog2 = new ContentDialog();
                 contentDialog2.Title = "AirDrop";
                 contentDialog2.Content = "等待对方接收文件";
                 contentDialog2.PrimaryButtonText = "取消";
                 contentDialog2.DefaultButton = ContentDialogButton.Primary;
-                if(await contentDialog2.ShowAsync()== ContentDialogResult.Primary)
+                if (await contentDialog2.ShowAsync() == ContentDialogResult.Primary)
                 {
-                    byte[] buf2 = ADMsg.sendFileCancel2Data().ToArr();
-                    socket1.SendTo(buf2, selectEP);
+                    SendTo(ADMsg.sendFileCancel2Data(), selectEP);
                 }
             }
             else if (data.ContainsText())
@@ -364,8 +362,7 @@ namespace ADWpfApp1
                 string str = data.GetText();
                 if (str.StartsWith("http"))
                 {
-                    byte[] buf = ADMsg.sendUrlData(str).ToArr();
-                    socket1.SendTo(buf, selectEP);
+                    SendTo(ADMsg.sendUrlData(str), selectEP);
 
                     this.Activate();
                     ContentDialog contentDialog = new ContentDialog();
@@ -373,12 +370,11 @@ namespace ADWpfApp1
                     contentDialog.Content = "已发送";
                     contentDialog.PrimaryButtonText = "好";
                     contentDialog.DefaultButton = ContentDialogButton.Primary;
-                   await contentDialog.ShowAsync();
+                    await contentDialog.ShowAsync();
                 }
                 else
                 {
-                    byte[] buf = ADMsg.sendStringData(str).ToArr();
-                    socket1.SendTo(buf, selectEP);
+                    SendTo(ADMsg.sendStringData(str), selectEP);
                 }
             }
         }
