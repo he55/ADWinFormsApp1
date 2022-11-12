@@ -22,7 +22,6 @@ namespace ADWpfApp1
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         const int PORT = 12500;
-
         Socket socket1;
         readonly IPEndPoint BroadcastEP = new IPEndPoint(IPAddress.Broadcast, PORT);
         IPAddress ipAddress;
@@ -112,160 +111,160 @@ namespace ADWpfApp1
             {
                 EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
                 int len = socket1.ReceiveFrom(buf, ref ep);
-                if (len >= 8 && ADMsg.IsMSG(buf))
+                if (len < 8 || !ADMsg.IsMSG(buf))
+                    continue;
+
+                ADMsg msg = ADMsg.ToMSG(buf);
+                ADMsgType msgType = (ADMsgType)msg.GetMsgType();
+
+                IPAddress address2 = ((IPEndPoint)ep).Address;
+                IPEndPoint remoteEP2 = new IPEndPoint(address2, PORT);
+
+                if (msgType == ADMsgType.hello)
                 {
-                    ADMsg msg = ADMsg.ToMSG(buf);
-                    ADMsgType msgType = (ADMsgType)msg.GetMsgType();
+                    AddDevice(address2, msg);
+                    SendTo(ADMsg.helloOKData(UserName), remoteEP2);
+                }
+                else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
+                {
+                    AddDevice(address2, msg);
+                }
+                else if (msgType == ADMsgType.sendFile)
+                {
+                    MyDownloadFileInfo downloadFileInfo = msg.ToFileData();
+                    string name = GetUserName(address2.Address);
 
-                    IPAddress address2 = ((IPEndPoint)ep).Address;
-                    IPEndPoint remoteEP2 = new IPEndPoint(address2, PORT);
+                    this.Dispatcher.Invoke(async () =>
+                    {
+                        this.Activate();
 
-                    if (msgType == ADMsgType.hello)
-                    {
-                        AddDevice(address2, msg);
-                        SendTo(ADMsg.helloOKData(UserName), remoteEP2);
-                    }
-                    else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
-                    {
-                        AddDevice(address2, msg);
-                    }
-                    else if (msgType == ADMsgType.sendFile)
-                    {
-                        MyDownloadFileInfo downloadFileInfo = msg.ToFileData();
-                        string name = GetUserName(address2.Address);
-
-                        this.Dispatcher.Invoke(async () =>
+                        dialog1 = new ContentDialogExample();
+                        dialog1.PrimaryButtonText = "保存到桌面";
+                        dialog1.TextBlock1.Text = $"接收来自 {name} 的文件";
+                        dialog1.TextBlock2.Text = downloadFileInfo.FileName;
+                        ContentDialogResult result = await dialog1.ShowAsync();
+                        if (result == ContentDialogResult.Primary)
                         {
-                            this.Activate();
-
-                            dialog1 = new ContentDialogExample();
-                            dialog1.PrimaryButtonText = "保存到桌面";
-                            dialog1.TextBlock1.Text = $"接收来自 {name} 的文件";
-                            dialog1.TextBlock2.Text = downloadFileInfo.FileName;
-                            ContentDialogResult result = await dialog1.ShowAsync();
-                            if (result == ContentDialogResult.Primary)
-                            {
-                                ContentDialogExample2 dialog2 = new ContentDialogExample2();
-                                dialog2.TextBlock1.Text = "正在接收文件...";
-                                dialog2.TextBlock2.Text = downloadFileInfo.FileName;
-                                dialog2.ShowAsync();
-
-                                TcpServer.ReceiveFileProgressCallback = (double val) =>
-                                {
-                                    this.Dispatcher.Invoke(() =>
-                                    {
-                                        dialog2.ProgressBar1.Value = val * 100;
-                                        if (val == 1.0)
-                                        {
-                                            TcpServer.ReceiveFileProgressCallback = null;
-                                            dialog2.Hide();
-
-                                            Process.Start("explorer.exe", $"/select,{TcpServer.CurrentSaveFilePath}");
-                                            TcpServer.CurrentSaveFilePath = null;
-                                        }
-                                    });
-                                };
-
-                                MyDownloadFileInfo.DownloadFileInfos.Add(downloadFileInfo);
-
-                                SendTo(ADMsg.sendFileOKData(remoteEP), remoteEP2);
-                            }
-                            else if (result == ContentDialogResult.Secondary)
-                            {
-                                SendTo(ADMsg.sendFileCancelData(), remoteEP2);
-                            }
-                        });
-                    }
-                    else if (msgType == ADMsgType.sendFileOK)
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            this.Activate();
-                            contentDialog2.Hide();
-
                             ContentDialogExample2 dialog2 = new ContentDialogExample2();
-                            dialog2.TextBlock1.Text = "正在传送文件...";
-                            dialog2.TextBlock2.Text = Path.GetFileName(filePath);
+                            dialog2.TextBlock1.Text = "正在接收文件...";
+                            dialog2.TextBlock2.Text = downloadFileInfo.FileName;
                             dialog2.ShowAsync();
 
-                            TcpServer.SendFileProgressCallback = (double val) =>
+                            TcpServer.ReceiveFileProgressCallback = (double val) =>
                             {
                                 this.Dispatcher.Invoke(() =>
                                 {
                                     dialog2.ProgressBar1.Value = val * 100;
                                     if (val == 1.0)
                                     {
-                                        TcpServer.SendFileProgressCallback = null;
+                                        TcpServer.ReceiveFileProgressCallback = null;
                                         dialog2.Hide();
+
+                                        Process.Start("explorer.exe", $"/select,{TcpServer.CurrentSaveFilePath}");
+                                        TcpServer.CurrentSaveFilePath = null;
                                     }
                                 });
                             };
-                        });
 
-                        IPEndPoint remoteEP = msg.ToIPData();
-                        TcpServer.StartClientTcp(filePath, remoteEP);
-                    }
-                    else if (msgType == ADMsgType.sendFileCancel)
-                    {
-                        this.Dispatcher.Invoke(async () =>
+                            MyDownloadFileInfo.DownloadFileInfos.Add(downloadFileInfo);
+
+                            SendTo(ADMsg.sendFileOKData(remoteEP), remoteEP2);
+                        }
+                        else if (result == ContentDialogResult.Secondary)
                         {
-                            if (contentDialog2 == null)
-                                return;
-
-                            this.Activate();
-                            contentDialog2.Hide();
-
-                            ContentDialog contentDialog = new ContentDialog();
-                            contentDialog.Content = "对方已取消文件传送";
-                            contentDialog.PrimaryButtonText = "好";
-                            contentDialog.DefaultButton = ContentDialogButton.Primary;
-                            await contentDialog.ShowAsync();
-                        });
-                    }
-                    else if (msgType == ADMsgType.sendFileCancel2)
-                    {
-                        this.Dispatcher.Invoke(async () =>
-                        {
-                            if (dialog1 == null)
-                                return;
-
-                            this.Activate();
-                            dialog1.Hide();
-
-                            ContentDialog contentDialog = new ContentDialog();
-                            contentDialog.Content = "对方已取消文件传送";
-                            contentDialog.PrimaryButtonText = "好";
-                            contentDialog.DefaultButton = ContentDialogButton.Primary;
-                            await contentDialog.ShowAsync();
-                        });
-                    }
-                    else if (msgType == ADMsgType.sendUrl)
-                    {
-                        string url = msg.ToStringData();
-                        string name = GetUserName(address2.Address);
-
-                        this.Dispatcher.Invoke(async () =>
-                        {
-                            this.Activate();
-
-                            ContentDialogExample dialog = new ContentDialogExample();
-                            dialog.PrimaryButtonText = "在浏览器中打开";
-                            dialog.TextBlock1.Text = $"接收来自 {name} 的链接";
-                            dialog.TextBlock2.Text = url;
-                            ContentDialogResult result = await dialog.ShowAsync();
-                            if (result == ContentDialogResult.Primary)
-                            {
-                                Process.Start(url);
-                            }
-                        });
-                    }
-                    else if (msgType == ADMsgType.sendString)
-                    {
-                        string v = msg.ToStringData();
-                    }
-
-                    Debug.WriteLine($"{ep} => {msgType} : {msg.ToStringData()}");
+                            SendTo(ADMsg.sendFileCancelData(), remoteEP2);
+                        }
+                    });
                 }
+                else if (msgType == ADMsgType.sendFileOK)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.Activate();
+                        contentDialog2.Hide();
+
+                        ContentDialogExample2 dialog2 = new ContentDialogExample2();
+                        dialog2.TextBlock1.Text = "正在传送文件...";
+                        dialog2.TextBlock2.Text = Path.GetFileName(filePath);
+                        dialog2.ShowAsync();
+
+                        TcpServer.SendFileProgressCallback = (double val) =>
+                        {
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                dialog2.ProgressBar1.Value = val * 100;
+                                if (val == 1.0)
+                                {
+                                    TcpServer.SendFileProgressCallback = null;
+                                    dialog2.Hide();
+                                }
+                            });
+                        };
+                    });
+
+                    IPEndPoint remoteEP = msg.ToIPData();
+                    TcpServer.StartClientTcp(filePath, remoteEP);
+                }
+                else if (msgType == ADMsgType.sendFileCancel)
+                {
+                    this.Dispatcher.Invoke(async () =>
+                    {
+                        if (contentDialog2 == null)
+                            return;
+
+                        this.Activate();
+                        contentDialog2.Hide();
+
+                        ContentDialog contentDialog = new ContentDialog();
+                        contentDialog.Content = "对方已取消文件传送";
+                        contentDialog.PrimaryButtonText = "好";
+                        contentDialog.DefaultButton = ContentDialogButton.Primary;
+                        await contentDialog.ShowAsync();
+                    });
+                }
+                else if (msgType == ADMsgType.sendFileCancel2)
+                {
+                    this.Dispatcher.Invoke(async () =>
+                    {
+                        if (dialog1 == null)
+                            return;
+
+                        this.Activate();
+                        dialog1.Hide();
+
+                        ContentDialog contentDialog = new ContentDialog();
+                        contentDialog.Content = "对方已取消文件传送";
+                        contentDialog.PrimaryButtonText = "好";
+                        contentDialog.DefaultButton = ContentDialogButton.Primary;
+                        await contentDialog.ShowAsync();
+                    });
+                }
+                else if (msgType == ADMsgType.sendUrl)
+                {
+                    string url = msg.ToStringData();
+                    string name = GetUserName(address2.Address);
+
+                    this.Dispatcher.Invoke(async () =>
+                    {
+                        this.Activate();
+
+                        ContentDialogExample dialog = new ContentDialogExample();
+                        dialog.PrimaryButtonText = "在浏览器中打开";
+                        dialog.TextBlock1.Text = $"接收来自 {name} 的链接";
+                        dialog.TextBlock2.Text = url;
+                        ContentDialogResult result = await dialog.ShowAsync();
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            Process.Start(url);
+                        }
+                    });
+                }
+                else if (msgType == ADMsgType.sendString)
+                {
+                    string v = msg.ToStringData();
+                }
+
+                Debug.WriteLine($"{ep} => {msgType} : {msg.ToStringData()}");
             }
         }
 
