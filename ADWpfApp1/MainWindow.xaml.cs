@@ -41,19 +41,16 @@ namespace ADWpfApp1
             get => _settings.UserName ?? MachineName;
             set
             {
-                if (_settings.UserName != value)
-                {
-                    if (string.IsNullOrWhiteSpace(value))
-                    {
-                        UserName = MachineName;
-                    }
-                    else
-                    {
-                        _settings.UserName = value;
-                        NotifyPropertyChanged();
-                        SendTo(ADMsg.sendInfoData(UserName), BroadcastEP);
-                    }
-                }
+                if (_settings.UserName == value)
+                    return;
+
+                if (!string.IsNullOrWhiteSpace(value))
+                    _settings.UserName = value;
+                else
+                    _settings.UserName = MachineName;
+
+                NotifyPropertyChanged();
+                SendTo(ADMsg.sendInfoData(_settings.UserName), BroadcastEP);
             }
         }
 
@@ -76,7 +73,7 @@ namespace ADWpfApp1
             this.DataContext = this;
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private  void Window_Loaded(object sender, RoutedEventArgs e)
         {
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -84,6 +81,7 @@ namespace ADWpfApp1
             ipAddress = Helper2.GetIPAddr();
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
             socket1.Bind(localEndPoint);
+            Task.Run(() => { OnReceive(); });
 
             remoteEP = new IPEndPoint(ipAddress, PORT);
             TcpServer.StartServerTcp(remoteEP);
@@ -91,10 +89,7 @@ namespace ADWpfApp1
             IPString = ipAddress.ToString();
             NotifyPropertyChanged("IPString");
 
-            Task.Run(() => { OnReceive(); });
-
-            await Task.Delay(800);
-            Button_Click_1(null, null);
+            SendTo(ADMsg.helloData(UserName), BroadcastEP);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -128,7 +123,6 @@ namespace ADWpfApp1
                     if (msgType == ADMsgType.hello)
                     {
                         AddDevice(address2, msg);
-
                         SendTo(ADMsg.helloOKData(UserName), remoteEP2);
                     }
                     else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
@@ -278,27 +272,27 @@ namespace ADWpfApp1
         void AddDevice(IPAddress address2, ADMsg msg)
         {
             long address = address2.Address;
-            if (ipAddress.Address != address)
-            {
-                UserInfo userInfo = new UserInfo();
-                userInfo.UserName = msg.ToStringData();
-                userInfo.IP = address;
-                userInfo.IPString = address2.ToString();
+            if (ipAddress.Address == address)
+                return;
 
-                this.Dispatcher.Invoke(() =>
+            UserInfo userInfo = new UserInfo();
+            userInfo.UserName = msg.ToStringData();
+            userInfo.IP = address;
+            userInfo.IPString = address2.ToString();
+
+            this.Dispatcher.Invoke(() =>
+            {
+                for (int i = 0; i < Devices.Count; i++)
                 {
-                    for (int i = 0; i < Devices.Count; i++)
+                    if (Devices[i].IP == address)
                     {
-                        if (Devices[i].IP == address)
-                        {
-                            Devices.RemoveAt(i);
-                            Devices.Insert(i, userInfo);
-                            return;
-                        }
+                        Devices.RemoveAt(i);
+                        Devices.Insert(i, userInfo);
+                        return;
                     }
-                    Devices.Add(userInfo);
-                });
-            }
+                }
+                Devices.Add(userInfo);
+            });
         }
 
         string GetUserName(long ip)
