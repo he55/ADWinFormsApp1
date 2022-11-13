@@ -24,7 +24,7 @@ namespace ADWpfApp1
             doubleAnimation.To = r;
             doubleAnimation.Duration = TimeSpan.FromSeconds(2);
             doubleAnimation.RepeatBehavior = RepeatBehavior.Forever;
-            animationClock = doubleAnimation.CreateClock();
+            //animationClock = doubleAnimation.CreateClock();
         }
 
         public class CanvasItem
