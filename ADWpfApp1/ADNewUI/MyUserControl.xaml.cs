@@ -24,5 +24,11 @@ namespace ADWpfApp1
         {
             InitializeComponent();
         }
+
+        public void SetUserInfo(UserInfo userInfo)
+        {
+            textBlock1.Text= userInfo.UserName;
+            textBlock2.Text = userInfo.IPString;
+        }
     }
 }

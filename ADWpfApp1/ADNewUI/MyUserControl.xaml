@@ -15,8 +15,8 @@
             <RowDefinition Height="1.5*"/>
         </Grid.RowDefinitions>
         <Ellipse Stroke="Black" Fill="#FF4DDA27"/>
-        <TextBlock Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" Foreground="White"/>
-        <TextBlock Grid.Row="2" TextWrapping="Wrap" Text="TextBlock" Foreground="White"/>
+        <TextBlock x:Name="textBlock1" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" Foreground="White"/>
+        <TextBlock x:Name="textBlock2" Grid.Row="2" TextWrapping="Wrap" Text="TextBlock" Foreground="White"/>
 
     </Grid>
 </UserControl>

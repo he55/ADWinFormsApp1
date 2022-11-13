@@ -24,13 +24,40 @@ namespace ADWpfApp1
         public TestWindow()
         {
             InitializeComponent();
+            this.AllowDrop=true;
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            return;
             Point point = e.GetPosition(leida);
             leida.SetPoint(point);
             Debug.WriteLine($"point: {point}");
+        }
+
+        protected override void OnDragOver(DragEventArgs e)
+        {
+            Point point = e.GetPosition(leida);
+            leida.SetPoint(point);
+            Debug.WriteLine($"point: {point}");
+        }
+
+        protected override void OnDrop(DragEventArgs e)
+        {
+            Debug.WriteLine($"dev: {leida.SelectUserInfo?.UserName}");
+            leida.ResetBackground();
+        }
+
+        int i = 0;
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            i++;
+            leida.AddDevice(new UserInfo { UserName = $"dev: {i}", IPString = "1.2.3.4" });
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            leida.RemoveDevice(leida.canvasItems[0].Item3);
         }
     }
 }
