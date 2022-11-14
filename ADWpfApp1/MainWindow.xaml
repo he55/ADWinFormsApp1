@@ -67,10 +67,11 @@
             </local:Leida>
             <Button
                 Content="Refresh"
-                Margin="0,0,140,10"
-                VerticalAlignment="Bottom"
-                Click="Button_Click_1"
-                HorizontalAlignment="Right" />
+                Background="Red"
+                Foreground="White"
+                VerticalAlignment="Top"
+                Click="Button_Click_1" Margin="9,6,0,0" />
+            <TextBox x:Name="textBox1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,5,0,0"/>
         </Grid>
 
     </Grid>

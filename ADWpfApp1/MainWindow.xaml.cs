@@ -1,5 +1,4 @@
-﻿using ModernWpf;
-using ModernWpf.Controls;
+﻿using ModernWpf.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -92,13 +91,13 @@ namespace ADWpfApp1
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            leida.Focus();
+            textBox1.Focus();
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
-                leida.Focus();
+                textBox1.Focus();
         }
 
         ContentDialogExample dialog1;
@@ -270,8 +269,8 @@ namespace ADWpfApp1
         void AddDevice(IPAddress address2, ADMsg msg)
         {
             long address = address2.Address;
-            if (ipAddress.Address == address)
-                return;
+            //if (ipAddress.Address == address)
+            //    return;
 
             UserInfo userInfo = new UserInfo();
             userInfo.UserName = msg.ToStringData();
@@ -280,6 +279,8 @@ namespace ADWpfApp1
 
             this.Dispatcher.Invoke(() =>
             {
+                leida.AddDevice(userInfo);
+
                 for (int i = 0; i < Devices.Count; i++)
                 {
                     if (Devices[i].IP == address)
