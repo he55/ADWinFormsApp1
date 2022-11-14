@@ -83,13 +83,11 @@ namespace ADWpfApp1
             {
                 if (item.Item1.Contains(point))
                 {
-                    //if(item.Item2.Background!=Brushes.Red)
                     item.Item2.Background = Brushes.Red;
                     userInfo = item.Item3;
                 }
                 else
                 {
-                    //if (item.Item2.Background != Brushes.Transparent)
                     item.Item2.Background = Brushes.Transparent;
                 }
             }
@@ -99,6 +97,7 @@ namespace ADWpfApp1
 
         public void ResetBackground()
         {
+            SelectUserInfo = null;
             foreach (var item in canvasItems)
             {
                 item.Item2.Background = Brushes.Transparent;

@@ -28,7 +28,6 @@ namespace ADWpfApp1
         IPEndPoint remoteEP;
         IPEndPoint selectEP;
         string filePath;
-        int selectedIndex;
         Settings _settings = Settings.Load();
 
         public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
@@ -93,13 +92,13 @@ namespace ADWpfApp1
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            listBox1.Focus();
+            leida.Focus();
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
-                listBox1.Focus();
+                leida.Focus();
         }
 
         ContentDialogExample dialog1;
@@ -317,9 +316,9 @@ namespace ADWpfApp1
         }
 
         ContentDialog contentDialog2;
-        async void DataActionMet(DataObject data)
+        async void DataActionMet(DataObject data,UserInfo userInfo)
         {
-            selectEP = new IPEndPoint(Devices[selectedIndex].IP, PORT);
+            selectEP = new IPEndPoint(userInfo.IP, PORT);
 
             if (data.ContainsFileDropList())
             {
@@ -360,19 +359,6 @@ namespace ADWpfApp1
         }
 
 
-        private void ToggleTheme(object sender, RoutedEventArgs e)
-        {
-            if (ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark)
-            {
-                ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
-            }
-            else
-            {
-                ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
-            }
-        }
-
-
         #region DragDropHelper
 
         private IDropTargetHelper ddHelper = (IDropTargetHelper)new DragDropHelper();
@@ -400,18 +386,10 @@ namespace ADWpfApp1
             Win32Point wp = GetWin32Point(e);
             ddHelper.DragOver(ref wp, (int)e.Effects);
 
-            Point point = e.GetPosition(listBox1);
-            int v = MyHelper.GetIndexAtPoint(listBox1, point);
+            Point point = e.GetPosition(leida);
+            leida.SetPoint(point);
 
-            if (selectedIndex != -1)
-                Devices[selectedIndex].IsSel = false;
-
-            if (v != -1)
-                Devices[v].IsSel = true;
-
-            selectedIndex = v;
-
-            Debug.WriteLine($"sel: {selectedIndex} {point}");
+            Debug.WriteLine($"point: {point}");
         }
 
         private void Window_DragLeave(object sender, DragEventArgs e)
@@ -424,10 +402,10 @@ namespace ADWpfApp1
             Win32Point wp = GetWin32Point(e);
             ddHelper.Drop(e.Data as IDataObject_Com, ref wp, (int)e.Effects);
 
-            if (selectedIndex != -1)
+            if (leida.SelectUserInfo!=null)
             {
-                Devices[selectedIndex].IsSel = false;
-                DataActionMet((DataObject)e.Data);
+                DataActionMet((DataObject)e.Data,leida.SelectUserInfo);
+                leida.ResetBackground();
             }
         }
 

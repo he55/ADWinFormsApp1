@@ -8,8 +8,8 @@
     xmlns:local="clr-namespace:ADWpfApp1"
     mc:Ignorable="d"
     Title="MainWindow"
-    Height="480"
-    Width="320"
+    Height="450"
+    Width="800"
     ui:WindowHelper.UseModernWindowStyle="True"
     AllowDrop="True"
     DragEnter="Window_DragEnter"
@@ -17,61 +17,6 @@
     DragLeave="Window_DragLeave"
     Drop="Window_Drop"
     Loaded="Window_Loaded" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/ListBox.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.MessageFontFamilyKey}}" />
-                <Setter Property="FontWeight" Value="SemiBold" />
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextTrimming" Value="None" />
-                <Setter Property="TextWrapping" Value="Wrap" />
-                <Setter Property="LineStackingStrategy" Value="MaxHeight" />
-            </Style>
-
-            <Style x:Key="BodyTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
-                <Setter Property="FontWeight" Value="Normal" />
-                <Setter Property="FontSize" Value="14" />
-            </Style>
-
-            <!-- When using x:Bind, you need to set x:DataType -->
-            <DataTemplate x:Key="ContactListViewTemplate">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <ui:PersonPicture
-                        Grid.RowSpan="2"
-                        Width="50"
-                        Height="50"
-                        Margin="6"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center" />
-                    <TextBlock
-                        Grid.Column="1"
-                        Text="{Binding UserName, Mode=OneTime}"
-                        Style="{DynamicResource BaseTextBlockStyle}"
-                        Margin="12,6,0,0" />
-                    <TextBlock
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        Text="{Binding IPString, Mode=OneTime}"
-                        Style="{DynamicResource BodyTextBlockStyle}"
-                        Margin="12,0,0,6" />
-                </Grid>
-            </DataTemplate>
-
-        </ResourceDictionary>
-    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -108,27 +53,23 @@
                 Grid.Row="1"
                 d:Text="192.168.1.17"
                 Text="{Binding IPString, Mode=OneWay}"
-                Style="{DynamicResource BodyTextBlockStyle}"
                 Margin="12,3" Padding="8,0,0,0" />
         </Grid>
 
         <Grid Grid.Row="1">
-            <ListBox
-                x:Name="listBox1"
-                FocusVisualStyle="{x:Null}"
-                ItemsSource="{Binding Devices}"
-                ItemTemplate="{StaticResource ContactListViewTemplate}" />
+            <local:Leida x:Name="leida">
+                <local:Leida.Background>
+                    <RadialGradientBrush>
+                        <GradientStop Color="Red" Offset="0.9"/>
+                        <GradientStop Offset="1"/>
+                    </RadialGradientBrush>
+                </local:Leida.Background>
+            </local:Leida>
             <Button
                 Content="Refresh"
                 Margin="0,0,140,10"
                 VerticalAlignment="Bottom"
                 Click="Button_Click_1"
-                HorizontalAlignment="Right" />
-            <Button
-                Content="Toggle Theme"
-                Click="ToggleTheme"
-                Margin="0,0,10,10"
-                VerticalAlignment="Bottom"
                 HorizontalAlignment="Right" />
         </Grid>
 
