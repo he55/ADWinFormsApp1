@@ -29,8 +29,6 @@ namespace ADWpfApp1
         string filePath;
         Settings _settings = Settings.Load();
 
-        public ObservableCollection<UserInfo> Devices { get; set; } = new ObservableCollection<UserInfo>();
-
         #region LocalUserInfo
 
         public string UserName
@@ -130,7 +128,7 @@ namespace ADWpfApp1
                 else if (msgType == ADMsgType.sendFile)
                 {
                     MyDownloadFileInfo downloadFileInfo = msg.ToFileData();
-                    string name = GetUserName(address2.Address);
+                    string name = leida.GetUserName(address2.Address);
 
                     this.Dispatcher.Invoke(async () =>
                     {
@@ -240,7 +238,7 @@ namespace ADWpfApp1
                 else if (msgType == ADMsgType.sendUrl)
                 {
                     string url = msg.ToStringData();
-                    string name = GetUserName(address2.Address);
+                    string name = leida.GetUserName(address2.Address);
 
                     this.Dispatcher.Invoke(async () =>
                     {
@@ -280,28 +278,7 @@ namespace ADWpfApp1
             this.Dispatcher.Invoke(() =>
             {
                 leida.AddDevice(userInfo);
-
-                for (int i = 0; i < Devices.Count; i++)
-                {
-                    if (Devices[i].IP == address)
-                    {
-                        Devices.RemoveAt(i);
-                        Devices.Insert(i, userInfo);
-                        return;
-                    }
-                }
-                Devices.Add(userInfo);
             });
-        }
-
-        string GetUserName(long ip)
-        {
-            foreach (var item in Devices)
-            {
-                if (item.IP == ip)
-                    return item.UserName;
-            }
-            return "匿名";
         }
 
         void SendTo(ADMsg msg, IPEndPoint endPoint)
@@ -312,7 +289,7 @@ namespace ADWpfApp1
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Devices.Clear();
+            leida.Clean();
             SendTo(ADMsg.helloData(UserName), BroadcastEP);
         }
 

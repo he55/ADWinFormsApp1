@@ -52,12 +52,12 @@ namespace ADWpfApp1
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             i++;
-            leida.AddDevice(new UserInfo { UserName = $"dev: {i}", IPString = "1.2.3.4" });
+            leida.AddDevice(new UserInfo { UserName = $"dev: {i}", IPString = "1.2.3.4",IP=0 });
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            leida.RemoveDevice(leida.canvasItems[0].Item3);
+            leida.RemoveDevice(0);
         }
     }
 }

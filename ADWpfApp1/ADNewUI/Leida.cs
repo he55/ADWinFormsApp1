@@ -30,13 +30,23 @@ namespace ADWpfApp1
         public class CanvasItem
         {
             public Rect Item1 { get; set; }
-            public Control Item2 { get; set; }
+            public MyUserControl Item2 { get; set; }
             public UserInfo Item3 { get; set; }
         }
 
        public List<CanvasItem> canvasItems = new List<CanvasItem>();
         public void AddDevice(UserInfo userInfo)
         {
+            foreach (var item in canvasItems)
+            {
+                if (item.Item3.IP == userInfo.IP)
+                {
+                    item.Item2.SetUserInfo(userInfo);
+                    item.Item3 = userInfo;
+                    return;
+                }
+            }
+
             MyUserControl myUserControl = new MyUserControl();
             myUserControl.SetUserInfo(userInfo);
 
@@ -46,19 +56,35 @@ namespace ADWpfApp1
             UpdateRect();
         }
 
-        public void RemoveDevice(UserInfo userInfo)
+        public void RemoveDevice(long ip)
         {
             for (int i = 0; i < canvasItems.Count; i++)
             {
                 CanvasItem item = canvasItems[i];
-                if (item.Item3 == userInfo)
+                if (item.Item3.IP == ip)
                 {
                     this.Children.Remove(item.Item2);
                     canvasItems.Remove(item);
                 }
             }
 
-            UpdateRect();
+            //UpdateRect();
+        }
+
+        public void Clean()
+        {
+            this.Children.Clear();
+            canvasItems.Clear();
+        }
+
+       public string GetUserName(long ip)
+        {
+            foreach (var item in canvasItems)
+            {
+                if (item.Item3.IP == ip)
+                    return item.Item3.UserName;
+            }
+            return "匿名";
         }
 
         public void UpdateRect()
