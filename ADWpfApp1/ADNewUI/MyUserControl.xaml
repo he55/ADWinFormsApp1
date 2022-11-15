@@ -5,18 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ADWpfApp1"
              mc:Ignorable="d" 
-             Height="80"
-             Width="50"
+             Height="100"
+             Width="90" Padding="4"
             >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="1.5*"/>
-            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="55"/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <Ellipse Stroke="Black" Fill="#FF4DDA27"/>
-        <TextBlock x:Name="textBlock1" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" Foreground="White"/>
-        <TextBlock x:Name="textBlock2" Grid.Row="2" TextWrapping="Wrap" Text="TextBlock" Foreground="White"/>
-
+        <Ellipse Stroke="Black" Fill="#FF4DDA27" Width="50" Height="50"/>
+        <TextBlock x:Name="textBlock1" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" Foreground="White" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="textBlock2" Grid.Row="2" TextWrapping="Wrap" Text="TextBlock" Foreground="White" HorizontalAlignment="Center" FontSize="11"/>
     </Grid>
 </UserControl>
