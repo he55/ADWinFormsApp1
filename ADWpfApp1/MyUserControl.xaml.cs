@@ -29,6 +29,7 @@ namespace ADWpfApp1
         {
             textBlock1.Text= userInfo.UserName;
             textBlock2.Text = userInfo.IPString;
+            this.ToolTip = userInfo;
         }
     }
 }

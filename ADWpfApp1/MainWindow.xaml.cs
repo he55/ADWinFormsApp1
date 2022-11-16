@@ -89,13 +89,13 @@ namespace ADWpfApp1
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            textBox1.Focus();
+            leida.Focus();
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
-                textBox1.Focus();
+                leida.Focus();
         }
 
         ContentDialogExample dialog1;

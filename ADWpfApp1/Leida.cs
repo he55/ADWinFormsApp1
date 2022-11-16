@@ -16,6 +16,8 @@ namespace ADWpfApp1
 
         public Leida()
         {
+            this.Focusable= true;
+
             double w = SystemParameters.PrimaryScreenWidth;
             double h = SystemParameters.PrimaryScreenHeight;
             double r = Math.Sqrt(w * w + h * h) / 2;

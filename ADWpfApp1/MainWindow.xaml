@@ -71,7 +71,6 @@
                 Foreground="White"
                 VerticalAlignment="Top"
                 Click="Button_Click_1" Margin="9,6,0,0" />
-            <TextBox x:Name="textBox1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,5,0,0" Opacity="0"/>
         </Grid>
 
     </Grid>
