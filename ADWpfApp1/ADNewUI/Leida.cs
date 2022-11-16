@@ -82,15 +82,19 @@ namespace ADWpfApp1
 
         public void UpdateRect()
         {
-            double left = 100.0;
-            double top = 100.0;
+            double a = -45.0;
+            double r = 90 + 45;
+            int i = 0;
             foreach (var item in canvasItems)
             {
                 Control control = item.Item2;
+                double d = Math.PI * a * i++ / 180.0;
+                double left = r * Math.Cos(d) + center.X - control.Width / 2;
+                double top = r * Math.Sin(d) + center.Y - control.Height / 2;
+
                 Canvas.SetLeft(control, left);
                 Canvas.SetTop(control, top);
                 item.Item1 = new Rect(left, top, control.Width, control.Height);
-                left += 100.0;
             }
         }
 
