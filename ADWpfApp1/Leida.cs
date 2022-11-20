@@ -27,6 +27,15 @@ namespace ADWpfApp1
             doubleAnimation.Duration = TimeSpan.FromSeconds(3.0);
             doubleAnimation.RepeatBehavior = RepeatBehavior.Forever;
             //animationClock = doubleAnimation.CreateClock();
+
+            this.Children.Add(selfMyUserControl);
+        }
+
+        MyUserControl selfMyUserControl = new MyUserControl();
+        public void SetSelfDevice(UserInfo userInfo)
+        {
+            selfMyUserControl.SetUserInfo(userInfo);
+            UpdateSelfRect();
         }
 
        public List<CanvasItem> canvasItems = new List<CanvasItem>();
@@ -70,6 +79,8 @@ namespace ADWpfApp1
         {
             this.Children.Clear();
             canvasItems.Clear();
+
+            this.Children.Add(selfMyUserControl);
         }
 
        public string GetUserName(long ip)
@@ -98,6 +109,17 @@ namespace ADWpfApp1
                 Canvas.SetTop(control, top);
                 item.Item1 = new Rect(left, top, control.Width, control.Height);
             }
+
+            UpdateSelfRect();
+        }
+
+        public void UpdateSelfRect()
+        {
+            double left = center.X - selfMyUserControl.Width / 2;
+            double top = center.Y - selfMyUserControl.Height / 2;
+
+            Canvas.SetLeft(selfMyUserControl, left);
+            Canvas.SetTop(selfMyUserControl, top);
         }
 
         public UserInfo SelectUserInfo { get; set; }
@@ -142,10 +164,10 @@ namespace ADWpfApp1
             double offsetY = 120.0;
              center = new Point(w / 2, h - offsetY);
             dc.DrawEllipse(Brushes.Red, null, center, 3, 3);
-            dc.DrawEllipse(Brushes.Transparent, new Pen(this.Background, 10),
+            dc.DrawEllipse(Brushes.Transparent, new Pen(this.Background, 5),
                 center, null,
-                3, animationClock,
-                3, animationClock);
+                10, animationClock,
+                10, animationClock);
 
             Pen pen = new Pen(Brushes.Red, 2);
             double maxR = Math.Sqrt(center.X * center.X + center.Y * center.Y);

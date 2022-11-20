@@ -57,14 +57,7 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <local:Leida x:Name="leida">
-                <local:Leida.Background>
-                    <RadialGradientBrush>
-                        <GradientStop Color="Red" Offset="0.9"/>
-                        <GradientStop Offset="1"/>
-                    </RadialGradientBrush>
-                </local:Leida.Background>
-            </local:Leida>
+            <local:Leida x:Name="leida" Background="#99FF0000"/>
             <Button
                 Content="Refresh"
                 Background="Red"
