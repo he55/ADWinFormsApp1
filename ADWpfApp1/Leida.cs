@@ -26,7 +26,7 @@ namespace ADWpfApp1
             doubleAnimation.To = r;
             doubleAnimation.Duration = TimeSpan.FromSeconds(3.0);
             doubleAnimation.RepeatBehavior = RepeatBehavior.Forever;
-            //animationClock = doubleAnimation.CreateClock();
+            animationClock = doubleAnimation.CreateClock();
 
             this.Children.Add(selfMyUserControl);
         }
