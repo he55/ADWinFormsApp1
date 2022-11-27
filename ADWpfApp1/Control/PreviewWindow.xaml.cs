@@ -51,7 +51,7 @@ namespace ScreenshotEx
                 this.Top = -10000;
         }
 
-        private void Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             OpenImageAction?.Invoke();
         }

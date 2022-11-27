@@ -19,12 +19,20 @@
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="15" Opacity="0.6" ShadowDepth="0" />
                     </Border.Effect>
-                    <ContentPresenter ClipToBounds="True" />
+                    <Grid Margin="10,5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Title" TextWrapping="Wrap"  VerticalAlignment="Center"/>
+                        <ContentPresenter Grid.Row="1" ClipToBounds="True" />
+                        <Button Click="Button_Click" Content="OK" Grid.Row="2" Margin="0,0,87,0" HorizontalAlignment="Right" Width="64"/>
+                        <Button Content="Cancel" Margin="0,0,10,0" Grid.Row="2" HorizontalAlignment="Right" Width="63"/>
+                    </Grid>
                 </Border>
             </Border>
         </ControlTemplate>
     </Window.Template>
-    <Grid Background="Transparent" Margin="3" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
-        <Image x:Name="image1" />
-    </Grid>
+    <Grid/>
 </Window>
