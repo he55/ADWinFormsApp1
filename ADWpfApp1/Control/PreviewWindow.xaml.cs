@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
-namespace ScreenshotEx
+namespace ADWpfApp1
 {
     public partial class PreviewWindow : Window
     {
