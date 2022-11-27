@@ -15,7 +15,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Ellipse Stroke="Black" Fill="#FF4DDA27" Width="50" Height="50"/>
-        <TextBlock x:Name="textBlock1" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" Foreground="White" HorizontalAlignment="Center"/>
-        <TextBlock x:Name="textBlock2" Grid.Row="2" TextWrapping="Wrap" Text="TextBlock" Foreground="White" HorizontalAlignment="Center" FontSize="11"/>
+        <TextBlock x:Name="textBlock1" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="textBlock2" Grid.Row="2" TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" FontSize="11" Foreground="#FF7D7D7D"/>
     </Grid>
 </UserControl>

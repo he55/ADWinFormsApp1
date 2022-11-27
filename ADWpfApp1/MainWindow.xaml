@@ -57,7 +57,7 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <local:Leida x:Name="leida" Background="#99FF0000"/>
+            <local:Leida x:Name="leida"/>
             <Button
                 Content="Refresh"
                 Background="Red"

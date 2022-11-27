@@ -12,21 +12,13 @@ namespace ADWpfApp1
 {
     public class Leida : Canvas
     {
-        AnimationClock animationClock;
+        Pen _pen;
 
         public Leida()
         {
             this.Focusable= true;
-
-            double w = SystemParameters.PrimaryScreenWidth;
-            double h = SystemParameters.PrimaryScreenHeight;
-            double r = Math.Sqrt(w * w + h * h) / 2;
-
-            DoubleAnimation doubleAnimation = new DoubleAnimation();
-            doubleAnimation.To = r;
-            doubleAnimation.Duration = TimeSpan.FromSeconds(3.0);
-            doubleAnimation.RepeatBehavior = RepeatBehavior.Forever;
-            animationClock = doubleAnimation.CreateClock();
+            SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
+            _pen = new Pen(brush, 2);
 
             this.Children.Add(selfMyUserControl);
         }
@@ -71,8 +63,6 @@ namespace ADWpfApp1
                     canvasItems.Remove(item);
                 }
             }
-
-            //UpdateRect();
         }
 
         public void Clean()
@@ -158,24 +148,18 @@ namespace ADWpfApp1
             double h = this.ActualHeight;
             Rect rectangle = new Rect(0, 0, w, h);
             dc.PushClip(new RectangleGeometry(rectangle));
-            dc.DrawRectangle(Brushes.Black, null, rectangle);
+            dc.DrawRectangle(this.Background, null, rectangle);
 
             // center point
             double offsetY = 120.0;
              center = new Point(w / 2, h - offsetY);
-            dc.DrawEllipse(Brushes.Red, null, center, 3, 3);
-            dc.DrawEllipse(Brushes.Transparent, new Pen(this.Background, 5),
-                center, null,
-                10, animationClock,
-                10, animationClock);
-
-            Pen pen = new Pen(Brushes.Red, 2);
+          
             double maxR = Math.Sqrt(center.X * center.X + center.Y * center.Y);
             double minR = 90.0;
             double minT = 90.0;
             for (double i = minR; i < maxR; i += minT)
             {
-                dc.DrawEllipse(Brushes.Transparent, pen, center, i, i);
+                dc.DrawEllipse(Brushes.Transparent,_pen, center, i, i);
             }
 
             UpdateRect();
