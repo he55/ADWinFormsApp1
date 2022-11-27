@@ -40,8 +40,8 @@ namespace ScreenshotEx
         {
                 this.Opacity = 1;
                 Rect workArea = SystemParameters.WorkArea;
-                this.Left = workArea.Width - this.Width;
-                this.Top = workArea.Height - this.Height;
+                this.Left =( workArea.Width - this.Width)/2;
+                this.Top = (workArea.Height - this.Height)/2;
         }
 
         public void SetHide()
