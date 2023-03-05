@@ -11,17 +11,17 @@
     <UserControl.Resources>
           <Storyboard x:Key="story" RepeatBehavior="3x" >
                             <DoubleAnimation Duration="0:0:.8" 
-                                             BeginTime="0"  To="4" 
+                                              To="4" 
                                              Storyboard.TargetName="LampRipple_1" 
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" 
                                             />
                             <DoubleAnimation Duration="0:0:.8" 
-                                             BeginTime="0"  To="4" 
+                                              To="4" 
                                              Storyboard.TargetName="LampRipple_1" 
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" 
                                             />
                             <DoubleAnimation Duration="0:0:.8" 
-                                             BeginTime="0"  To="0" 
+                                              To="0" 
                                              Storyboard.TargetName="LampRipple_1" 
                                              Storyboard.TargetProperty="Opacity" 
                                             />
