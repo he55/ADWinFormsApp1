@@ -5,17 +5,41 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ADWpfApp1"
              mc:Ignorable="d" 
-             Height="100"
-             Width="90" Padding="4"
+             Height="85"
+             Width="125" Padding="4"
             >
+    <UserControl.Resources>
+          <Storyboard x:Key="story" RepeatBehavior="3x" >
+                            <DoubleAnimation Duration="0:0:.8" 
+                                             BeginTime="0"  To="4" 
+                                             Storyboard.TargetName="LampRipple_1" 
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" 
+                                            />
+                            <DoubleAnimation Duration="0:0:.8" 
+                                             BeginTime="0"  To="4" 
+                                             Storyboard.TargetName="LampRipple_1" 
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" 
+                                            />
+                            <DoubleAnimation Duration="0:0:.8" 
+                                             BeginTime="0"  To="0" 
+                                             Storyboard.TargetName="LampRipple_1" 
+                                             Storyboard.TargetProperty="Opacity" 
+                                            />
+                        </Storyboard>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="55"/>
             <RowDefinition/>
-            <RowDefinition/>
         </Grid.RowDefinitions>
-        <Ellipse Stroke="Black" Fill="#FF4DDA27" Width="50" Height="50"/>
-        <TextBlock x:Name="textBlock1" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center"/>
-        <TextBlock x:Name="textBlock2" Grid.Row="2" TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" FontSize="11" Foreground="#FF7D7D7D"/>
+        <Grid Width="50" Height="50">
+            <Ellipse x:Name="LampRipple_1" Opacity="1" Fill="#7F6B6B6B" RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+            <Ellipse  Fill="#FF4DDA27" />
+        </Grid>
+        <TextBlock x:Name="textBlock1" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
     </Grid>
 </UserControl>
