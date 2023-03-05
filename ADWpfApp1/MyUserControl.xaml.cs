@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -28,8 +29,15 @@ namespace ADWpfApp1
         public void SetUserInfo(UserInfo userInfo)
         {
             textBlock1.Text= userInfo.UserName;
-            textBlock2.Text = userInfo.IPString;
-            this.ToolTip = userInfo;
+           this.ToolTip= userInfo.IPString;
+
+            BeginStory();
+        }
+
+        void BeginStory()
+        {
+            Storyboard storyboard = (Storyboard)this.FindResource("story");
+            storyboard.Begin();
         }
     }
 }
