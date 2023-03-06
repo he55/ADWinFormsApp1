@@ -9,7 +9,7 @@
              Width="125" Padding="4"
             >
     <UserControl.Resources>
-          <Storyboard x:Key="story" RepeatBehavior="3x" >
+          <Storyboard x:Key="story" RepeatBehavior="3x" FillBehavior="Stop" >
                             <DoubleAnimation Duration="0:0:.6" 
                                               To="4" 
                                              Storyboard.TargetName="LampRipple_1" 
