@@ -120,12 +120,12 @@ namespace ADWpfApp1
             {
                 if (item.Item1.Contains(point))
                 {
-                    item.Item2.Background = Brushes.Red;
+                    item.Item2.SetHi(true);
                     userInfo = item.Item3;
                 }
                 else
                 {
-                    item.Item2.Background = Brushes.Transparent;
+                    item.Item2.SetHi(false);
                 }
             }
 
@@ -137,7 +137,7 @@ namespace ADWpfApp1
             SelectUserInfo = null;
             foreach (var item in canvasItems)
             {
-                item.Item2.Background = Brushes.Transparent;
+                item.Item2.SetHi(false);
             }
         }
 

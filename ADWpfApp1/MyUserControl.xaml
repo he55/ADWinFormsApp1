@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ADWpfApp1"
              mc:Ignorable="d" 
-             Height="85"
+             Height="125"
              Width="125" Padding="4"
             >
     <UserControl.Resources>
@@ -28,11 +28,8 @@
                         </Storyboard>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="55"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid Width="50" Height="50">
+        <Border x:Name="hiBorder" d:Visibility="Visible" Visibility="Hidden" Background="#FF9E9E9E" CornerRadius="15"/>
+        <Grid Width="50" Height="50" VerticalAlignment="Top" Margin="0,20,0,0">
             <Ellipse x:Name="LampRipple_1" Opacity="1" Fill="#7F6B6B6B" RenderTransformOrigin="0.5,0.5">
                 <Ellipse.RenderTransform>
                     <ScaleTransform/>
@@ -40,6 +37,6 @@
             </Ellipse>
             <Ellipse  Fill="#FF4DDA27" />
         </Grid>
-        <TextBlock x:Name="textBlock1" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+        <TextBlock x:Name="textBlock1"  TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" Margin="0,80,0,0"/>
     </Grid>
 </UserControl>

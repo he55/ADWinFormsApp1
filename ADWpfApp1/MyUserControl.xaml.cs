@@ -34,6 +34,11 @@ namespace ADWpfApp1
             BeginStory();
         }
 
+        public void SetHi(bool val)
+        {
+            hiBorder.Visibility=val? Visibility.Visible : Visibility.Hidden;
+        }
+
         void BeginStory()
         {
             Storyboard storyboard = (Storyboard)this.FindResource("story");

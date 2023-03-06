@@ -137,16 +137,12 @@ namespace ADWpfApp1
                     {
                         this.Activate();
 
-                        dialog1 = new ContentDialogExample();
+                        dialog1 = new ContentDialogExample($"接收来自 {name} 的文件", downloadFileInfo.FileName);
                         dialog1.PrimaryButtonText = "保存到桌面";
-                        dialog1.TextBlock1.Text = $"接收来自 {name} 的文件";
-                        dialog1.TextBlock2.Text = downloadFileInfo.FileName;
                         ContentDialogResult result = await dialog1.ShowAsync();
                         if (result == ContentDialogResult.Primary)
                         {
-                            ContentDialogExample2 dialog2 = new ContentDialogExample2();
-                            dialog2.TextBlock1.Text = "正在接收文件...";
-                            dialog2.TextBlock2.Text = downloadFileInfo.FileName;
+                            ContentDialogExample2 dialog2 = new ContentDialogExample2("正在接收文件...", downloadFileInfo.FileName);
                             dialog2.ShowAsync();
 
                             TcpServer.ReceiveFileProgressCallback = (double val) =>
@@ -182,9 +178,7 @@ namespace ADWpfApp1
                         this.Activate();
                         contentDialog2.Hide();
 
-                        ContentDialogExample2 dialog2 = new ContentDialogExample2();
-                        dialog2.TextBlock1.Text = "正在传送文件...";
-                        dialog2.TextBlock2.Text = Path.GetFileName(filePath);
+                        ContentDialogExample2 dialog2 = new ContentDialogExample2("正在传送文件...", Path.GetFileName(filePath));
                         dialog2.ShowAsync();
 
                         TcpServer.SendFileProgressCallback = (double val) =>
@@ -247,10 +241,8 @@ namespace ADWpfApp1
                     {
                         this.Activate();
 
-                        ContentDialogExample dialog = new ContentDialogExample();
+                        ContentDialogExample dialog = new ContentDialogExample($"接收来自 {name} 的链接",url);
                         dialog.PrimaryButtonText = "在浏览器中打开";
-                        dialog.TextBlock1.Text = $"接收来自 {name} 的链接";
-                        dialog.TextBlock2.Text = url;
                         ContentDialogResult result = await dialog.ShowAsync();
                         if (result == ContentDialogResult.Primary)
                         {
