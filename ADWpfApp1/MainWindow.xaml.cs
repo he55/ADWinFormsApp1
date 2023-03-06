@@ -148,7 +148,7 @@ namespace ADWpfApp1
                                 {
                                     double val = 1.0;
                                     if (progress.Length != 0)
-                                        val = progress.Position / progress.Length;
+                                        val =(double) progress.Position / progress.Length;
 
                                     dialog2.ProgressBar1.Value = val * 100;
                                     if (val == 1.0)
@@ -188,7 +188,7 @@ namespace ADWpfApp1
                             {
                                 double val = 1.0;
                                 if (progress.Length != 0)
-                                    val = progress.Position / progress.Length;
+                                    val =(double) progress.Position / progress.Length;
 
                                 dialog2.ProgressBar1.Value = val * 100;
                                 if (val == 1.0)
