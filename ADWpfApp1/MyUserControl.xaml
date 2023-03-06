@@ -28,7 +28,7 @@
                         </Storyboard>
     </UserControl.Resources>
     <Grid>
-        <Border x:Name="hiBorder" d:Visibility="Visible" Visibility="Hidden" Background="#FF9E9E9E" CornerRadius="15"/>
+        <Border x:Name="hiBorder" d:Visibility="Visible" Visibility="Hidden" Background="#CC9E9E9E" CornerRadius="10"/>
         <Grid Width="50" Height="50" VerticalAlignment="Top" Margin="0,20,0,0">
             <Ellipse x:Name="LampRipple_1" Opacity="1" Fill="#7F6B6B6B" RenderTransformOrigin="0.5,0.5">
                 <Ellipse.RenderTransform>
