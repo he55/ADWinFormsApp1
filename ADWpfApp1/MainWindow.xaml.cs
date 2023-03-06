@@ -142,10 +142,14 @@ namespace ADWpfApp1
                             ContentDialogExample2 dialog2 = new ContentDialogExample2("正在接收文件...", downloadFileInfo.FileName);
                             dialog2.ShowAsync();
 
-                            TcpServer.ReceiveFileProgressCallback = (double val) =>
+                            TcpServer.ReceiveFileProgressCallback = (ProgressData progress) =>
                             {
                                 this.Dispatcher.Invoke(() =>
                                 {
+                                    double val = 1.0;
+                                    if (progress.Length != 0)
+                                        val = progress.Position / progress.Length;
+
                                     dialog2.ProgressBar1.Value = val * 100;
                                     if (val == 1.0)
                                     {
@@ -178,10 +182,14 @@ namespace ADWpfApp1
                         ContentDialogExample2 dialog2 = new ContentDialogExample2("正在传送文件...", Path.GetFileName(filePath));
                         dialog2.ShowAsync();
 
-                        TcpServer.SendFileProgressCallback = (double val) =>
+                        TcpServer.SendFileProgressCallback = (ProgressData progress) =>
                         {
                             this.Dispatcher.Invoke(() =>
                             {
+                                double val = 1.0;
+                                if (progress.Length != 0)
+                                    val = progress.Position / progress.Length;
+
                                 dialog2.ProgressBar1.Value = val * 100;
                                 if (val == 1.0)
                                 {

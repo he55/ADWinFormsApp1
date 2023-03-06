@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace ADWpfApp1
 {
+    public class ProgressData
+    {
+        public long Length { get; set; }
+        public long Position { get; set; }
+    }
+
     public class TcpServer
     {
         const int BufferSize = 8192;
 
         public static string CurrentSaveFilePath;
-        public static Action<double> SendFileProgressCallback;
-        public static Action<double> ReceiveFileProgressCallback;
+        public static Action<ProgressData> SendFileProgressCallback;
+        public static Action<ProgressData> ReceiveFileProgressCallback;
 
         public static void StartClientTcp(string path, IPEndPoint remoteEP)
         {
@@ -32,6 +38,11 @@ namespace ADWpfApp1
                 {
                     using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
                     {
+                        ProgressData progress = new ProgressData();
+                        progress.Length = reader.Length;
+                        progress.Position =0;
+                        SendFileProgressCallback?.Invoke(progress);
+
                         byte[] fileBuffer = new byte[BufferSize];
                         int read, sent;
                         while ((read = reader.Read(fileBuffer, 0, BufferSize)) != 0)
@@ -42,12 +53,8 @@ namespace ADWpfApp1
                                 read -= sent;
                             }
 
-                            SendFileProgressCallback?.Invoke((double)reader.Position / reader.Length);
-                        }
-
-                        if (reader.Length == 0)
-                        {
-                            SendFileProgressCallback?.Invoke(1.0);
+                            progress.Position = reader.Position;
+                            SendFileProgressCallback?.Invoke(progress);
                         }
                     }
                 }
@@ -93,7 +100,12 @@ namespace ADWpfApp1
                 CurrentSaveFilePath = saveFilePath;
                 using (FileStream writer = new FileStream(saveFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    long receive = 0L;
+                    ProgressData progress = new ProgressData();
+                    progress.Length = downloadFileInfo.Len;
+                    progress.Position = 0;
+                    ReceiveFileProgressCallback?.Invoke(progress);
+
+                    long receive = 0;
                     int received;
                     byte[] fileBuffer = new byte[BufferSize];
 
@@ -103,12 +115,8 @@ namespace ADWpfApp1
                         writer.Write(fileBuffer, 0, received);
                         receive += received;
 
-                        ReceiveFileProgressCallback?.Invoke((double)receive / downloadFileInfo.Len);
-                    }
-
-                    if (downloadFileInfo.Len == 0)
-                    {
-                        ReceiveFileProgressCallback?.Invoke(1.0);
+                        progress.Position = receive;
+                        ReceiveFileProgressCallback?.Invoke(progress);
                     }
                 }
             }
