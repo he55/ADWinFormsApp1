@@ -80,8 +80,8 @@ namespace ADWpfApp1
         public void UpdateRect()
         {
             double a = -45.0;
-            double r = 90 + 45;
-            int i = 0;
+            double r = 90 + 90+90;
+            int i = 2;
             foreach (var item in canvasItems)
             {
                 Control control = item.Item2;
