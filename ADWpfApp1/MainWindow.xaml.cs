@@ -84,9 +84,6 @@ namespace ADWpfApp1
             IPString = ipAddress.ToString();
             NotifyPropertyChanged("IPString");
 
-            UserInfo userInfo = new UserInfo { UserName = UserName, IPString = IPString };
-            leida.SetSelfDevice(userInfo);
-
             SendTo(ADMsg.helloData(UserName), BroadcastEP);
         }
 

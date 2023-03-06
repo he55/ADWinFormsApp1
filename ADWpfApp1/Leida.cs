@@ -13,6 +13,7 @@ namespace ADWpfApp1
     public class Leida : Canvas
     {
         Pen _pen;
+        SelfUserControl1 selfMyUserControl = new SelfUserControl1();
 
         public Leida()
         {
@@ -21,13 +22,6 @@ namespace ADWpfApp1
             _pen = new Pen(brush, 2);
 
             this.Children.Add(selfMyUserControl);
-        }
-
-        MyUserControl selfMyUserControl = new MyUserControl();
-        public void SetSelfDevice(UserInfo userInfo)
-        {
-            selfMyUserControl.SetUserInfo(userInfo);
-            UpdateSelfRect();
         }
 
        public List<CanvasItem> canvasItems = new List<CanvasItem>();
