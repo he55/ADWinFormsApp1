@@ -30,8 +30,6 @@ namespace ADWpfApp1
         {
             textBlock1.Text= userInfo.UserName;
            this.ToolTip= userInfo.IPString;
-
-            BeginStory();
         }
 
         public void SetHi(bool val)
@@ -39,7 +37,7 @@ namespace ADWpfApp1
             hiBorder.Visibility=val? Visibility.Visible : Visibility.Hidden;
         }
 
-        void BeginStory()
+       public void BeginStory()
         {
             Storyboard storyboard = (Storyboard)this.FindResource("story");
             storyboard.Begin();

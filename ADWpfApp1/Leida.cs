@@ -39,6 +39,7 @@ namespace ADWpfApp1
 
             MyUserControl myUserControl = new MyUserControl();
             myUserControl.SetUserInfo(userInfo);
+            myUserControl.BeginStory();
 
             this.Children.Add(myUserControl);
             canvasItems.Add(new CanvasItem { Item2 = myUserControl, Item3 = userInfo });
@@ -46,17 +47,20 @@ namespace ADWpfApp1
             UpdateRect();
         }
 
-        public void RemoveDevice(long ip)
+        public void UpdateDevice()
         {
+            DateTime now = DateTime.Now;
             for (int i = 0; i < canvasItems.Count; i++)
             {
                 CanvasItem item = canvasItems[i];
-                if (item.Item3.IP == ip)
+                if (now-item.Item3.LastTime>TimeSpan.FromSeconds(3))
                 {
                     this.Children.Remove(item.Item2);
                     canvasItems.Remove(item);
                 }
             }
+
+            UpdateRect();
         }
 
         public void Clean()
@@ -93,8 +97,6 @@ namespace ADWpfApp1
                 Canvas.SetTop(control, top);
                 item.Item1 = new Rect(left, top, control.Width, control.Height);
             }
-
-            UpdateSelfRect();
         }
 
         public void UpdateSelfRect()
@@ -157,6 +159,7 @@ namespace ADWpfApp1
             }
 
             UpdateRect();
+            UpdateSelfRect();
         }
     }
 

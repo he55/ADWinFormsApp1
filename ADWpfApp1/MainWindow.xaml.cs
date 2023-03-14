@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using IDataObject_Com = System.Runtime.InteropServices.ComTypes.IDataObject;
 
 namespace ADWpfApp1
@@ -84,6 +85,17 @@ namespace ADWpfApp1
             IPString = ipAddress.ToString();
             NotifyPropertyChanged("IPString");
 
+            SendTo(ADMsg.helloData(UserName), BroadcastEP);
+
+            DispatcherTimer dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Interval = TimeSpan.FromSeconds(2);
+            dispatcherTimer.Tick += DispatcherTimer_Tick;
+            dispatcherTimer.Start();
+        }
+
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            leida.UpdateDevice();
             SendTo(ADMsg.helloData(UserName), BroadcastEP);
         }
 
@@ -271,6 +283,8 @@ namespace ADWpfApp1
             //    return;
 
             UserInfo userInfo = new UserInfo();
+            userInfo.Uid = Guid.NewGuid().ToString();
+            userInfo.LastTime = DateTime.Now;
             userInfo.UserName = msg.ToStringData();
             userInfo.IP = address;
             userInfo.IPString = address2.ToString();
@@ -285,12 +299,6 @@ namespace ADWpfApp1
         {
             byte[] buf = msg.ToArr();
             socket1.SendTo(buf, endPoint);
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            leida.Clean();
-            SendTo(ADMsg.helloData(UserName), BroadcastEP);
         }
 
         ContentDialog contentDialog2;
