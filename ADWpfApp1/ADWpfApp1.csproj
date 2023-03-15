@@ -5,11 +5,17 @@
     <TargetFramework>net472</TargetFramework>
     <UseWPF>true</UseWPF>
 	  <UseWindowsForms>true</UseWindowsForms>
+	  <ApplicationIcon>ad.ico</ApplicationIcon>
+	  <AssemblyName>AirDrop</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="ad.png" />
     <None Remove="ma.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ad.ico" />
   </ItemGroup>
 
   <ItemGroup>
