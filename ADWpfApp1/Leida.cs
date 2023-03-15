@@ -18,7 +18,7 @@ namespace ADWpfApp1
         public Leida()
         {
             this.Focusable= true;
-            SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
+            SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(255, 230, 230, 230));
             _pen = new Pen(brush, 2);
 
             this.Children.Add(selfMyUserControl);
