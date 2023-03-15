@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="ad.png" />
+    <None Remove="ma.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
 
   <ItemGroup>
     <Resource Include="ad.png" />
+    <Resource Include="ma.png" />
   </ItemGroup>
 
 </Project>

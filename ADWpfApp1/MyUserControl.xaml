@@ -11,12 +11,12 @@
     <UserControl.Resources>
           <Storyboard x:Key="story" RepeatBehavior="3x" FillBehavior="Stop" >
                             <DoubleAnimation Duration="0:0:.6" 
-                                              To="4" 
+                                              To="3" 
                                              Storyboard.TargetName="LampRipple_1" 
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" 
                                             />
                             <DoubleAnimation Duration="0:0:.6" 
-                                              To="4" 
+                                              To="3" 
                                              Storyboard.TargetName="LampRipple_1" 
                                              Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" 
                                             />
@@ -29,14 +29,19 @@
     </UserControl.Resources>
     <Grid>
         <Border x:Name="hiBorder" d:Visibility="Visible" Visibility="Hidden" Background="#CC9E9E9E" CornerRadius="10"/>
-        <Grid Width="50" Height="50" VerticalAlignment="Top" Margin="0,20,0,0">
+        <Grid Width="70" Height="70" VerticalAlignment="Top" Margin="0,20,0,0">
             <Ellipse x:Name="LampRipple_1" Opacity="1" Fill="#7F6B6B6B" RenderTransformOrigin="0.5,0.5">
                 <Ellipse.RenderTransform>
                     <ScaleTransform/>
                 </Ellipse.RenderTransform>
             </Ellipse>
             <Ellipse  Fill="#FF4DDA27" />
+            <Image Source="/ma.png">
+                <Image.Clip>
+                    <RectangleGeometry RadiusX="35" RadiusY="35" Rect="0,0,70,70"/>
+                </Image.Clip>
+            </Image>
         </Grid>
-        <TextBlock x:Name="textBlock1"  TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" Margin="0,80,0,0"/>
+        <TextBlock x:Name="textBlock1"  TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" Margin="0,95,0,0"/>
     </Grid>
 </UserControl>
