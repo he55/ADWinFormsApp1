@@ -85,7 +85,7 @@ namespace ADWpfApp1
         {
             double a = -45.0;
             double r = 90 + 90+90;
-            int i = 2;
+            int i = 1;
             foreach (var item in canvasItems)
             {
                 Control control = item.Item2;

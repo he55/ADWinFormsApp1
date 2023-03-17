@@ -279,8 +279,12 @@ namespace ADWpfApp1
         void AddDevice(IPAddress address2, ADMsg msg)
         {
             long address = address2.Address;
-            //if (ipAddress.Address == address)
-            //    return;
+
+            if(!Debugger.IsAttached)
+            {
+                if (ipAddress.Address == address)
+                return;
+            }
 
             UserInfo userInfo = new UserInfo();
             userInfo.Uid = Guid.NewGuid().ToString();
