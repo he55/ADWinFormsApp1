@@ -97,11 +97,6 @@ namespace ADWpfApp1
             SendTo(ADMsg.helloData(UserName), BroadcastEP);
         }
 
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.Focus();
-        }
-
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
