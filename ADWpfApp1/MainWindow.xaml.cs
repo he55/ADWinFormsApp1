@@ -51,7 +51,6 @@ namespace ADWpfApp1
         }
 
         public string MachineName { get; set; }
-        public string IPString { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -82,8 +81,7 @@ namespace ADWpfApp1
             remoteEP = new IPEndPoint(ipAddress, PORT);
             TcpServer.StartServerTcp(remoteEP);
 
-            IPString = ipAddress.ToString();
-            NotifyPropertyChanged("IPString");
+            ipTextBlock.Text = ipAddress.ToString();
 
             SendTo(ADMsg.helloData(UserName), BroadcastEP);
 
@@ -101,13 +99,13 @@ namespace ADWpfApp1
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            leida.Focus();
+            this.Focus();
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
-                leida.Focus();
+                this.Focus();
         }
 
         ContentDialogExample dialog1;

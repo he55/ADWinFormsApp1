@@ -37,8 +37,7 @@
                 BorderThickness="0"
                 KeyDown="TextBox_KeyDown"
                 Margin="0,3" VerticalContentAlignment="Center" />
-            <TextBlock
-                Text="{Binding IPString, Mode=OneWay}"
+                        <TextBlock x:Name="ipTextBlock"
                 Margin="0,3" Padding="8,0,0,0" />
                             </StackPanel>
                         </ui:Flyout>
