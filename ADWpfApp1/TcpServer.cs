@@ -6,19 +6,11 @@ using System.Threading.Tasks;
 
 namespace ADWpfApp1
 {
-    public class ProgressData
-    {
-        public long Length { get; set; }
-        public long Position { get; set; }
-    }
-
     public class TcpServer
     {
         const int BufferSize = 8192;
 
-        public static string CurrentSaveFilePath;
         public static Action<ProgressData> SendFileProgressCallback;
-        public static Action<ProgressData> ReceiveFileProgressCallback;
 
         public static void StartClientTcp(string path, IPEndPoint remoteEP)
         {
@@ -97,13 +89,13 @@ namespace ADWpfApp1
                 handler.Send(okBuffer);
 
                 string saveFilePath = Helper2.GetSafeFileName(downloadFileInfo.FileName);
-                CurrentSaveFilePath = saveFilePath;
+                downloadFileInfo.SaveFilePath = saveFilePath;
                 using (FileStream writer = new FileStream(saveFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     ProgressData progress = new ProgressData();
                     progress.Length = downloadFileInfo.Len;
                     progress.Position = 0;
-                    ReceiveFileProgressCallback?.Invoke(progress);
+                    downloadFileInfo.ProgressCallback(progress);
 
                     long receive = 0;
                     int received;
@@ -116,7 +108,7 @@ namespace ADWpfApp1
                         receive += received;
 
                         progress.Position = receive;
-                        ReceiveFileProgressCallback?.Invoke(progress);
+                        downloadFileInfo.ProgressCallback(progress);
                     }
                 }
             }

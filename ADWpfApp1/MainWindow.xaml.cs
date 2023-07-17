@@ -147,7 +147,7 @@ namespace ADWpfApp1
                             ContentDialogExample2 dialog2 = new ContentDialogExample2("正在接收文件...", downloadFileInfo.FileName);
                             dialog2.ShowAsync();
 
-                            TcpServer.ReceiveFileProgressCallback = (ProgressData progress) =>
+                            downloadFileInfo.ProgressCallback = (ProgressData progress) =>
                             {
                                 this.Dispatcher.Invoke(() =>
                                 {
@@ -158,11 +158,9 @@ namespace ADWpfApp1
                                     dialog2.ProgressBar1.Value = val * 100;
                                     if (val == 1.0)
                                     {
-                                        TcpServer.ReceiveFileProgressCallback = null;
                                         dialog2.Hide();
 
-                                        Process.Start("explorer.exe", $"/select,{TcpServer.CurrentSaveFilePath}");
-                                        TcpServer.CurrentSaveFilePath = null;
+                                        Process.Start("explorer.exe", $"/select,{downloadFileInfo.SaveFilePath}");
                                     }
                                 });
                             };

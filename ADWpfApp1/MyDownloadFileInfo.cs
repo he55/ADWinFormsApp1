@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ADWpfApp1
 {
@@ -23,5 +24,14 @@ namespace ADWpfApp1
         public long Len { get; set; }
         public string FileName { get; set; }
         public int Hash { get; set; }
+
+        public string SaveFilePath { get; set; }
+        public Action<ProgressData> ProgressCallback;
+    }
+
+    public class ProgressData
+    {
+        public long Length { get; set; }
+        public long Position { get; set; }
     }
 }
