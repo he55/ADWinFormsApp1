@@ -151,12 +151,8 @@ namespace ADWpfApp1
                             {
                                 this.Dispatcher.Invoke(() =>
                                 {
-                                    double val = 1.0;
-                                    if (progress.Length != 0)
-                                        val =(double) progress.Position / progress.Length;
-
-                                    dialog2.ProgressBar1.Value = val * 100;
-                                    if (val == 1.0)
+                                    dialog2.UpdateProgress(progress);
+                                    if (progress.Done)
                                     {
                                         dialog2.Hide();
 
@@ -189,12 +185,8 @@ namespace ADWpfApp1
                         {
                             this.Dispatcher.Invoke(() =>
                             {
-                                double val = 1.0;
-                                if (progress.Length != 0)
-                                    val =(double) progress.Position / progress.Length;
-
-                                dialog2.ProgressBar1.Value = val * 100;
-                                if (val == 1.0)
+                                dialog2.UpdateProgress(progress);
+                                if (progress.Done)
                                 {
                                     TcpServer.SendFileProgressCallback = null;
                                     dialog2.Hide();

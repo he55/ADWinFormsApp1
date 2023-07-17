@@ -33,5 +33,6 @@ namespace ADWpfApp1
     {
         public long Length { get; set; }
         public long Position { get; set; }
+        public bool Done => Length == Position;
     }
 }
