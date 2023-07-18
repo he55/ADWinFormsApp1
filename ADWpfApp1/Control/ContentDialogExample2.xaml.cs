@@ -14,7 +14,10 @@ namespace ADWpfApp1
         public void UpdateProgress(ProgressData progress)
         {
             ProgressBar1.Value = (double)progress.Position / progress.Length * 100;
-            TextBlock3.Text = $"{progress.Position}/{progress.Length}";
+
+            string v = StringHelper.ToSizeString(progress.Position);
+            string v2 = StringHelper.ToSizeString(progress.Length);
+            TextBlock3.Text = $"{v}/{v2}";
         }
     }
 }
