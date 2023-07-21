@@ -5,7 +5,12 @@ namespace ADWpfApp1
 {
     public class MyDownloadFileInfo
     {
-        public static List<MyDownloadFileInfo> DownloadFileInfos = new List<MyDownloadFileInfo>();
+         static List<MyDownloadFileInfo> DownloadFileInfos = new List<MyDownloadFileInfo>();
+
+        public static void Add(MyDownloadFileInfo info)
+        {
+            DownloadFileInfos.Add(info);
+        }
 
         public static MyDownloadFileInfo Get(int hash)
         {
