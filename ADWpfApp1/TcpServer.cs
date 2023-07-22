@@ -10,9 +10,7 @@ namespace ADWpfApp1
     {
         const int BufferSize = 8192;
 
-        public static Action<ProgressData> SendFileProgressCallback;
-
-        public static void StartClientTcp(string path, IPEndPoint remoteEP)
+        public static void StartClientTcp(MyDownloadFileInfo downloadFileInfo, IPEndPoint remoteEP)
         {
             Task.Run(() =>
             {
@@ -28,12 +26,12 @@ namespace ADWpfApp1
 
                 if (okBuffer[0] == 1)
                 {
-                    using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
+                    using (FileStream reader = new FileStream(downloadFileInfo.FileName, FileMode.Open, FileAccess.Read, FileShare.None))
                     {
                         ProgressData progress = new ProgressData();
                         progress.Length = reader.Length;
                         progress.Position =0;
-                        SendFileProgressCallback?.Invoke(progress);
+                        downloadFileInfo.ProgressCallback(progress);
 
                         byte[] fileBuffer = new byte[BufferSize];
                         int read, sent;
@@ -46,7 +44,7 @@ namespace ADWpfApp1
                             }
 
                             progress.Position = reader.Position;
-                            SendFileProgressCallback?.Invoke(progress);
+                            downloadFileInfo.ProgressCallback(progress);
                         }
                     }
                 }

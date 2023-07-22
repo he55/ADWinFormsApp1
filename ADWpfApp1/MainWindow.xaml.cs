@@ -173,6 +173,9 @@ namespace ADWpfApp1
                 }
                 else if (msgType == ADMsgType.sendFileOK)
                 {
+                    MyDownloadFileInfo downloadFileInfo = new MyDownloadFileInfo();
+                    downloadFileInfo.FileName = filePath;
+
                     this.Dispatcher.Invoke(() =>
                     {
                         this.Activate();
@@ -181,14 +184,13 @@ namespace ADWpfApp1
                         ContentDialogExample2 dialog2 = new ContentDialogExample2("正在传送文件...", Path.GetFileName(filePath));
                         dialog2.ShowAsync();
 
-                        TcpServer.SendFileProgressCallback = (ProgressData progress) =>
+                       downloadFileInfo.ProgressCallback = (ProgressData progress) =>
                         {
                             this.Dispatcher.Invoke(() =>
                             {
                                 dialog2.UpdateProgress(progress);
                                 if (progress.Done)
                                 {
-                                    TcpServer.SendFileProgressCallback = null;
                                     dialog2.Hide();
                                 }
                             });
@@ -196,7 +198,7 @@ namespace ADWpfApp1
                     });
 
                     IPEndPoint remoteEP = msg.ToIPData();
-                    TcpServer.StartClientTcp(filePath, remoteEP);
+                    TcpServer.StartClientTcp(downloadFileInfo, remoteEP);
                 }
                 else if (msgType == ADMsgType.sendFileCancel)
                 {
