@@ -161,7 +161,7 @@ namespace ADWpfApp1
                                 });
                             };
 
-                            MyDownloadFileInfo.Add(downloadFileInfo);
+                            MyDownloadFileInfoManager.Add(downloadFileInfo);
 
                             SendTo(ADMsg.sendFileOKData(remoteEP), remoteEP2);
                         }

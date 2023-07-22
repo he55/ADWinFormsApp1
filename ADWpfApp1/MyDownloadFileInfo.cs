@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ADWpfApp1
 {
-    public class MyDownloadFileInfo
+    public class MyDownloadFileInfoManager
     {
          static List<MyDownloadFileInfo> DownloadFileInfos = new List<MyDownloadFileInfo>();
 
@@ -25,7 +25,10 @@ namespace ADWpfApp1
             }
             return null;
         }
+    }
 
+    public class MyDownloadFileInfo
+    {
         public long Len { get; set; }
         public string FileName { get; set; }
         public int Hash { get; set; }

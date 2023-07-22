@@ -82,7 +82,7 @@ namespace ADWpfApp1
             handler.Receive(hashBuffer);
             int hash = BitConverter.ToInt32(hashBuffer, 0);
 
-            MyDownloadFileInfo downloadFileInfo =MyDownloadFileInfo.Get(hash);
+            MyDownloadFileInfo downloadFileInfo =MyDownloadFileInfoManager.Get(hash);
             if (downloadFileInfo != null)
             {
                 byte[] okBuffer = new byte[4] { 1, 1, 1, 1 };
