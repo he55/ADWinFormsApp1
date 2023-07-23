@@ -19,7 +19,7 @@ namespace ADWpfApp1
             this.Children.Add(selfMyUserControl);
         }
 
-        public List<CanvasItem> canvasItems = new List<CanvasItem>();
+         List<CanvasItem> canvasItems = new List<CanvasItem>();
         public void AddDevice(UserInfo userInfo)
         {
             foreach (var item in canvasItems)

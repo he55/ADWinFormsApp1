@@ -75,7 +75,7 @@ namespace ADWpfApp1
             ipAddress = Helper2.GetIPAddr();
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
             socket1.Bind(localEndPoint);
-            Task.Run(() => { OnReceive(); });
+            Task.Run(OnReceive);
 
             remoteEP = new IPEndPoint(ipAddress, PORT);
             TcpServer.StartServerTcp(remoteEP);
