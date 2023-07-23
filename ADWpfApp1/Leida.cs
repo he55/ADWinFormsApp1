@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 
 namespace ADWpfApp1
 {
@@ -23,7 +19,7 @@ namespace ADWpfApp1
             this.Children.Add(selfMyUserControl);
         }
 
-       public List<CanvasItem> canvasItems = new List<CanvasItem>();
+        public List<CanvasItem> canvasItems = new List<CanvasItem>();
         public void AddDevice(UserInfo userInfo)
         {
             foreach (var item in canvasItems)
@@ -52,7 +48,7 @@ namespace ADWpfApp1
             for (int i = 0; i < canvasItems.Count; i++)
             {
                 CanvasItem item = canvasItems[i];
-                if (now-item.Item3.LastTime>TimeSpan.FromSeconds(3))
+                if (now - item.Item3.LastTime > TimeSpan.FromSeconds(3))
                 {
                     this.Children.Remove(item.Item2);
                     canvasItems.Remove(item);
@@ -70,7 +66,7 @@ namespace ADWpfApp1
             this.Children.Add(selfMyUserControl);
         }
 
-       public string GetUserName(long ip)
+        public string GetUserName(long ip)
         {
             foreach (var item in canvasItems)
             {
@@ -83,7 +79,7 @@ namespace ADWpfApp1
         public void UpdateRect()
         {
             double a = -45.0;
-            double r = 90 + 90+90;
+            double r = 90 + 90 + 90;
             int i = 1;
             foreach (var item in canvasItems)
             {
@@ -110,7 +106,7 @@ namespace ADWpfApp1
         public UserInfo SelectUserInfo { get; set; }
         public void SetPoint(Point point)
         {
-            UserInfo userInfo=null;
+            UserInfo userInfo = null;
             foreach (var item in canvasItems)
             {
                 if (item.Item1.Contains(point))
@@ -147,14 +143,14 @@ namespace ADWpfApp1
 
             // center point
             double offsetY = 120.0;
-             center = new Point(w / 2, h - offsetY);
-          
+            center = new Point(w / 2, h - offsetY);
+
             double maxR = Math.Sqrt(center.X * center.X + center.Y * center.Y);
             double minR = 90.0;
             double minT = 90.0;
             for (double i = minR; i < maxR; i += minT)
             {
-                dc.DrawEllipse(Brushes.Transparent,_pen, center, i, i);
+                dc.DrawEllipse(Brushes.Transparent, _pen, center, i, i);
             }
 
             UpdateRect();

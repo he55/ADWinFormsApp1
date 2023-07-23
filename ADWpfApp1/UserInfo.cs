@@ -2,7 +2,7 @@
 
 namespace ADWpfApp1
 {
-    public class UserInfo 
+    public class UserInfo
     {
         public string Uid { get; set; }
         public DateTime LastTime { get; set; }

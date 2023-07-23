@@ -1,6 +1,5 @@
 ﻿using ModernWpf.Controls;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -68,7 +67,7 @@ namespace ADWpfApp1
             this.DataContext = this;
         }
 
-        private  void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             socket1 = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket1.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -184,17 +183,17 @@ namespace ADWpfApp1
                         ContentDialogExample2 dialog2 = new ContentDialogExample2("正在传送文件...", Path.GetFileName(filePath));
                         dialog2.ShowAsync();
 
-                       downloadFileInfo.ProgressCallback = (ProgressData progress) =>
-                        {
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                dialog2.UpdateProgress(progress);
-                                if (progress.Done)
-                                {
-                                    dialog2.Hide();
-                                }
-                            });
-                        };
+                        downloadFileInfo.ProgressCallback = (ProgressData progress) =>
+                         {
+                             this.Dispatcher.Invoke(() =>
+                             {
+                                 dialog2.UpdateProgress(progress);
+                                 if (progress.Done)
+                                 {
+                                     dialog2.Hide();
+                                 }
+                             });
+                         };
                     });
 
                     IPEndPoint remoteEP = msg.ToIPData();
@@ -243,7 +242,7 @@ namespace ADWpfApp1
                     {
                         this.Activate();
 
-                        ContentDialogExample dialog = new ContentDialogExample($"接收来自 {name} 的链接",url);
+                        ContentDialogExample dialog = new ContentDialogExample($"接收来自 {name} 的链接", url);
                         dialog.PrimaryButtonText = "在浏览器中打开";
                         ContentDialogResult result = await dialog.ShowAsync();
                         if (result == ContentDialogResult.Primary)
@@ -265,10 +264,10 @@ namespace ADWpfApp1
         {
             long address = address2.Address;
 
-            if(!Debugger.IsAttached)
+            if (!Debugger.IsAttached)
             {
                 if (ipAddress.Address == address)
-                return;
+                    return;
             }
 
             UserInfo userInfo = new UserInfo();
@@ -291,7 +290,7 @@ namespace ADWpfApp1
         }
 
         ContentDialog contentDialog2;
-        async void DataActionMet(DataObject data,UserInfo userInfo)
+        async void DataActionMet(DataObject data, UserInfo userInfo)
         {
             selectEP = new IPEndPoint(userInfo.IP, PORT);
 
@@ -377,9 +376,9 @@ namespace ADWpfApp1
             Win32Point wp = GetWin32Point(e);
             ddHelper.Drop(e.Data as IDataObject_Com, ref wp, (int)e.Effects);
 
-            if (leida.SelectUserInfo!=null)
+            if (leida.SelectUserInfo != null)
             {
-                DataActionMet((DataObject)e.Data,leida.SelectUserInfo);
+                DataActionMet((DataObject)e.Data, leida.SelectUserInfo);
                 leida.ResetBackground();
             }
         }

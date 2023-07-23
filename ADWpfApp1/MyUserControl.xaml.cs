@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ADWpfApp1
 {
@@ -28,16 +16,16 @@ namespace ADWpfApp1
 
         public void SetUserInfo(UserInfo userInfo)
         {
-            textBlock1.Text= userInfo.UserName;
-           this.ToolTip= userInfo.IPString;
+            textBlock1.Text = userInfo.UserName;
+            this.ToolTip = userInfo.IPString;
         }
 
         public void SetHi(bool val)
         {
-            hiBorder.Visibility=val? Visibility.Visible : Visibility.Hidden;
+            hiBorder.Visibility = val ? Visibility.Visible : Visibility.Hidden;
         }
 
-       public void BeginStory()
+        public void BeginStory()
         {
             Storyboard storyboard = (Storyboard)this.FindResource("story");
             storyboard.Begin();

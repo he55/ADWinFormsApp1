@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Media.Imaging;
 
 namespace ADWpfApp1
 {
@@ -38,17 +36,17 @@ namespace ADWpfApp1
 
         public void SetShow()
         {
-                this.Opacity = 1;
-                Rect workArea = SystemParameters.WorkArea;
-                this.Left =( workArea.Width - this.Width)/2;
-                this.Top = (workArea.Height - this.Height)/2;
+            this.Opacity = 1;
+            Rect workArea = SystemParameters.WorkArea;
+            this.Left = (workArea.Width - this.Width) / 2;
+            this.Top = (workArea.Height - this.Height) / 2;
         }
 
         public void SetHide()
         {
-                this.Opacity = 0;
-                this.Left = -10000;
-                this.Top = -10000;
+            this.Opacity = 0;
+            this.Left = -10000;
+            this.Top = -10000;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

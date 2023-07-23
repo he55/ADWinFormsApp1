@@ -5,8 +5,8 @@
         public static string ToSizeString(long size)
         {
             const double KB = 1024;
-            const double MB = 1024*1024;
-            const double GB = 1024*1024*1024;
+            const double MB = 1024 * 1024;
+            const double GB = 1024 * 1024 * 1024;
 
             if (size >= GB)
                 return $"{(size / GB):0.##} GB";
