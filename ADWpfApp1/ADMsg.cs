@@ -68,6 +68,14 @@ namespace ADWpfApp1
             return myDownloadFileInfo;
         }
 
+        public MyDownloadFileInfo2 ToFileData2()
+        {
+            MyDownloadFileInfo2 myDownloadFileInfo = new MyDownloadFileInfo2();
+            myDownloadFileInfo.ImageIndex = BitConverter.ToInt64(this.data, 0);
+            myDownloadFileInfo.Name = Encoding.UTF8.GetString(this.data, 8, this.len - 8);
+            return myDownloadFileInfo;
+        }
+
         public byte[] ToArr()
         {
             using (MemoryStream memoryStream = new MemoryStream())
@@ -107,19 +115,20 @@ namespace ADWpfApp1
             return msg;
         }
 
-        public static ADMsg helloData(string name)
+        public static ADMsg sendFileData2(ADMsgType msgType,MyDownloadFileInfo2 myDownloadFileInfo2)
         {
-            return new ADMsg(ADMsgType.hello, name);
-        }
+            ADMsg adMsg = new ADMsg(msgType);
 
-        public static ADMsg helloOKData(string name)
-        {
-            return new ADMsg(ADMsgType.helloOK, name);
-        }
+            byte[] vs1 = BitConverter.GetBytes(myDownloadFileInfo2.ImageIndex);
+            byte[] vs = Encoding.UTF8.GetBytes(myDownloadFileInfo2.Name);
 
-        public static ADMsg sendInfoData(string name)
-        {
-            return new ADMsg(ADMsgType.sendInfo, name);
+            adMsg.len = 8 + vs.Length;
+            adMsg.data = new byte[adMsg.len];
+
+            vs1.CopyTo(adMsg.data, 0);
+            vs.CopyTo(adMsg.data, 8);
+
+            return adMsg;
         }
 
         public static ADMsg sendFileData(string filePath)

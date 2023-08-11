@@ -37,6 +37,12 @@ namespace ADWpfApp1
         public Action<ProgressData> ProgressCallback;
     }
 
+    public class MyDownloadFileInfo2
+    {
+        public long ImageIndex { get; set; }
+        public string Name { get; set; }
+    }
+
     public class ProgressData
     {
         public long Length { get; set; }

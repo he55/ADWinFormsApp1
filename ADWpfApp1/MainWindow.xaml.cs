@@ -28,6 +28,7 @@ namespace ADWpfApp1
         IPEndPoint selectEP;
         string filePath;
         Settings _settings = Settings.Load();
+        MyDownloadFileInfo2 myDownloadFileInfo2;
 
         #region LocalUserInfo
 
@@ -45,7 +46,9 @@ namespace ADWpfApp1
                     _settings.UserName = MachineName;
 
                 NotifyPropertyChanged();
-                SendTo(ADMsg.sendInfoData(_settings.UserName), BroadcastEP);
+
+                myDownloadFileInfo2.Name=_settings.UserName;
+                SendTo(ADMsg.sendFileData2(ADMsgType.sendInfo, myDownloadFileInfo2), BroadcastEP);
             }
         }
 
@@ -65,6 +68,7 @@ namespace ADWpfApp1
             InitializeComponent();
             MachineName = Dns.GetHostName();
             this.DataContext = this;
+            myDownloadFileInfo2 = new MyDownloadFileInfo2 { ImageIndex=0, Name=UserName };
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -82,7 +86,7 @@ namespace ADWpfApp1
 
             ipTextBlock.Text = ipAddress.ToString();
 
-            SendTo(ADMsg.helloData(UserName), BroadcastEP);
+            SendTo(ADMsg.sendFileData2(ADMsgType.hello,myDownloadFileInfo2), BroadcastEP);
 
             DispatcherTimer dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Interval = TimeSpan.FromSeconds(2);
@@ -93,7 +97,7 @@ namespace ADWpfApp1
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
             leida.UpdateDevice();
-            SendTo(ADMsg.helloData(UserName), BroadcastEP);
+            SendTo(ADMsg.sendFileData2(ADMsgType.hello, myDownloadFileInfo2), BroadcastEP);
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
@@ -123,7 +127,7 @@ namespace ADWpfApp1
                 if (msgType == ADMsgType.hello)
                 {
                     AddDevice(address2, msg);
-                    SendTo(ADMsg.helloOKData(UserName), remoteEP2);
+                    SendTo(ADMsg.sendFileData2(ADMsgType.helloOK,myDownloadFileInfo2), remoteEP2);
                 }
                 else if (msgType == ADMsgType.helloOK || msgType == ADMsgType.sendInfo)
                 {
@@ -270,10 +274,13 @@ namespace ADWpfApp1
                     return;
             }
 
+            MyDownloadFileInfo2 v = msg.ToFileData2();
+
             UserInfo userInfo = new UserInfo();
             userInfo.Uid = Guid.NewGuid().ToString();
             userInfo.LastTime = DateTime.Now;
-            userInfo.UserName = msg.ToStringData();
+            userInfo.ImagePath =$"{v.ImageIndex}.png";
+            userInfo.UserName =v.Name;
             userInfo.IP = address;
             userInfo.IPString = address2.ToString();
 

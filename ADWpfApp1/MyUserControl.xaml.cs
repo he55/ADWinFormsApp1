@@ -16,6 +16,7 @@ namespace ADWpfApp1
 
         public void SetUserInfo(UserInfo userInfo)
         {
+            // TODO: set image
             textBlock1.Text = userInfo.UserName;
             this.ToolTip = userInfo.IPString;
         }
