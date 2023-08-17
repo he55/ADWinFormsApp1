@@ -7,7 +7,7 @@
              mc:Ignorable="d" Width="300" Height="150"
             >
     <Grid>
-        <Image Height="70" Width="70" Source="/Assets/AppIcon.png"/>
+        <Image Height="70" Width="70" Source="/Assets/11.png"/>
         <TextBlock TextWrapping="Wrap" Text="&quot;隔空投送&quot;可让你与附近的用户立即共享。" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,10"/>
     </Grid>
 </UserControl>
