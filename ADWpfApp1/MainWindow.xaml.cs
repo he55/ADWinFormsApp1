@@ -304,6 +304,16 @@ namespace ADWpfApp1
             if (data.ContainsFileDropList())
             {
                 filePath = data.GetFileDropList()[0];
+                if(Directory.Exists(filePath))
+                {
+                    ContentDialog contentDialog = new ContentDialog();
+                    contentDialog.Content = "不支持文件夹传送";
+                    contentDialog.PrimaryButtonText = "好";
+                    contentDialog.DefaultButton = ContentDialogButton.Primary;
+                    await contentDialog.ShowAsync();
+                    return;
+                }
+
                 SendTo(ADMsg.sendFileData(filePath), selectEP);
 
                 this.Activate();
