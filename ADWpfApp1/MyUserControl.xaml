@@ -35,12 +35,8 @@
                     <ScaleTransform/>
                 </Ellipse.RenderTransform>
             </Ellipse>
-            <Ellipse  Fill="#FF4DDA27" />
-            <Image Source="/ma.png">
-                <Image.Clip>
-                    <RectangleGeometry RadiusX="35" RadiusY="35" Rect="0,0,70,70"/>
-                </Image.Clip>
-            </Image>
+            <Ellipse  Fill="#ffd3f1d2" />
+            <Image Width="50" Height="50" Source="/Assets/6.png"/>
         </Grid>
         <TextBlock x:Name="textBlock1"  TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" Margin="0,95,0,0"/>
     </Grid>
