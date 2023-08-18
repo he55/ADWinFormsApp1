@@ -131,15 +131,12 @@ namespace ADWpfApp1
             return adMsg;
         }
 
-        public static ADMsg sendFileData(string filePath)
+        public static ADMsg sendFileData(string fileName, long length)
         {
             ADMsg adMsg = new ADMsg(ADMsgType.sendFile);
 
-            FileInfo fileInfo = new FileInfo(filePath);
-            long length = fileInfo.Length;
-
             byte[] vs1 = BitConverter.GetBytes(length);
-            byte[] vs = Encoding.UTF8.GetBytes(fileInfo.Name);
+            byte[] vs = Encoding.UTF8.GetBytes(fileName);
 
             adMsg.len = 8 + vs.Length;
             adMsg.data = new byte[adMsg.len];

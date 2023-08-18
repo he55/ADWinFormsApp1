@@ -306,6 +306,7 @@ namespace ADWpfApp1
                 filePath = data.GetFileDropList()[0];
                 if(Directory.Exists(filePath))
                 {
+                    this.Activate();
                     ContentDialog contentDialog = new ContentDialog();
                     contentDialog.Content = "不支持文件夹传送";
                     contentDialog.PrimaryButtonText = "好";
@@ -314,7 +315,19 @@ namespace ADWpfApp1
                     return;
                 }
 
-                SendTo(ADMsg.sendFileData(filePath), selectEP);
+                FileInfo fileInfo = new FileInfo(filePath);
+                if (fileInfo.Length == 0)
+                {
+                    this.Activate();
+                    ContentDialog contentDialog = new ContentDialog();
+                    contentDialog.Content = "要传送的文件大小不能为 0";
+                    contentDialog.PrimaryButtonText = "好";
+                    contentDialog.DefaultButton = ContentDialogButton.Primary;
+                    await contentDialog.ShowAsync();
+                    return;
+                }
+
+                SendTo(ADMsg.sendFileData(fileInfo.Name,fileInfo.Length), selectEP);
 
                 this.Activate();
                 contentDialog2 = new ContentDialog();
